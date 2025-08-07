@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile Setup</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #2d3748;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      padding: 20px;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: calc(100vh - 40px);
+    }
+
+    h1 {
+      text-align: center;
+      color: #4a5568;
+      margin-bottom: 8px;
+      font-size: 2.2rem;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #718096;
+      margin-bottom: 30px;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    .form-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .question {
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 600;
+      color: #4a5568;
+      font-size: 1.05rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 2px solid #e2e8f0;
+      background: #f7fafc;
+      color: #2d3748;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #a0aec0;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .range-display {
+      text-align: center;
+      margin-top: 8px;
+      color: #718096;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      margin-top: 25px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .progress {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #718096;
+      font-size: 0.9rem;
+    }
+
+    .back-btn {
+      background: rgba(113, 128, 150, 0.2);
+      color: #4a5568;
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      margin-bottom: 25px;
+      width: auto;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      box-shadow: none;
+    }
+
+    .back-btn:hover {
+      background: rgba(113, 128, 150, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .category-form {
+      display: none;
+    }
+
+    .category-form.active {
+      display: block;
+    }
+
+    .optional {
+      color: #a0aec0;
+      font-size: 0.85rem;
+      margin-left: 8px;
+      font-weight: 400;
+    }
+
+    /* Enhanced sections */
+    .expandable-section {
+      margin-top: 35px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 25px;
+    }
+
+    .expand-btn {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+      padding: 14px 20px;
+      font-size: 0.95rem;
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      margin: 0;
+      transition: all 0.3s ease;
+      border-radius: 10px;
+      box-shadow: none;
+    }
+
+    .expand-btn:hover {
+      background: rgba(102, 126, 234, 0.15);
+      border-color: #667eea;
+      transform: translateY(-1px);
+    }
+
+    .expanded-content {
+      margin-top: 25px;
+      padding: 25px;
+      background: rgba(102, 126, 234, 0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .expanded-content .question {
+      margin-bottom: 24px;
+    }
+
+    .expanded-content label {
+      color: #4a5568;
+      font-size: 1rem;
+    }
+
+    .data-quality-indicator {
+      margin-top: 20px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .quality-basic {
+      background: rgba(237, 137, 54, 0.1);
+      border: 1px solid rgba(237, 137, 54, 0.3);
+      color: #c05621;
+    }
+
+    .quality-good {
+      background: rgba(102, 126, 234, 0.1);
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      color: #667eea;
+    }
+
+    .quality-excellent {
+      background: rgba(72, 187, 120, 0.1);
+      border: 1px solid rgba(72, 187, 120, 0.3);
+      color: #38a169;
+    }
+
+    .quality-outstanding {
+      background: rgba(159, 122, 234, 0.1);
+      border: 1px solid rgba(159, 122, 234, 0.3);
+      color: #805ad5;
+    }
+
+    /* Priority checkboxes */
+    .priority-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .priority-item {
+      display: flex;
+      align-items: center;
+      font-weight: normal;
+      font-size: 0.95rem;
+    }
+
+    .priority-item input[type="checkbox"] {
+      width: auto;
+      margin-right: 8px;
+      padding: 0;
+    }
+
+    /* Profile completion dashboard */
+    .profile-progress {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 10px;
+      border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .completion-bar-container {
+      background: rgba(255,255,255,0.2);
+      height: 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+    }
+
+    .completion-bar {
+      background: #667eea;
+      height: 100%;
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Range slider styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-track {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 4px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      background: #667eea;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(102, 126, 234, 0.4);
+    }
+
+    input[type="range"]::-moz-range-track {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 4px;
+      border: none;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      background: #667eea;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 6px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+
+      .form-container {
+        padding: 25px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .container {
+        min-height: calc(100vh - 30px);
+      }
+
+      .priority-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Smooth animations */
+    * {
+      transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <button class="back-btn" onclick="window.location.href='categories.html'">← Back to Categories</button>
+
+    <div class="form-container">
+      
+      <!-- Profile Completion Dashboard -->
+      <div class="profile-progress">
+        <div class="progress-header">
+          <span>Profile Completeness</span>
+          <span id="completion-percentage">0%</span>
+        </div>
+        <div class="completion-bar-container">
+          <div class="completion-bar" id="completion-bar"></div>
+        </div>
+      </div>
+
+      <!-- Mental Health Form -->
+      <div class="category-form" id="mental-health">
+        <h1>🧠 Mental Health</h1>
+        <div class="subtitle">Let's understand your mental wellness</div>
+        <div class="progress">Core questions + enhanced details</div>
+
+        <form id="mental-form">
+          <div class="question">
+            <label for="stressLevel">How stressed do you feel on average?</label>
+            <input type="range" id="stressLevel" name="stressLevel" min="1" max="10" value="5" oninput="updateStressDisplay(this.value); updateDataQuality('mental')" />
+            <div class="range-display" id="stress-display">5 - Moderate stress</div>
+          </div>
+
+          <div class="question">
+            <label for="sleepHours">Hours of sleep per night</label>
+            <select id="sleepHours" name="sleepHours" onchange="updateDataQuality('mental')">
+              <option value="">Select one</option>
+              <option value="4">4 or less</option>
+              <option value="5">5 hours</option>
+              <option value="6">6 hours</option>
+              <option value="7">7 hours</option>
+              <option value="8">8 hours</option>
+              <option value="9">9+ hours</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="mainStressor">Biggest stressor right now</label>
+            <textarea id="mainStressor" name="mainStressor" placeholder="Work, relationships, money, health, family..." rows="3" oninput="updateDataQuality('mental')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="mentalGoal">One mental health goal</label>
+            <textarea id="mentalGoal" name="mentalGoal" placeholder="Reduce anxiety, sleep better, manage stress..." rows="3" oninput="updateDataQuality('mental')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="mentalUrgency">How urgent is improving your mental health?</label>
+            <select id="mentalUrgency" name="mentalUrgency" onchange="updateDataQuality('mental')">
+              <option value="">Select one</option>
+              <option value="low">Low - Nice to have improvement</option>
+              <option value="medium">Medium - Important but not critical</option>
+              <option value="high">High - Really need help soon</option>
+              <option value="critical">Critical - Major life impact</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="mentalAdviceStyle">What kind of advice works best for you?</label>
+            <select id="mentalAdviceStyle" name="mentalAdviceStyle" onchange="updateDataQuality('mental')">
+              <option value="">Select one</option>
+              <option value="direct">Direct and to the point</option>
+              <option value="detailed">Detailed explanations</option>
+              <option value="step-by-step">Step-by-step instructions</option>
+              <option value="encouraging">Encouraging and supportive</option>
+              <option value="realistic">Realistic and honest</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label>What matters most to you in mental health? (Select top 3)</label>
+            <div class="priority-grid">
+              <label class="priority-item">
+                <input type="checkbox" name="mentalPriorities" value="immediate-relief">
+                Quick/immediate relief
+              </label>
+              <label class="priority-item">
+                <input type="checkbox" name="mentalPriorities" value="long-term">
+                Long-term sustainable change
+              </label>
+              <label class="priority-item">
+                <input type="checkbox" name="mentalPriorities" value="practical">
+                Practical/actionable steps
+              </label>
+              <label class="priority-item">
+                <input type="checkbox" name="mentalPriorities" value="understanding">
+                Understanding root causes
+              </label>
+              <label class="priority-item">
+                <input type="checkbox" name="mentalPriorities" value="coping">
+                Better coping strategies
+              </label>
+              <label class="priority-item">
+                <input type="checkbox" name="mentalPriorities" value="professional">
+                Professional treatment guidance
+              </label>
+            </div>
+          </div>
+
+          <div class="data-quality-indicator quality-basic" id="mental-data-quality">
+            Basic info collected. Add more details below for much better AI advice!
+          </div>
+
+          <button type="submit">Save & Get AI Advice</button>
+        </form>
+      </div>
+
+      <!-- Finance Form -->
+      <div class="category-form" id="finance">
+        <h1>💸 Finance</h1>
+        <div class="subtitle">Let's understand your financial situation</div>
+        <div class="progress">Core questions + enhanced details</div>
+
+        <form id="finance-form">
+          <div class="question">
+            <label for="monthlyIncome">Monthly income (approximate)</label>
+            <select id="monthlyIncome" name="monthlyIncome" onchange="updateDataQuality('finance')">
+              <option value="">Select range</option>
+              <option value="1000">Under $1,000</option>
+              <option value="2500">$1,000 - $4,000</option>
+              <option value="6000">$4,000 - $8,000</option>
+              <option value="10000">$8,000 - $12,000</option>
+              <option value="15000">$12,000+</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="savings">Emergency savings</label>
+            <select id="savings" name="savings" onchange="updateDataQuality('finance')">
+              <option value="">Select closest</option>
+              <option value="0">$0 - $500</option>
+              <option value="2000">$500 - $5,000</option>
+              <option value="10000">$5,000 - $20,000</option>
+              <option value="30000">$20,000+</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="riskTolerance">How do you feel about financial risk?</label>
+            <select id="riskTolerance" name="riskTolerance" onchange="updateDataQuality('finance')">
+              <option value="">Select one</option>
+              <option value="Conservative">Conservative - I hate losing money</option>
+              <option value="Moderate">Moderate - Some risk is okay</option>
+              <option value="Aggressive">Aggressive - Higher risk for higher reward</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="financialGoal">Main financial goal right now</label>
+            <textarea id="financialGoal" name="financialGoal" placeholder="Save for house, pay off debt, invest, emergency fund..." rows="3" oninput="updateDataQuality('finance')"></textarea>
+          </div>
+
+          <div class="data-quality-indicator quality-basic" id="finance-data-quality">
+            Basic info collected. Complete the questions above for personalized advice!
+          </div>
+
+          <button type="submit">Save & Get AI Advice</button>
+        </form>
+      </div>
+
+      <!-- Career Form -->
+      <div class="category-form" id="career">
+        <h1>💼 Career</h1>
+        <div class="subtitle">Let's understand your career situation</div>
+        <div class="progress">Core questions + enhanced details</div>
+
+        <form id="career-form">
+          <div class="question">
+            <label for="jobStatus">Current job situation</label>
+            <select id="jobStatus" name="jobStatus" onchange="updateDataQuality('career')">
+              <option value="">Select one</option>
+              <option value="Employed full-time">Employed full-time</option>
+              <option value="Employed part-time">Employed part-time</option>
+              <option value="Freelancer">Freelancer/Contractor</option>
+              <option value="Unemployed">Unemployed</option>
+              <option value="Student">Student</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="jobSatisfaction">Job satisfaction level</label>
+            <input type="range" id="jobSatisfaction" name="jobSatisfaction" min="1" max="10" value="5" oninput="updateJobDisplay(this.value); updateDataQuality('career')" />
+            <div class="range-display" id="job-display">5 - It's okay</div>
+          </div>
+
+          <div class="question">
+            <label for="careerChallenge">Biggest career challenge</label>
+            <textarea id="careerChallenge" name="careerChallenge" placeholder="Low pay, bad boss, no growth, unclear direction..." rows="3" oninput="updateDataQuality('career')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="careerGoal">Main career goal</label>
+            <textarea id="careerGoal" name="careerGoal" placeholder="Get promoted, change fields, start business, better work-life balance..." rows="3" oninput="updateDataQuality('career')"></textarea>
+          </div>
+
+          <div class="data-quality-indicator quality-basic" id="career-data-quality">
+            Basic info collected. Complete the questions above for personalized advice!
+          </div>
+
+          <button type="submit">Save & Get AI Advice</button>
+        </form>
+      </div>
+
+      <!-- Relationships Form -->
+      <div class="category-form" id="relationships">
+        <h1>💬 Relationships</h1>
+        <div class="subtitle">Let's understand your social connections</div>
+        <div class="progress">Core questions + enhanced details</div>
+
+        <form id="relationships-form">
+          <div class="question">
+            <label for="relationshipStatus">Current relationship status</label>
+            <select id="relationshipStatus" name="relationshipStatus" onchange="updateDataQuality('relationships')">
+              <option value="">Select one</option>
+              <option value="Single">Single</option>
+              <option value="Dating">Dating</option>
+              <option value="In a relationship">In a relationship</option>
+              <option value="Married">Married</option>
+              <option value="It's complicated">It's complicated</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="socialSatisfaction">How satisfied are you with your social life?</label>
+            <input type="range" id="socialSatisfaction" name="socialSatisfaction" min="1" max="10" value="5" oninput="updateSocialDisplay(this.value); updateDataQuality('relationships')" />
+            <div class="range-display" id="social-display">5 - It's okay</div>
+          </div>
+
+          <div class="question">
+            <label for="relationshipChallenge">Biggest relationship challenge</label>
+            <textarea id="relationshipChallenge" name="relationshipChallenge" placeholder="Finding someone, communication, trust, loneliness..." rows="3" oninput="updateDataQuality('relationships')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="relationshipGoal">Main relationship goal</label>
+            <textarea id="relationshipGoal" name="relationshipGoal" placeholder="Find a partner, improve communication, make more friends..." rows="3" oninput="updateDataQuality('relationships')"></textarea>
+          </div>
+
+          <div class="data-quality-indicator quality-basic" id="relationships-data-quality">
+            Basic info collected. Complete the questions above for personalized advice!
+          </div>
+
+          <button type="submit">Save & Get AI Advice</button>
+        </form>
+      </div>
+
+      <!-- Fitness Form -->
+      <div class="category-form" id="fitness">
+        <h1>🏃 Fitness</h1>
+        <div class="subtitle">Let's understand your health and fitness</div>
+        <div class="progress">Core questions + enhanced details</div>
+
+        <form id="fitness-form">
+          <div class="question">
+            <label for="exerciseFrequency">How often do you exercise?</label>
+            <select id="exerciseFrequency" name="exerciseFrequency" onchange="updateDataQuality('fitness')">
+              <option value="">Select one</option>
+              <option value="Never">Never</option>
+              <option value="Rarely">Rarely (1-2 times/month)</option>
+              <option value="Sometimes">Sometimes (1-2 times/week)</option>
+              <option value="Regular">Regular (3-4 times/week)</option>
+              <option value="Daily">Daily</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="fitnessLevel">Current fitness level</label>
+            <input type="range" id="fitnessLevel" name="fitnessLevel" min="1" max="10" value="5" oninput="updateFitnessDisplay(this.value); updateDataQuality('fitness')" />
+            <div class="range-display" id="fitness-display">5 - Average</div>
+          </div>
+
+          <div class="question">
+            <label for="fitnessChallenge">Biggest fitness challenge</label>
+            <textarea id="fitnessChallenge" name="fitnessChallenge" placeholder="No time, lack motivation, injuries, don't know where to start..." rows="3" oninput="updateDataQuality('fitness')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="fitnessGoal">Main fitness goal</label>
+            <textarea id="fitnessGoal" name="fitnessGoal" placeholder="Lose weight, build muscle, run a marathon, feel healthier..." rows="3" oninput="updateDataQuality('fitness')"></textarea>
+          </div>
+
+          <div class="data-quality-indicator quality-basic" id="fitness-data-quality">
+            Basic info collected. Complete the questions above for personalized advice!
+          </div>
+
+          <button type="submit">Save & Get AI Advice</button>
+        </form>
+      </div>
+
+      <!-- Lifestyle Form -->
+      <div class="category-form" id="lifestyle">
+        <h1>🏠 Lifestyle</h1>
+        <div class="subtitle">Let's understand your lifestyle preferences</div>
+        <div class="progress">Core questions + enhanced details</div>
+
+        <form id="lifestyle-form">
+          <div class="question">
+            <label for="livingSituation">Living situation</label>
+            <select id="livingSituation" name="livingSituation" onchange="updateDataQuality('lifestyle')">
+              <option value="">Select one</option>
+              <option value="Live alone">Live alone</option>
+              <option value="With roommates">With roommates</option>
+              <option value="With family">With family</option>
+              <option value="With partner">With partner/spouse</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="lifestyleSatisfaction">How satisfied are you with your lifestyle?</label>
+            <input type="range" id="lifestyleSatisfaction" name="lifestyleSatisfaction" min="1" max="10" value="5" oninput="updateLifestyleDisplay(this.value); updateDataQuality('lifestyle')" />
+            <div class="range-display" id="lifestyle-display">5 - It's okay</div>
+          </div>
+
+          <div class="question">
+            <label for="lifestyleChallenge">Biggest lifestyle challenge</label>
+            <textarea id="lifestyleChallenge" name="lifestyleChallenge" placeholder="No free time, boring routine, want to travel, need change..." rows="3" oninput="updateDataQuality('lifestyle')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="lifestyleGoal">Main lifestyle goal</label>
+            <textarea id="lifestyleGoal" name="lifestyleGoal" placeholder="Travel more, move cities, better work-life balance, new hobbies..." rows="3" oninput="updateDataQuality('lifestyle')"></textarea>
+          </div>
+
+          <div class="data-quality-indicator quality-basic" id="lifestyle-data-quality">
+            Basic info collected. Complete the questions above for personalized advice!
+          </div>
+
+          <button type="submit">Save & Get AI Advice</button>
+        </form>
+      </div>
+
+      <!-- Education Form -->
+      <div class="category-form" id="education">
+        <h1>📚 Education & Learning</h1>
+        <div class="subtitle">Let's understand your learning goals</div>
+        <div class="progress">Build your learning profile</div>
+
+        <form id="education-form">
+          <div class="question">
+            <label for="educationLevel">Highest education completed</label>
+            <select id="educationLevel" name="educationLevel" onchange="updateDataQuality('education')">
+              <option value="">Select one</option>
+              <option value="High School">High School</option>
+              <option value="Some College">Some College</option>
+              <option value="Associate Degree">Associate Degree</option>
+              <option value="Bachelor's Degree">Bachelor's Degree</option>
+              <option value="Master's Degree">Master's Degree</option>
+              <option value="PhD/Doctorate">PhD/Doctorate</option>
+              <option value="Trade/Technical">Trade/Technical School</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="learningGoals">What do you want to learn or improve?</label>
+            <textarea id="learningGoals" name="learningGoals" placeholder="New skills, certifications, languages, hobbies..." rows="3" oninput="updateDataQuality('education')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="learningStyle">How do you learn best?</label>
+            <select id="learningStyle" name="learningStyle" onchange="updateDataQuality('education')">
+              <option value="">Select one</option>
+              <option value="Visual">Visual (reading, diagrams)</option>
+              <option value="Auditory">Auditory (listening, discussions)</option>
+              <option value="Hands-on">Hands-on (practice, experiments)</option>
+              <option value="Mixed">Mixed approach</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="timeForLearning">Time available for learning per week</label>
+            <select id="timeForLearning" name="timeForLearning" onchange="updateDataQuality('education')">
+              <option value="">Select one</option>
+              <option value="1-2 hours">1-2 hours</option>
+              <option value="3-5 hours">3-5 hours</option>
+              <option value="6-10 hours">6-10 hours</option>
+              <option value="10+ hours">10+ hours</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="learningMotivation">Why do you want to learn new things?</label>
+            <textarea id="learningMotivation" name="learningMotivation" placeholder="Career advancement, personal interest, staying current..." rows="3" oninput="updateDataQuality('education')"></textarea>
+          </div>
+
+          <div class="data-quality-indicator quality-basic" id="education-data-quality">
+            Basic info collected. Complete the questions above for personalized advice!
+          </div>
+
+          <button type="submit">Save & Get AI Advice</button>
+        </form>
+      </div>
+
+      <!-- Family Form -->
+      <div class="category-form" id="family">
+        <h1>👨‍👩‍👧‍👦 Family & Parenting</h1>
+        <div class="subtitle">Let's understand your family dynamics</div>
+        <div class="progress">Build your family profile</div>
+
+        <form id="family-form">
+          <div class="question">
+            <label for="familyStatus">Family situation</label>
+            <select id="familyStatus" name="familyStatus" onchange="updateDataQuality('family')">
+              <option value="">Select one</option>
+              <option value="Single, no children">Single, no children</option>
+              <option value="Single parent">Single parent</option>
+              <option value="Married/partnered, no children">Married/partnered, no children</option>
+              <option value="Married/partnered with children">Married/partnered with children</option>
+              <option value="Planning to have children">Planning to have children</option>
+              <option value="Adult children">Adult children</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="familyGoals">Main family/parenting goals</label>
+            <textarea id="familyGoals" name="familyGoals" placeholder="Spend more time together, improve communication, plan for children..." rows="3" oninput="updateDataQuality('family')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="familyChallenges">Biggest family challenges</label>
+            <textarea id="familyChallenges" name="familyChallenges" placeholder="Work-life balance, discipline, communication, finances..." rows="3" oninput="updateDataQuality('family')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="parentingStyle">Parenting approach (if applicable)</label>
+            <select id="parentingStyle" name="parentingStyle" onchange="updateDataQuality('family')">
+              <option value="">Select one or N/A</option>
+              <option value="N/A">Not applicable</option>
+              <option value="Authoritative">Authoritative (firm but warm)</option>
+              <option value="Permissive">Permissive (lenient)</option>
+              <option value="Authoritarian">Authoritarian (strict)</option>
+              <option value="Attachment">Attachment-focused</option>
+              <option value="Still figuring out">Still figuring out</option>
+            </select>
+          </div>
+
+          <div class="data-quality-indicator quality-basic" id="family-data-quality">
+            Basic info collected. Complete the questions above for personalized advice!
+          </div>
+
+          <button type="submit">Save & Get AI Advice</button>
+        </form>
+      </div>
+
+      <!-- Creativity Form -->
+      <div class="category-form" id="creativity">
+        <h1>🎨 Creativity & Hobbies</h1>
+        <div class="subtitle">Let's understand your creative pursuits</div>
+        <div class="progress">Build your creativity profile</div>
+
+        <form id="creativity-form">
+          <div class="question">
+            <label for="creativeActivities">What creative activities do you enjoy or want to try?</label>
+            <textarea id="creativeActivities" name="creativeActivities" placeholder="Art, music, writing, crafts, photography, cooking..." rows="3" oninput="updateDataQuality('creativity')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="creativityLevel">How would you rate your creativity?</label>
+            <input type="range" id="creativityLevel" name="creativityLevel" min="1" max="10" value="5" oninput="updateCreativityDisplay(this.value); updateDataQuality('creativity')" />
+            <div class="range-display" id="creativity-display">5 - Moderately creative</div>
+          </div>
+
+          <div class="question">
+            <label for="creativeGoals">Creative goals or projects you want to pursue</label>
+            <textarea id="creativeGoals" name="creativeGoals" placeholder="Learn guitar, write a book, start painting, photography project..." rows="3" oninput="updateDataQuality('creativity')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="creativeBarriers">What stops you from being more creative?</label>
+            <textarea id="creativeBarriers" name="creativeBarriers" placeholder="No time, lack of skills, fear of judgment, no space..." rows="3" oninput="updateDataQuality('creativity')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="creativeTime">Time you can dedicate to creative pursuits weekly</label>
+            <select id="creativeTime" name="creativeTime" onchange="updateDataQuality('creativity')">
+              <option value="">Select one</option>
+              <option value="None currently">None currently</option>
+              <option value="1-2 hours">1-2 hours</option>
+              <option value="3-5 hours">3-5 hours</option>
+              <option value="6-10 hours">6-10 hours</option>
+              <option value="10+ hours">10+ hours</option>
+            </select>
+          </div>
+
+          <div class="data-quality-indicator quality-basic" id="creativity-data-quality">
+            Basic info collected. Complete the questions above for personalized advice!
+          </div>
+
+          <button type="submit">Save & Get AI Advice</button>
+        </form>
+      </div>
+
+      <!-- Spirituality Form -->
+      <div class="category-form" id="spirituality">
+        <h1>🕯️ Spirituality & Values</h1>
+        <div class="subtitle">Let's understand your beliefs and values</div>
+        <div class="progress">Build your spiritual profile</div>
+
+        <form id="spirituality-form">
+          <div class="question">
+            <label for="spiritualBeliefs">How would you describe your spiritual or religious beliefs?</label>
+            <select id="spiritualBeliefs" name="spiritualBeliefs" onchange="updateDataQuality('spirituality')">
+              <option value="">Select one</option>
+              <option value="Very religious">Very religious</option>
+              <option value="Somewhat religious">Somewhat religious</option>
+              <option value="Spiritual but not religious">Spiritual but not religious</option>
+              <option value="Agnostic">Agnostic</option>
+              <option value="Atheist">Atheist</option>
+              <option value="Exploring/Questioning">Exploring/Questioning</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="coreValues">What are your core values? (Top 3-5)</label>
+            <textarea id="coreValues" name="coreValues" placeholder="Family, honesty, growth, service, freedom, creativity..." rows="3" oninput="updateDataQuality('spirituality')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="lifePhilosophy">Personal philosophy or approach to life</label>
+            <textarea id="lifePhilosophy" name="lifePhilosophy" placeholder="What guides your decisions? What gives life meaning?" rows="3" oninput="updateDataQuality('spirituality')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="spiritualPractices">Spiritual practices or rituals (if any)</label>
+            <textarea id="spiritualPractices" name="spiritualPractices" placeholder="Prayer, meditation, nature walks, journaling..." rows="3" oninput="updateDataQuality('spirituality')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="purposeMeaning">What gives your life purpose and meaning?</label>
+            <textarea id="purposeMeaning" name="purposeMeaning" placeholder="Relationships, helping others, personal growth, creating..." rows="3" oninput="updateDataQuality('spirituality')"></textarea>
+          </div>
+
+          <div class="data-quality-indicator quality-basic" id="spirituality-data-quality">
+            Basic info collected. Complete the questions above for personalized advice!
+          </div>
+
+          <button type="submit">Save & Get AI Advice</button>
+        </form>
+      </div>
+
+      <!-- Travel Form -->
+      <div class="category-form" id="travel">
+        <h1>✈️ Travel & Adventure</h1>
+        <div class="subtitle">Let's understand your travel preferences</div>
+        <div class="progress">Build your travel profile</div>
+
+        <form id="travel-form">
+          <div class="question">
+            <label for="travelFrequency">How often do you travel?</label>
+            <select id="travelFrequency" name="travelFrequency" onchange="updateDataQuality('travel')">
+              <option value="">Select one</option>
+              <option value="Never">Never</option>
+              <option value="Rarely">Rarely (once every few years)</option>
+              <option value="Sometimes">Sometimes (1-2 times per year)</option>
+              <option value="Often">Often (3-5 times per year)</option>
+              <option value="Frequently">Frequently (6+ times per year)</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="travelStyle">Preferred travel style</label>
+            <select id="travelStyle" name="travelStyle" onchange="updateDataQuality('travel')">
+              <option value="">Select one</option>
+              <option value="Budget/Backpacking">Budget/Backpacking</option>
+              <option value="Mid-range">Mid-range</option>
+              <option value="Luxury">Luxury</option>
+              <option value="Mix of all">Mix of all</option>
+              <option value="Not sure">Not sure yet</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="dreamDestinations">Dream destinations or travel goals</label>
+            <textarea id="dreamDestinations" name="dreamDestinations" placeholder="Countries, cities, experiences you want to have..." rows="3" oninput="updateDataQuality('travel')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="travelBarriers">What prevents you from traveling more?</label>
+            <textarea id="travelBarriers" name="travelBarriers" placeholder="Money, time, work commitments, family..." rows="3" oninput="updateDataQuality('travel')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="adventureLevel">How adventurous are you?</label>
+            <input type="range" id="adventureLevel" name="adventureLevel" min="1" max="10" value="5" oninput="updateAdventureDisplay(this.value); updateDataQuality('travel')" />
+            <div class="range-display" id="adventure-display">5 - Moderately adventurous</div>
+          </div>
+
+          <div class="data-quality-indicator quality-basic" id="travel-data-quality">
+            Basic info collected. Complete the questions above for personalized advice!
+          </div>
+
+          <button type="submit">Save & Get AI Advice</button>
+        </form>
+      </div>
+
+      <!-- Community Form -->
+      <div class="category-form" id="community">
+        <h1>🤝 Community & Social Impact</h1>
+        <div class="subtitle">Let's understand your community involvement</div>
+        <div class="progress">Build your community profile</div>
+
+        <form id="community-form">
+          <div class="question">
+            <label for="communityInvolvement">Current level of community involvement</label>
+            <select id="communityInvolvement" name="communityInvolvement" onchange="updateDataQuality('community')">
+              <option value="">Select one</option>
+              <option value="Very active">Very active</option>
+              <option value="Somewhat active">Somewhat active</option>
+              <option value="Occasionally involved">Occasionally involved</option>
+              <option value="Not very involved">Not very involved</option>
+              <option value="Want to get involved">Want to get involved</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="causesCarAbout">Causes or issues you care about</label>
+            <textarea id="causesCarAbout" name="causesCarAbout" placeholder="Environment, education, poverty, animals, health..." rows="3" oninput="updateDataQuality('community')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="volunteerExperience">Volunteer or community service experience</label>
+            <textarea id="volunteerExperience" name="volunteerExperience" placeholder="Past volunteering, current commitments, organizations..." rows="3" oninput="updateDataQuality('community')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="communityGoals">Community involvement goals</label>
+            <textarea id="communityGoals" name="communityGoals" placeholder="Start volunteering, join organizations, make a difference..." rows="3" oninput="updateDataQuality('community')"></textarea>
+          </div>
+
+          <div class="question">
+            <label for="timeForCommunity">Time available for community activities monthly</label>
+            <select id="timeForCommunity" name="timeForCommunity" onchange="updateDataQuality('community')">
+              <option value="">Select one</option>
+              <option value="None currently">None currently</option>
+              <option value="1-5 hours">1-5 hours</option>
+              <option value="6-15 hours">6-15 hours</option>
+              <option value="16-30 hours">16-30 hours</option>
+              <option value="30+ hours">30+ hours</option>
+            </select>
+          </div>
+
+          <div class="data-quality-indicator quality-basic" id="community-data-quality">
+            Basic info collected. Complete the questions above for personalized advice!
+          </div>
+
+          <button type="submit">Save & Get AI Advice</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Get category from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category') || 'mental-health';
+
+    // Show the correct form
+    document.addEventListener('DOMContentLoaded', () => {
+      const forms = document.querySelectorAll('.category-form');
+      forms.forEach(form => form.classList.remove('active'));
+      
+      const targetForm = document.getElementById(category);
+      if (targetForm) {
+        targetForm.classList.add('active');
+      } else {
+        // Default to mental health if invalid category
+        document.getElementById('mental-health').classList.add('active');
+      }
+      
+      // Update profile completion on load
+      updateProfileCompletion();
+    });
+
+    // Range slider display functions
+    function updateStressDisplay(value) {
+      const display = document.getElementById('stress-display');
+      const labels = {
+        1: '1 - Very calm', 2: '2 - Mostly calm', 3: '3 - Slightly stressed',
+        4: '4 - Somewhat stressed', 5: '5 - Moderate stress', 6: '6 - Pretty stressed',
+        7: '7 - Very stressed', 8: '8 - Highly stressed', 9: '9 - Extremely stressed',
+        10: '10 - Overwhelmed'
+      };
+      display.textContent = labels[value] || value;
+    }
+
+    function updateJobDisplay(value) {
+      const display = document.getElementById('job-display');
+      const labels = {
+        1: '1 - Hate it', 2: '2 - Really dislike', 3: '3 - Dislike', 4: '4 - Below average',
+        5: '5 - It\'s okay', 6: '6 - Pretty good', 7: '7 - Good', 8: '8 - Really good',
+        9: '9 - Love it', 10: '10 - Dream job'
+      };
+      display.textContent = labels[value] || value;
+    }
+
+    function updateSocialDisplay(value) {
+      const display = document.getElementById('social-display');
+      const labels = {
+        1: '1 - Very lonely', 2: '2 - Quite lonely', 3: '3 - Somewhat lonely',
+        4: '4 - Could be better', 5: '5 - It\'s okay', 6: '6 - Pretty good',
+        7: '7 - Good', 8: '8 - Very satisfied', 9: '9 - Great', 10: '10 - Amazing'
+      };
+      display.textContent = labels[value] || value;
+    }
+
+    function updateFitnessDisplay(value) {
+      const display = document.getElementById('fitness-display');
+      const labels = {
+        1: '1 - Very unfit', 2: '2 - Poor', 3: '3 - Below average', 4: '4 - Slightly below',
+        5: '5 - Average', 6: '6 - Above average', 7: '7 - Good', 8: '8 - Very good',
+        9: '9 - Excellent', 10: '10 - Athletic'
+      };
+      display.textContent = labels[value] || value;
+    }
+
+    function updateLifestyleDisplay(value) {
+      const display = document.getElementById('lifestyle-display');
+      const labels = {
+        1: '1 - Very unhappy', 2: '2 - Unhappy', 3: '3 - Somewhat unhappy',
+        4: '4 - Could be better', 5: '5 - It\'s okay', 6: '6 - Pretty good',
+        7: '7 - Good', 8: '8 - Very satisfied', 9: '9 - Great', 10: '10 - Living my best life'
+      };
+      display.textContent = labels[value] || value;
+    }
+
+    function updateCreativityDisplay(value) {
+      const display = document.getElementById('creativity-display');
+      const labels = {
+        1: '1 - Not creative', 2: '2 - Slightly creative', 3: '3 - Somewhat creative',
+        4: '4 - Below average', 5: '5 - Moderately creative', 6: '6 - Above average',
+        7: '7 - Creative', 8: '8 - Very creative', 9: '9 - Highly creative', 10: '10 - Extremely creative'
+      };
+      display.textContent = labels[value] || value;
+    }
+
+    function updateAdventureDisplay(value) {
+      const display = document.getElementById('adventure-display');
+      const labels = {
+        1: '1 - Very cautious', 2: '2 - Cautious', 3: '3 - Somewhat cautious',
+        4: '4 - Below average', 5: '5 - Moderately adventurous', 6: '6 - Above average',
+        7: '7 - Adventurous', 8: '8 - Very adventurous', 9: '9 - Highly adventurous', 10: '10 - Extreme adventurer'
+      };
+      display.textContent = labels[value] || value;
+    }
+
+    // Profile completion tracking
+    function updateProfileCompletion() {
+      const categories = ['mentalHealthProfile', 'financeProfile', 'careerProfile', 'relationshipsProfile', 'fitnessProfile', 'lifestyleProfile', 'educationProfile', 'familyProfile', 'creativityProfile', 'spiritualityProfile', 'travelProfile', 'communityProfile'];
+      let completedCategories = 0;
+      
+      categories.forEach(cat => {
+        if (localStorage.getItem(cat)) {
+          completedCategories++;
+        }
+      });
+      
+      const percentage = Math.round((completedCategories / categories.length) * 100);
+      document.getElementById('completion-percentage').textContent = percentage + '%';
+      document.getElementById('completion-bar').style.width = percentage + '%';
+    }
+
+    // Enhanced data quality tracking
+    function updateDataQuality(categoryType) {
+      const indicator = document.getElementById(categoryType + '-data-quality');
+      if (!indicator) return;
+      
+      // Count filled fields for this category
+      const form = document.getElementById(categoryType + '-form') || document.querySelector(`form[id*="${categoryType}"]`);
+      if (!form) return;
+      
+      const inputs = form.querySelectorAll('input, select, textarea');
+      let filledCount = 0;
+      let totalCount = 0;
+      
+      inputs.forEach(input => {
+        if (input.type !== 'submit' && input.name) {
+          totalCount++;
+          if ((input.type === 'range' && input.value !== '5') || 
+              (input.type !== 'range' && input.value.trim())) {
+            filledCount++;
+          }
+        }
+      });
+      
+      const completionRatio = totalCount > 0 ? filledCount / totalCount : 0;
+      
+      if (completionRatio >= 0.8) {
+        indicator.className = 'data-quality-indicator quality-excellent';
+        indicator.textContent = 'Excellent! This detail will give you highly personalized advice.';
+      } else if (completionRatio >= 0.6) {
+        indicator.className = 'data-quality-indicator quality-good';
+        indicator.textContent = 'Good detail level. AI can provide solid personalized advice.';
+      } else if (completionRatio >= 0.4) {
+        indicator.className = 'data-quality-indicator quality-basic';
+        indicator.textContent = 'Basic info collected. Add more details for better AI advice!';
+      } else {
+        indicator.className = 'data-quality-indicator quality-basic';
+        indicator.textContent = 'Please complete more questions above for personalized advice.';
+      }
+    }
+
+    // Form submission handlers
+    function collectFormData(formId, profileKey, categoryName) {
+      const form = document.getElementById(formId);
+      if (!form) return;
+      
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        const data = {};
+        
+        // Collect all form data
+        for (let [key, value] of formData.entries()) {
+          if (key.includes('Priorities')) {
+            // Handle checkbox arrays
+            if (!data[key]) data[key] = [];
+            data[key].push(value);
+          } else {
+            data[key] = value;
+          }
+        }
+        
+        // Add timestamp
+        data.completedAt = new Date().toISOString();
+        
+        localStorage.setItem(profileKey, JSON.stringify(data));
+        redirectToAdvice(categoryName);
+      });
+    }
+
+    // Initialize form handlers for all categories
+    const categoryMappings = {
+      'mental': { key: 'mentalHealthProfile', name: 'Mental Health' },
+      'finance': { key: 'financeProfile', name: 'Finance' },
+      'career': { key: 'careerProfile', name: 'Career' },
+      'relationships': { key: 'relationshipsProfile', name: 'Relationships' },
+      'fitness': { key: 'fitnessProfile', name: 'Fitness' },
+      'lifestyle': { key: 'lifestyleProfile', name: 'Lifestyle' },
+      'education': { key: 'educationProfile', name: 'Education' },
+      'family': { key: 'familyProfile', name: 'Family' },
+      'creativity': { key: 'creativityProfile', name: 'Creativity' },
+      'spirituality': { key: 'spiritualityProfile', name: 'Spirituality' },
+      'travel': { key: 'travelProfile', name: 'Travel' },
+      'community': { key: 'communityProfile', name: 'Community' }
+    };
+
+    Object.keys(categoryMappings).forEach(cat => {
+      const mapping = categoryMappings[cat];
+      collectFormData(cat + '-form', mapping.key, mapping.name);
+    });
+
+    function redirectToAdvice(categoryName) {
+      alert(`${categoryName} profile saved! Getting your personalized advice...`);
+      updateProfileCompletion();
+      window.location.href = 'ai-advice.html';
+    }
+
+    // Initialize data quality indicators on load
+    window.addEventListener('load', () => {
+      Object.keys(categoryMappings).forEach(cat => {
+        updateDataQuality(cat);
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - 🧠 Knowme AI</title>
+  <style>
+    body {
+      background: #0d0d0d;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .login-container {
+      background: #1a1a1a;
+      padding: 40px;
+      border-radius: 15px;
+      border: 1px solid cyan;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo h1 {
+      color: cyan;
+      font-size: 2.5rem;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .logo p {
+      color: #888;
+      margin: 5px 0 0 0;
+      font-size: 0.9rem;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #333;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      background: #333;
+      transition: background 0.3s;
+      border: none;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .tab.active {
+      background: cyan;
+      color: black;
+      font-weight: 600;
+    }
+
+    .form-section {
+      display: none;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: cyan;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #333;
+      color: white;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: cyan;
+      box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: cyan;
+      color: black;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #00cccc;
+    }
+
+    .error-message {
+      color: #ff5722;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .success-message {
+      color: #4caf50;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .guest-option {
+      margin-top: 20px;
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid #444;
+    }
+
+    .guest-link {
+      color: #888;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .guest-link:hover {
+      color: cyan;
+    }
+
+    .user-info {
+      background: #2a2a2a;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .logout-btn {
+      background: #ff5722;
+      margin-top: 10px;
+    }
+
+    .logout-btn:hover {
+      background: #d84315;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <!-- Welcome back section (hidden initially) -->
+    <div id="logged-in-section" class="user-info" style="display: none;">
+      <div class="logo">
+        <h1>🧠 Knowme AI</h1>
+        <p>Welcome back!</p>
+      </div>
+      <p>Hello, <span id="username-display"></span>!</p>
+      <button onclick="goToApp()">Continue to App</button>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Login/Signup section -->
+    <div id="auth-section">
+      <div class="logo">
+        <h1>🧠 Knowme AI</h1>
+        <p>Your Personal Decision Assistant</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('login')">Login</button>
+        <button class="tab" onclick="showTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- Login Form -->
+      <div class="form-section active" id="login-section">
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-username">Username</label>
+            <input type="text" id="login-username" name="username" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" name="password" required>
+          </div>
+          <button type="submit">Login</button>
+          <div id="login-message"></div>
+        </form>
+      </div>
+
+      <!-- Signup Form -->
+      <div class="form-section" id="signup-section">
+        <form id="signup-form">
+          <div class="form-group">
+            <label for="signup-username">Choose Username</label>
+            <input type="text" id="signup-username" name="username" required>
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" name="password" required>
+          </div>
+          <div class="form-group">
+            <label for="signup-email">Email (optional)</label>
+            <input type="email" id="signup-email" name="email">
+          </div>
+          <button type="submit">Create Account</button>
+          <div id="signup-message"></div>
+        </form>
+      </div>
+
+      <div class="guest-option">
+        <a href="categories.html" class="guest-link">Continue as guest (data won't be saved)</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check if user is already logged in
+    window.addEventListener('load', () => {
+      const currentUser = localStorage.getItem('currentUser');
+      if (currentUser) {
+        showLoggedInState(currentUser);
+      }
+    });
+
+    // Tab switching
+    function showTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Update form sections
+      document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
+      document.getElementById(tabName + '-section').classList.add('active');
+    }
+
+    // Simple user storage system (localStorage based)
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('users') || '{}');
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    function saveUserProfile(username, profileData) {
+      const userProfiles = JSON.parse(localStorage.getItem('userProfiles') || '{}');
+      if (!userProfiles[username]) {
+        userProfiles[username] = {};
+      }
+      Object.assign(userProfiles[username], profileData);
+      localStorage.setItem('userProfiles', JSON.stringify(userProfiles));
+    }
+
+    function loadUserProfile(username) {
+      const userProfiles = JSON.parse(localStorage.getItem('userProfiles') || '{}');
+      return userProfiles[username] || {};
+    }
+
+    // Signup handler
+    document.getElementById('signup-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('signup-username').value.trim();
+      const password = document.getElementById('signup-password').value;
+      const email = document.getElementById('signup-email').value.trim();
+      const messageEl = document.getElementById('signup-message');
+
+      if (username.length < 3) {
+        messageEl.innerHTML = '<div class="error-message">Username must be at least 3 characters</div>';
+        return;
+      }
+
+      if (password.length < 4) {
+        messageEl.innerHTML = '<div class="error-message">Password must be at least 4 characters</div>';
+        return;
+      }
+
+      const users = getUsers();
+      
+      if (users[username]) {
+        messageEl.innerHTML = '<div class="error-message">Username already exists</div>';
+        return;
+      }
+
+      // Create new user
+      users[username] = {
+        password: password, // In real app, this would be hashed
+        email: email,
+        createdAt: new Date().toISOString()
+      };
+
+      saveUsers(users);
+      localStorage.setItem('currentUser', username);
+      
+      messageEl.innerHTML = '<div class="success-message">Account created successfully!</div>';
+      
+      setTimeout(() => {
+        showLoggedInState(username);
+      }, 1000);
+    });
+
+    // Login handler
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+      const messageEl = document.getElementById('login-message');
+
+      const users = getUsers();
+      
+      if (!users[username]) {
+        messageEl.innerHTML = '<div class="error-message">Username not found</div>';
+        return;
+      }
+
+      if (users[username].password !== password) {
+        messageEl.innerHTML = '<div class="error-message">Incorrect password</div>';
+        return;
+      }
+
+      localStorage.setItem('currentUser', username);
+      
+      // Load user's profile data
+      const userProfile = loadUserProfile(username);
+      
+      // Set individual profile data back to localStorage for the app to use
+      Object.keys(userProfile).forEach(key => {
+        if (userProfile[key]) {
+          localStorage.setItem(key, JSON.stringify(userProfile[key]));
+        }
+      });
+
+      messageEl.innerHTML = '<div class="success-message">Login successful!</div>';
+      
+      setTimeout(() => {
+        showLoggedInState(username);
+      }, 1000);
+    });
+
+    function showLoggedInState(username) {
+      document.getElementById('auth-section').style.display = 'none';
+      document.getElementById('logged-in-section').style.display = 'block';
+      document.getElementById('username-display').textContent = username;
+    }
+
+    function logout() {
+      localStorage.removeItem('currentUser');
+      // Optionally clear profile data
+      const profileKeys = ['mentalHealthProfile', 'financeProfile', 'careerProfile', 'relationshipsProfile', 'fitnessProfile', 'lifestyleProfile'];
+      profileKeys.forEach(key => localStorage.removeItem(key));
+      
+      location.reload();
+    }
+
+    function goToApp() {
+      window.location.href = 'categories.html';
+    }
+
+    // Save profile data when user completes forms (call this from your profile forms)
+    function saveCurrentUserProfile() {
+      const currentUser = localStorage.getItem('currentUser');
+      if (currentUser) {
+        const profileData = {
+          mentalHealthProfile: JSON.parse(localStorage.getItem('mentalHealthProfile') || '{}'),
+          financeProfile: JSON.parse(localStorage.getItem('financeProfile') || '{}'),
+          careerProfile: JSON.parse(localStorage.getItem('careerProfile') || '{}'),
+          relationshipsProfile: JSON.parse(localStorage.getItem('relationshipsProfile') || '{}'),
+          fitnessProfile: JSON.parse(localStorage.getItem('fitnessProfile') || '{}'),
+          lifestyleProfile: JSON.parse(localStorage.getItem('lifestyleProfile') || '{}')
+        };
+        
+        saveUserProfile(currentUser, profileData);
+      }
+    }
+
+    // Make this function available globally for other pages to use
+    window.saveCurrentUserProfile = saveCurrentUserProfile;
+  </script>
+
+</body>
+</html>
