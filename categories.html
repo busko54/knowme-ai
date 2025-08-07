@@ -2,16 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🧠 Knowme AI - Build Your AI Profile</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧠 Knowme AI - Select Your Life Areas</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
+      margin: 0;
       font-family: "Segoe UI", -apple-system, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
@@ -23,7 +17,7 @@
     .header {
       padding: 2rem 2rem 1rem;
       text-align: center;
-      border-bottom: 1px solid rgba(118, 169, 255, 0.2);
+      border-bottom: 1px solid rgba(0, 255, 255, 0.2);
       position: relative;
     }
 
@@ -41,7 +35,7 @@
       to { text-shadow: 0 0 30px rgba(118, 169, 255, 0.8), 0 0 40px rgba(118, 169, 255, 0.6); }
     }
 
-    /* Tier status - top right */
+    /* Tier status indicator - moved to top right */
     .tier-status {
       position: absolute;
       top: 2rem;
@@ -51,7 +45,6 @@
       font-size: 0.9rem;
       font-weight: 600;
       backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
     }
 
     .tier-free {
@@ -68,8 +61,127 @@
 
     .tagline {
       font-size: 0.9rem;
-      color: #ccc;
+      color: #888;
       font-weight: 400;
+    }
+
+    /* Quick access section for existing users */
+    .quick-access-section {
+      background: linear-gradient(145deg, rgba(76, 175, 80, 0.1) 0%, rgba(56, 142, 60, 0.1) 100%);
+      border: 2px solid rgba(76, 175, 80, 0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 600px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quick-access-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.1), transparent);
+      animation: quickShine 3s infinite;
+    }
+
+    @keyframes quickShine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .quick-access-content p {
+      color: #4CAF50;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .quick-access-btn {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 25px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .quick-access-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+    }
+
+    .brain-container {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem 0;
+    }
+
+    .brain {
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, #76a9ff 0%, #4f89d4 50%, #2a5a8a 100%);
+      border-radius: 50%;
+      z-index: 2;
+      position: relative;
+      box-shadow: 0 0 30px rgba(118, 169, 255, 0.6);
+      animation: brainPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes brainPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(118, 169, 255, 0.6); }
+      50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(118, 169, 255, 0.8); }
+    }
+
+    .brain::after {
+      content: '🧠';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 4rem;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+    }
+
+    .wire {
+      position: absolute;
+      width: 3px;
+      background: linear-gradient(to bottom, #76a9ff, transparent);
+      animation: wireFlow 2s infinite;
+      border-radius: 2px;
+    }
+
+    @keyframes wireFlow {
+      0% { height: 0; opacity: 0; }
+      50% { height: 80px; opacity: 1; }
+      100% { height: 0; opacity: 0; }
+    }
+
+    .wire:nth-child(2) { animation-delay: 0.3s; }
+    .wire:nth-child(3) { animation-delay: 0.6s; }
+    .wire:nth-child(4) { animation-delay: 0.9s; }
+
+    h1 {
+      text-align: center;
+      margin: 1rem 0;
+      color: #76a9ff;
+      font-size: 1.8rem;
+      font-weight: 500;
+      text-shadow: 0 0 15px rgba(118, 169, 255, 0.4);
     }
 
     /* Back button */
@@ -94,137 +206,13 @@
       transform: translateX(-3px);
     }
 
-    /* Quick access - conditional */
-    .quick-access-section {
-      background: linear-gradient(145deg, rgba(76, 175, 80, 0.15) 0%, rgba(56, 142, 60, 0.15) 100%);
-      border: 2px solid rgba(76, 175, 80, 0.4);
-      border-radius: 20px;
-      padding: 1.5rem;
-      margin: 2rem auto;
-      max-width: 600px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      display: none; /* Hidden by default, shown when user has profile */
-    }
-
-    .quick-access-section::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.1), transparent);
-      animation: quickShine 3s infinite;
-    }
-
-    @keyframes quickShine {
-      0% { left: -100%; }
-      100% { left: 100%; }
-    }
-
-    .quick-access-btn {
-      background: linear-gradient(135deg, #4CAF50, #45a049);
-      color: white;
-      border: none;
-      padding: 14px 28px;
-      border-radius: 25px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 1rem;
-      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
-    }
-
-    .quick-access-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
-    }
-
-    /* Main content */
-    .main-content {
-      padding: 0 2rem;
+    /* Category sections */
+    .categories-section {
+      padding: 0 2rem 2rem;
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    /* Primary CTA Section */
-    .primary-cta {
-      text-align: center;
-      margin: 2rem 0;
-      padding: 2rem;
-      background: linear-gradient(145deg, rgba(118, 169, 255, 0.1) 0%, rgba(79, 137, 212, 0.1) 100%);
-      border-radius: 20px;
-      border: 2px solid rgba(118, 169, 255, 0.3);
-    }
-
-    .primary-cta h1 {
-      color: #76a9ff;
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-
-    .primary-cta p {
-      font-size: 1.1rem;
-      color: #ddd;
-      margin-bottom: 1.5rem;
-    }
-
-    .completion-preview {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    .completion-level {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1rem;
-      border-radius: 10px;
-      font-size: 0.9rem;
-    }
-
-    .completion-level.basic { border-left: 4px solid #ff9800; }
-    .completion-level.good { border-left: 4px solid #2196F3; }
-    .completion-level.excellent { border-left: 4px solid #4CAF50; }
-
-    /* Social proof */
-    .social-proof {
-      text-align: center;
-      margin: 2rem 0;
-      padding: 1.5rem;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 15px;
-    }
-
-    .social-proof p {
-      color: #76a9ff;
-      margin-bottom: 1rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    .stats {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .stat {
-      font-size: 0.9rem;
-      color: #ccc;
-    }
-
-    .stat strong {
-      color: #4CAF50;
-      display: block;
-      font-size: 1.2rem;
-    }
-
-    /* Categories sections */
     .section-header {
       text-align: center;
       margin: 3rem 0 2rem;
@@ -265,10 +253,6 @@
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(10px);
-      min-height: 200px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
     }
 
     .category::before {
@@ -307,32 +291,28 @@
       color: #76a9ff;
     }
 
-    .category-desc {
-      font-size: 0.9rem;
-      color: #ccc;
-      line-height: 1.4;
-    }
-
-    /* Enhanced completion indicators */
+    /* Category completion indicators */
     .category.completed {
       border-color: #4CAF50;
-      background: linear-gradient(145deg, rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.1) 100%);
-      transform: scale(0.98);
-      opacity: 0.9;
+      background: linear-gradient(145deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
     }
 
     .category.completed::after {
-      content: '✓ COMPLETED';
+      content: '✓';
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 15px;
+      right: 15px;
+      width: 30px;
+      height: 30px;
       background: #4CAF50;
       color: white;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      z-index: 2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
     }
 
     .category.completed .category-title {
@@ -343,14 +323,14 @@
       content: ' • Click to edit';
       color: #4CAF50;
       font-style: italic;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
     }
 
     .category:not(.completed) .category-desc::after {
       content: ' • Click to complete';
       color: #76a9ff;
       font-style: italic;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
     }
 
     /* Premium locked categories */
@@ -368,16 +348,21 @@
     }
 
     .category.premium-locked::after {
-      content: '🔒 PREMIUM';
+      content: '🔒';
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 15px;
+      right: 15px;
+      width: 30px;
+      height: 30px;
       background: #ff9800;
       color: white;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      font-weight: 600;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 8px rgba(255, 152, 0, 0.4);
     }
 
     .category.premium-locked .category-title {
@@ -388,84 +373,71 @@
       color: #aaa;
     }
 
-    /* Progress tracking */
-    .progress-section {
-      background: rgba(118, 169, 255, 0.1);
-      border: 2px solid rgba(118, 169, 255, 0.3);
-      border-radius: 20px;
-      padding: 2rem;
-      margin: 2rem 0;
-      text-align: center;
+    .category.premium-locked .category-desc::after {
+      content: ' • Premium Only';
+      color: #ff9800;
+      font-style: italic;
+      font-size: 0.85rem;
     }
 
-    .progress-bar-container {
-      background: rgba(0, 0, 0, 0.3);
-      height: 12px;
-      border-radius: 6px;
-      margin: 1rem 0;
+    /* Premium upgrade section */
+    .premium-upsell {
+      background: linear-gradient(145deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 193, 7, 0.1) 100%);
+      border: 2px solid rgba(255, 152, 0, 0.5);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin: 3rem auto;
+      max-width: 800px;
+      text-align: center;
+      position: relative;
       overflow: hidden;
     }
 
-    .progress-bar {
-      background: linear-gradient(90deg, #4CAF50, #76a9ff);
-      height: 100%;
-      border-radius: 6px;
-      width: 0%;
-      transition: width 0.8s ease;
-      position: relative;
-    }
-
-    .progress-bar::after {
+    .premium-upsell::before {
       content: '';
       position: absolute;
       top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      animation: progressShine 2s infinite;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 193, 7, 0.1), transparent);
+      animation: premiumShine 4s infinite;
     }
 
-    @keyframes progressShine {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
+    @keyframes premiumShine {
+      0% { left: -100%; }
+      100% { left: 100%; }
     }
 
-    /* Continue section - moved up */
-    .continue-section {
-      text-align: center;
-      padding: 3rem 2rem;
-      margin: 2rem 0;
-    }
-
-    .continue-btn {
-      background: linear-gradient(135deg, #4CAF50, #45a049);
-      color: white;
-      border: none;
-      padding: 18px 36px;
-      border-radius: 30px;
-      font-size: 1.2rem;
+    .premium-title {
+      color: #ffc107;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
       font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
-      text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
-    .continue-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
+    .premium-benefits {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+      text-align: left;
     }
 
-    .continue-btn:disabled {
-      background: #666;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
+    .premium-benefit {
+      background: rgba(255, 193, 7, 0.1);
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 193, 7, 0.3);
     }
 
-    /* Additional context - premium only */
+    .premium-benefit strong {
+      color: #ffc107;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Additional Context Section */
     .additional-context-section {
       background: linear-gradient(145deg, rgba(26, 26, 26, 0.8) 0%, rgba(18, 18, 18, 0.9) 100%);
       border: 2px solid rgba(255, 193, 7, 0.3);
@@ -477,6 +449,22 @@
       position: relative;
       overflow: hidden;
       min-height: 400px;
+    }
+
+    .additional-context-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 193, 7, 0.1), transparent);
+      animation: contextShine 4s infinite;
+    }
+
+    @keyframes contextShine {
+      0% { left: -100%; }
+      100% { left: 100%; }
     }
 
     .context-title {
@@ -504,6 +492,7 @@
     .lock-content {
       max-width: 500px;
       padding: 2rem;
+      text-align: center;
     }
 
     .lock-content h3 {
@@ -512,48 +501,123 @@
       font-size: 1.8rem;
     }
 
-    /* Premium upsell - consolidated */
-    .premium-upsell {
-      background: linear-gradient(145deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 193, 7, 0.1) 100%);
-      border: 2px solid rgba(255, 152, 0, 0.5);
-      border-radius: 20px;
-      padding: 2.5rem;
-      margin: 3rem auto;
-      max-width: 800px;
-      text-align: center;
+    .context-content {
       position: relative;
-      overflow: hidden;
+      z-index: 1;
     }
 
-    .premium-title {
-      color: #ffc107;
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      font-weight: 700;
+    .context-subtitle {
+      color: #ccc;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      font-size: 1.1rem;
     }
 
-    .value-stack {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin: 2rem 0;
+    .context-prompts {
       text-align: left;
-    }
-
-    .value-tier {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 1.5rem;
+      margin: 2rem 0;
+      background: rgba(255, 193, 7, 0.05);
+      padding: 2rem;
       border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 193, 7, 0.2);
     }
 
-    .value-tier h3 {
+    .context-prompts h4 {
+      color: #ffc107;
       margin-bottom: 1rem;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
 
-    .value-tier.free h3 { color: #ff9800; }
-    .value-tier.premium h3 { color: #4CAF50; }
+    .context-prompts ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .context-prompts li {
+      color: #ddd;
+      margin: 0.8rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .context-prompts li::before {
+      content: '💭';
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .context-textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 20px;
+      border-radius: 15px;
+      border: 2px solid rgba(255, 193, 7, 0.3);
+      background: rgba(0, 0, 0, 0.3);
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      font-family: inherit;
+      line-height: 1.6;
+      resize: vertical;
+    }
+
+    .context-textarea:focus {
+      outline: none;
+      border-color: #ffc107;
+      box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.1);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .context-textarea::placeholder {
+      color: #888;
+      line-height: 1.6;
+    }
+
+    .save-context-btn {
+      background: linear-gradient(135deg, #ffc107, #ff9800);
+      color: #000;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 25px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      margin: 0 10px;
+      box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
+    }
+
+    .save-context-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255, 193, 7, 0.4);
+    }
+
+    .save-context-btn:disabled {
+      background: #666;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .skip-context-btn {
+      background: transparent;
+      color: #888;
+      border: 2px solid #555;
+      padding: 14px 30px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      margin: 0 10px;
+    }
+
+    .skip-context-btn:hover {
+      color: #76a9ff;
+      border-color: #76a9ff;
+      transform: translateY(-2px);
+    }
 
     .upgrade-btn {
       background: linear-gradient(135deg, #4CAF50, #45a049);
@@ -574,8 +638,140 @@
       box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
     }
 
-    /* Responsive design */
+    .character-count {
+      text-align: right;
+      color: #888;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    .progress-hint {
+      text-align: center;
+      margin: 1rem 0;
+      padding: 1rem;
+      background: rgba(26, 26, 26, 0.5);
+      border: 1px solid rgba(118, 169, 255, 0.2);
+      border-radius: 10px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    /* Continue button */
+    .continue-section {
+      text-align: center;
+      padding: 3rem 2rem;
+      margin-top: 2rem;
+    }
+
+    .continue-btn {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      border: none;
+      padding: 18px 36px;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .continue-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
+    }
+
+    /* Premium modal styles */
+    .premium-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .premium-modal-content {
+      background: linear-gradient(135deg, #1a1a1a, #2d1b69);
+      padding: 3rem;
+      border-radius: 20px;
+      max-width: 600px;
+      text-align: center;
+      border: 2px solid #ffc107;
+      color: white;
+      margin: 2rem;
+    }
+
+    .premium-modal h3 {
+      color: #ffc107;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+    }
+
+    /* Status messages */
+    .status-message {
+      margin-top: 15px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .status-success {
+      background: rgba(76, 175, 80, 0.2);
+      border: 2px solid rgba(76, 175, 80, 0.5);
+      color: #4CAF50;
+    }
+
+    .status-error {
+      background: rgba(244, 67, 54, 0.2);
+      border: 2px solid rgba(244, 67, 54, 0.5);
+      color: #f44336;
+    }
+
+    .status-info {
+      background: rgba(33, 150, 243, 0.2);
+      border: 2px solid rgba(33, 150, 243, 0.5);
+      color: #2196F3;
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
+      .logo {
+        font-size: 2rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        margin: 1.5rem 0 1rem;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .category {
+        padding: 1.5rem;
+      }
+
+      .back-btn {
+        top: 1rem;
+        left: 1rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+
       .tier-status {
         position: static;
         display: inline-block;
@@ -586,41 +782,8 @@
         text-align: center;
       }
 
-      .back-btn {
-        top: 1rem;
-        left: 1rem;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-      }
-
-      .logo {
-        font-size: 2rem;
-      }
-
-      .grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-      }
-
-      .category {
-        padding: 1.5rem;
-        min-height: 180px;
-      }
-
-      .primary-cta h1 {
-        font-size: 1.6rem;
-      }
-
-      .completion-preview {
-        grid-template-columns: 1fr;
-      }
-
-      .stats {
-        gap: 1rem;
-      }
-
-      .value-stack {
-        grid-template-columns: 1fr;
+      .categories-section {
+        padding: 0 1rem 2rem;
       }
 
       .additional-context-section {
@@ -632,18 +795,35 @@
         margin: 2rem 1rem;
         padding: 2rem;
       }
-    }
 
-    /* Loading skeleton for better perceived performance */
-    .skeleton {
-      background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
-      background-size: 200% 100%;
-      animation: skeleton-loading 1.5s infinite;
-    }
+      .context-title {
+        font-size: 1.4rem;
+      }
 
-    @keyframes skeleton-loading {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
+      .save-context-btn, .skip-context-btn {
+        width: 100%;
+        margin: 0.5rem 0;
+      }
+
+      .premium-benefits {
+        grid-template-columns: 1fr;
+      }
+
+      .premium-modal-content {
+        margin: 1rem;
+        padding: 2rem;
+      }
+
+      .quick-access-section {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+
+      .quick-access-btn {
+        width: 100%;
+        font-size: 1rem;
+        padding: 14px 24px;
+      }
     }
   </style>
 </head>
@@ -652,540 +832,92 @@
   <a href="index.html" class="back-btn">← Back to Home</a>
 
   <div class="header">
-    <div class="tier-status" id="tier-status">🆓 Free Plan</div>
+    <!-- Tier Status moved to top right -->
+    <div class="tier-status" id="tier-status">
+      🆓 Free Plan
+    </div>
+    
     <div class="logo">🧠 Knowme AI</div>
     <div class="tagline">Your Personal Decision Intelligence</div>
   </div>
 
-  <!-- Quick Access for Existing Users (Conditional) -->
-  <div class="quick-access-section" id="quick-access-section">
+  <!-- Quick Access for Existing Users -->
+  <div class="quick-access-section">
     <div class="quick-access-content">
-      <p><strong>👋 Welcome back!</strong> Ready to continue building your profile?</p>
-      <button class="quick-access-btn" onclick="continueProfile()">
-        Continue Building My Profile
+      <p>Already have your profile set up?</p>
+      <button class="quick-access-btn" onclick="window.location.href='ai-advice.html'">
+        ⚡ Go Straight to AI Advice
       </button>
     </div>
   </div>
 
-  <div class="main-content">
-    <!-- Primary CTA Section -->
-    <div class="primary-cta">
-      <h1>Build Your Complete AI Profile</h1>
-      <p>The more categories you complete, the smarter and more personalized your AI advice becomes.</p>
-      
-      <div class="completion-preview">
-        <div class="completion-level basic">
-          <strong>1-2 Categories</strong><br>
-          Basic personalized advice
-        </div>
-      
-      <!-- Premium Content (Hidden for free users) -->
-      <div class="context-content" id="context-content" style="display: none;">
-        <div class="context-subtitle">
-          <span style="color: #4CAF50;">💎 Premium Unlocked!</span><br>
-          Share your complete story for truly personalized AI advice.
-        </div>
-        
-        <textarea class="context-textarea" id="additional-context" 
-                  placeholder="Tell me about your unique situation, background, goals, challenges, or anything else that would help me give you better advice..."
-                  maxlength="2000"
-                  style="width: 100%; min-height: 150px; padding: 20px; border-radius: 15px; border: 2px solid rgba(255, 193, 7, 0.3); background: rgba(0, 0, 0, 0.3); color: white; font-size: 1rem; margin: 1rem 0; font-family: inherit; line-height: 1.6; resize: vertical;"></textarea>
-        
-        <div style="text-align: right; color: #888; font-size: 0.9rem; margin-top: 5px;" id="char-count">0 / 2000 characters</div>
-        
-        <button style="background: linear-gradient(135deg, #ffc107, #ff9800); color: #000; border: none; padding: 16px 32px; border-radius: 25px; font-weight: 700; cursor: pointer; font-size: 1.1rem; margin: 10px;" onclick="saveAdditionalContext()">Save My Context</button>
-        <button style="background: transparent; color: #888; border: 2px solid #555; padding: 14px 30px; border-radius: 25px; cursor: pointer; font-size: 1rem; margin: 10px;" onclick="skipContext()">Skip This Step</button>
-        
-        <div id="status-message"></div>
-      </div>
-    </div>
-
-    <!-- Premium Upsell - Consolidated -->
-    <div class="premium-upsell" id="premium-upsell">
-      <div class="premium-title">🚀 Unlock Your Full Potential</div>
-      
-      <div class="value-stack">
-        <div class="value-tier free">
-          <h3>🆓 Free Plan</h3>
-          <p>✅ 6 core life categories<br>
-          ✅ Basic AI advice<br>
-          ✅ 5 questions per month<br>
-          ✅ Decision tracking</p>
-        </div>
-        
-        <div class="value-tier premium">
-          <h3>💎 Premium Plan</h3>
-          <p>✅ All 12 life categories<br>
-          ✅ Advanced multi-step analysis<br>
-          ✅ Unlimited questions<br>
-          ✅ Personal context sharing<br>
-          ✅ Complete decision history<br>
-          ✅ Real-time data integration</p>
-        </div>
-      </div>
-
-      <p style="font-size: 1.4rem; margin: 2rem 0; font-weight: 600;">
-        Only <span style="color: #4CAF50;">$9.99/month</span> - Cancel anytime
-      </p>
-
-      <button class="upgrade-btn" onclick="upgradeToePremium()">
-        Upgrade to Premium Now
-      </button>
-      
-      <p style="margin-top: 1rem; font-size: 0.9rem; color: #aaa;">
-        30-day money-back guarantee • Secure payment
-      </p>
-    </div>
+  <div class="brain-container">
+    <div class="brain"></div>
+    <!-- animated wires -->
+    <div class="wire" style="top: 120px; left: 35%;"></div>
+    <div class="wire" style="top: 120px; left: 45%;"></div>
+    <div class="wire" style="top: 120px; left: 55%;"></div>
+    <div class="wire" style="top: 120px; left: 65%;"></div>
   </div>
 
-  <script>
-    // User tier management
-    function getUserTier() {
-      return localStorage.getItem('userTier') || 'free';
-    }
+  <h1>Build Your Complete AI Profile</h1>
 
-    function isPremiumUser() {
-      return getUserTier() === 'premium';
-    }
+  <div class="progress-hint">
+    💡 <strong>Tip:</strong> Complete multiple areas for better AI advice. The more Knowme knows about you, the smarter its recommendations become.
+  </div>
 
-    // Profile data
-    const profiles = {
-      'mental-health': JSON.parse(localStorage.getItem('mentalHealthProfile') || '{}'),
-      'career': JSON.parse(localStorage.getItem('careerProfile') || '{}'),
-      'finance': JSON.parse(localStorage.getItem('financeProfile') || '{}'),
-      'fitness': JSON.parse(localStorage.getItem('fitnessProfile') || '{}'),
-      'relationships': JSON.parse(localStorage.getItem('relationshipsProfile') || '{}'),
-      'lifestyle': JSON.parse(localStorage.getItem('lifestyleProfile') || '{}'),
-      'education': JSON.parse(localStorage.getItem('educationProfile') || '{}'),
-      'family': JSON.parse(localStorage.getItem('familyProfile') || '{}'),
-      'creativity': JSON.parse(localStorage.getItem('creativityProfile') || '{}'),
-      'spirituality': JSON.parse(localStorage.getItem('spiritualityProfile') || '{}'),
-      'travel': JSON.parse(localStorage.getItem('travelProfile') || '{}'),
-      'community': JSON.parse(localStorage.getItem('communityProfile') || '{}')
-    };
-
-    // Update tier status display
-    function updateTierStatus() {
-      const tierEl = document.getElementById('tier-status');
-      const isPremium = isPremiumUser();
-      
-      if (isPremium) {
-        tierEl.innerHTML = '💎 Premium Plan';
-        tierEl.className = 'tier-status tier-premium';
-      } else {
-        tierEl.innerHTML = '🆓 Free Plan';
-        tierEl.className = 'tier-status tier-free';
-      }
-    }
-
-    // Update quick access visibility
-    function updateQuickAccess() {
-      const hasProfile = Object.keys(profiles).some(key => 
-        Object.keys(profiles[key]).length > 0
-      );
-      
-      const quickAccess = document.getElementById('quick-access-section');
-      if (hasProfile) {
-        quickAccess.style.display = 'block';
-      } else {
-        quickAccess.style.display = 'none';
-      }
-    }
-
-    // Continue profile function
-    function continueProfile() {
-      // Find first incomplete category
-      const coreCategories = ['mental-health', 'career', 'finance', 'fitness', 'relationships', 'lifestyle'];
-      const incompleteCategory = coreCategories.find(cat => Object.keys(profiles[cat]).length === 0);
-      
-      if (incompleteCategory) {
-        window.location.href = `category-form.html?category=${incompleteCategory}`;
-      } else {
-        // All core categories complete, go to AI advice
-        window.location.href = 'ai-advice.html';
-      }
-    }
-
-    // Mark completed categories
-    function markCompletedCategories() {
-      Object.keys(profiles).forEach(categoryKey => {
-        if (Object.keys(profiles[categoryKey]).length > 0) {
-          const categoryElement = document.querySelector(`[data-category="${categoryKey}"]`);
-          if (categoryElement) {
-            categoryElement.classList.add('completed');
-          }
-        }
-      });
-    }
-
-    // Update progress tracking
-    function updateProgress() {
-      const coreCategories = ['mental-health', 'career', 'finance', 'fitness', 'relationships', 'lifestyle'];
-      const completedCore = coreCategories.filter(cat => Object.keys(profiles[cat]).length > 0).length;
-      const totalCore = coreCategories.length;
-      
-      const percentage = (completedCore / totalCore) * 100;
-      
-      const progressBar = document.getElementById('progress-bar');
-      const progressText = document.getElementById('progress-text');
-      
-      progressBar.style.width = percentage + '%';
-      
-      if (completedCore === 0) {
-        progressText.textContent = 'Complete your first category to get started!';
-      } else if (completedCore < 3) {
-        progressText.textContent = `${completedCore}/${totalCore} categories completed - Good start! Add more for better advice.`;
-      } else if (completedCore < totalCore) {
-        progressText.textContent = `${completedCore}/${totalCore} categories completed - Excellent! You're getting great advice.`;
-      } else {
-        progressText.textContent = `${completedCore}/${totalCore} categories completed - Perfect! You're getting the best possible advice.`;
-      }
-    }
-
-    // Update continue button
-    function updateContinueButton() {
-      const coreCategories = ['mental-health', 'career', 'finance', 'fitness', 'relationships', 'lifestyle'];
-      const completedCore = coreCategories.filter(cat => Object.keys(profiles[cat]).length > 0).length;
-      
-      const continueBtn = document.getElementById('continue-btn');
-      const continueDesc = document.getElementById('continue-description');
-      
-      if (completedCore === 0) {
-        continueBtn.textContent = 'Complete at least 1 category first';
-        continueBtn.disabled = true;
-        continueDesc.textContent = 'Complete at least one category to get personalized AI advice';
-        continueDesc.style.color = '#ff9800';
-      } else {
-        continueBtn.textContent = 'Continue to AI Advice →';
-        continueBtn.disabled = false;
-        continueDesc.textContent = `${completedCore}/6 core categories completed - ${completedCore < 3 ? 'Good start!' : 'Excellent progress!'}`;
-        continueDesc.style.color = completedCore < 3 ? '#ffc107' : '#4CAF50';
-      }
-    }
-
-    // Proceed to AI advice
-    function proceedToAI() {
-      const coreCategories = ['mental-health', 'career', 'finance', 'fitness', 'relationships', 'lifestyle'];
-      const completedCore = coreCategories.filter(cat => Object.keys(profiles[cat]).length > 0).length;
-      
-      if (completedCore === 0) {
-        alert('💭 Please complete at least one category to get personalized advice!');
-        return;
-      }
-      
-      window.location.href = 'ai-advice.html';
-    }
-
-    // Premium modal functions
-    function showPremiumModal(categoryName) {
-      const modal = document.createElement('div');
-      modal.style.cssText = `
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0, 0, 0, 0.8); display: flex; align-items: center;
-        justify-content: center; z-index: 10000;
-      `;
-      
-      modal.innerHTML = `
-        <div style="background: linear-gradient(135deg, #1a1a1a, #2d1b69); padding: 3rem; border-radius: 20px; max-width: 600px; text-align: center; border: 2px solid #ffc107; color: white; margin: 2rem;">
-          <h3 style="color: #ffc107; margin-bottom: 1rem; font-size: 2rem;">🔒 Premium Feature</h3>
-          <p style="font-size: 1.2rem; margin-bottom: 2rem;">
-            <strong>${getCategoryDisplayName(categoryName)}</strong> is available with Premium
-          </p>
-          
-          <div style="background: rgba(255, 193, 7, 0.1); padding: 1.5rem; border-radius: 15px; margin: 2rem 0; text-align: left;">
-            <strong style="color: #ffc107;">Premium includes:</strong><br><br>
-            ✅ All 12 life categories<br>
-            ✅ Unlimited AI advice sessions<br>
-            ✅ Advanced multi-step analysis<br>
-            ✅ Personal context sharing<br>
-            ✅ Complete decision history
-          </div>
-
-          <p style="font-size: 1.3rem; margin: 1.5rem 0; font-weight: 600;">
-            Only $9.99/month • Cancel anytime
-          </p>
-          
-          <button onclick="upgradeToePremium()" style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; border: none; padding: 15px 30px; border-radius: 25px; font-size: 1.1rem; cursor: pointer; margin: 10px;">
-            Upgrade to Premium
-          </button>
-          
-          <button onclick="closePremiumModal()" style="background: transparent; color: #aaa; border: 1px solid #666; padding: 12px 25px; border-radius: 25px; font-size: 1rem; cursor: pointer; margin: 10px;">
-            Maybe Later
-          </button>
-        </div>
-      `;
-      
-      document.body.appendChild(modal);
-    }
-
-    function closePremiumModal() {
-      const modal = document.querySelector('div[style*="position: fixed"]');
-      if (modal) modal.remove();
-    }
-
-    function getCategoryDisplayName(category) {
-      const names = {
-        education: 'Education & Learning',
-        family: 'Family & Parenting',
-        creativity: 'Creativity & Hobbies',
-        spirituality: 'Spirituality & Values',
-        travel: 'Travel & Adventure',
-        community: 'Community & Social Impact'
-      };
-      return names[category] || category;
-    }
-
-    // Upgrade to premium
-    function upgradeToePremium() {
-      closePremiumModal();
-      
-      if (confirm('This would normally redirect to Stripe for payment.\n\nFor demo purposes, would you like to simulate upgrading to Premium?')) {
-        localStorage.setItem('userTier', 'premium');
-        localStorage.setItem('upgradeDate', new Date().toISOString());
-        alert('🎉 Welcome to Premium! You now have access to all categories and unlimited AI advice.');
-        location.reload();
-      }
-    }
-
-    // Update UI for premium users
-    function updateUIForPremiumUser() {
-      if (isPremiumUser()) {
-        // Unlock premium categories
-        const premiumCategories = document.querySelectorAll('.category.premium-locked');
-        premiumCategories.forEach(category => {
-          category.classList.remove('premium-locked');
-          const categoryName = category.onclick.toString().match(/showPremiumModal\('(\w+)'\)/)?.[1];
-          if (categoryName) {
-            category.onclick = () => window.location.href = `category-form.html?category=${categoryName}`;
-          }
-        });
-
-        // Update section description
-        document.getElementById('premium-section-desc').textContent = 'Advanced categories for comprehensive personalization - UNLOCKED';
-        
-        // Hide premium upsell
-        document.getElementById('premium-upsell').style.display = 'none';
-
-        // Unlock additional context section
-        const contextOverlay = document.getElementById('context-premium-overlay');
-        const contextContent = document.getElementById('context-content');
-        
-        if (contextOverlay && contextContent) {
-          contextOverlay.style.display = 'none';
-          contextContent.style.display = 'block';
-        }
-      }
-    }
-
-    // Additional context functions
-    function updateCharacterCount() {
-      const textarea = document.getElementById('additional-context');
-      const counter = document.getElementById('char-count');
-      if (!textarea || !counter) return;
-      
-      const current = textarea.value.length;
-      const max = 2000;
-      
-      counter.textContent = `${current} / ${max} characters`;
-      
-      if (current > max * 0.9) {
-        counter.style.color = '#ff6b6b';
-      } else if (current > max * 0.7) {
-        counter.style.color = '#ffc107';
-      } else {
-        counter.style.color = '#888';
-      }
-    }
-
-    function saveAdditionalContext() {
-      const textarea = document.getElementById('additional-context');
-      if (!textarea) return;
-      
-      const context = textarea.value.trim();
-      
-      if (!context) {
-        alert('Please enter some additional context or click "Skip This Step"');
-        return;
-      }
-      
-      if (context.length < 20) {
-        alert('Please provide more detail (at least 20 characters) or skip this step');
-        return;
-      }
-      
-      try {
-        const contextData = {
-          content: context,
-          timestamp: new Date().toISOString(),
-          wordCount: context.split(' ').length,
-          tier: getUserTier()
-        };
-        
-        localStorage.setItem('additionalContext', JSON.stringify(contextData));
-        alert('✅ Your additional context has been saved successfully!');
-        
-        // Update section styling
-        const section = document.querySelector('.additional-context-section');
-        const title = document.querySelector('.context-title');
-        if (section && title) {
-          section.style.border = '2px solid rgba(76, 175, 80, 0.5)';
-          title.innerHTML = '✅ Personal Context (Saved)';
-          title.style.color = '#4CAF50';
-        }
-        
-      } catch (error) {
-        console.error('Error saving context:', error);
-        alert('❌ Error saving context. Please try again.');
-      }
-    }
-
-    function skipContext() {
-      if (confirm('Are you sure you want to skip? Adding context helps the AI give you much better personalized advice.')) {
-        const section = document.querySelector('.additional-context-section');
-        if (section) {
-          section.style.opacity = '0.5';
-          section.style.transform = 'scale(0.95)';
-          section.style.pointerEvents = 'none';
-        }
-      }
-    }
-
-    // Load existing context
-    function loadExistingContext() {
-      const saved = localStorage.getItem('additionalContext');
-      if (saved && isPremiumUser()) {
-        try {
-          const data = JSON.parse(saved);
-          const textarea = document.getElementById('additional-context');
-          if (textarea) {
-            textarea.value = data.content;
-            updateCharacterCount();
-            
-            // Show it's saved
-            const section = document.querySelector('.additional-context-section');
-            const title = document.querySelector('.context-title');
-            if (section && title) {
-              section.style.border = '2px solid rgba(76, 175, 80, 0.5)';
-              title.innerHTML = '✅ Personal Context (Saved)';
-              title.style.color = '#4CAF50';
-            }
-          }
-        } catch (error) {
-          console.error('Error loading saved context:', error);
-        }
-      }
-    }
-
-    // Initialize on load
-    window.addEventListener('load', () => {
-      updateTierStatus();
-      updateQuickAccess();
-      markCompletedCategories();
-      updateProgress();
-      updateContinueButton();
-      updateUIForPremiumUser();
-      loadExistingContext();
-      
-      // Add character count listener
-      const textarea = document.getElementById('additional-context');
-      if (textarea) {
-        textarea.addEventListener('input', updateCharacterCount);
-      }
-    });
-  </script>
-
-</body>
-</html>
-        <div class="completion-level good">
-          <strong>3-4 Categories</strong><br>
-          Good cross-category insights
-        </div>
-        <div class="completion-level excellent">
-          <strong>5+ Categories</strong><br>
-          Excellent holistic advice
-        </div>
-      </div>
-    </div>
-
-    <!-- Social Proof -->
-    <div class="social-proof">
-      <p>Join 2,847+ people making smarter decisions with AI</p>
-      <div class="stats">
-        <div class="stat">
-          <strong>15,623</strong>
-          decisions made
-        </div>
-        <div class="stat">
-          <strong>94%</strong>
-          find it helpful
-        </div>
-        <div class="stat">
-          <strong>4.8/5</strong>
-          average rating
-        </div>
-      </div>
-    </div>
-
-    <!-- Progress Tracking -->
-    <div class="progress-section">
-      <h3>Your Progress</h3>
-      <div class="progress-bar-container">
-        <div class="progress-bar" id="progress-bar"></div>
-      </div>
-      <p id="progress-text">Complete your first category to get started!</p>
-    </div>
-
+  <div class="categories-section">
     <!-- Core Categories -->
     <div class="section-header">
       <div class="section-title">🎯 Essential Life Areas</div>
       <div class="section-desc">Core categories that affect most major decisions - FREE for all users</div>
     </div>
 
-    <div class="grid" id="core-categories">
-      <a href="category-form.html?category=mental-health" class="category" data-category="mental-health">
+    <div class="grid">
+      <a href="category-form.html?category=mental-health" class="category">
         <span class="category-icon">🧠</span>
         <div class="category-title">Mental Health</div>
         <div class="category-desc">Stress, anxiety, sleep patterns, and emotional wellbeing</div>
       </a>
 
-      <a href="category-form.html?category=career" class="category" data-category="career">
+      <a href="category-form.html?category=career" class="category">
         <span class="category-icon">💼</span>
         <div class="category-title">Career</div>
         <div class="category-desc">Job satisfaction, goals, skills, and professional growth</div>
       </a>
 
-      <a href="category-form.html?category=finance" class="category" data-category="finance">
+      <a href="category-form.html?category=finance" class="category">
         <span class="category-icon">💸</span>
         <div class="category-title">Finance</div>
         <div class="category-desc">Income, savings, investments, and financial goals</div>
       </a>
 
-      <a href="category-form.html?category=fitness" class="category" data-category="fitness">
+      <a href="category-form.html?category=fitness" class="category">
         <span class="category-icon">🏃</span>
         <div class="category-title">Fitness</div>
         <div class="category-desc">Exercise habits, health goals, and physical wellness</div>
       </a>
 
-      <a href="category-form.html?category=relationships" class="category" data-category="relationships">
+      <a href="category-form.html?category=relationships" class="category">
         <span class="category-icon">💬</span>
         <div class="category-title">Relationships</div>
         <div class="category-desc">Social connections, communication, and relationship goals</div>
       </a>
 
-      <a href="category-form.html?category=lifestyle" class="category" data-category="lifestyle">
+      <a href="category-form.html?category=lifestyle" class="category">
         <span class="category-icon">🏠</span>
         <div class="category-title">Lifestyle</div>
         <div class="category-desc">Daily routines, hobbies, life satisfaction, and balance</div>
       </a>
     </div>
 
-    <!-- Premium Categories -->
+    <!-- Premium Categories Section -->
     <div class="section-header">
-      <div class="section-title">🌟 Advanced Areas</div>
+      <div class="section-title">🌟 Additional Areas</div>
       <div class="section-desc" id="premium-section-desc">Premium categories for comprehensive personalization</div>
     </div>
 
-    <div class="grid" id="premium-categories">
+    <div class="grid" id="premium-categories-grid">
       <div class="category premium-locked" onclick="showPremiumModal('education')">
         <span class="category-icon">📚</span>
         <div class="category-title">Education & Learning</div>
@@ -1223,37 +955,558 @@
       </div>
     </div>
 
-    <!-- Continue Section (Moved Up) -->
-    <div class="continue-section">
-      <button class="continue-btn" id="continue-btn" onclick="proceedToAI()">
-        Continue to AI Advice →
+    <!-- Premium Upsell Section -->
+    <div class="premium-upsell" id="premium-upsell">
+      <div class="premium-title">🚀 Unlock Your Full Potential</div>
+      <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+        Get access to all 12 life categories + unlimited AI advice for complete personalization
+      </p>
+      
+      <div class="premium-benefits">
+        <div class="premium-benefit">
+          <strong>✅ All 12 Categories</strong>
+          Complete life optimization across every area
+        </div>
+        <div class="premium-benefit">
+          <strong>✅ Unlimited AI Advice</strong>
+          No monthly limits on questions
+        </div>
+        <div class="premium-benefit">
+          <strong>✅ Advanced Analysis</strong>
+          Multi-step reasoning and deeper insights
+        </div>
+        <div class="premium-benefit">
+          <strong>✅ Real-time Data</strong>
+          Market trends and current information
+        </div>
+        <div class="premium-benefit">
+          <strong>✅ Complete History</strong>
+          Track all decisions and outcomes
+        </div>
+        <div class="premium-benefit">
+          <strong>✅ Data Export</strong>
+          Download your complete profile anytime
+        </div>
+      </div>
+
+      <p style="font-size: 1.4rem; margin: 2rem 0; font-weight: 600;">
+        Only <span style="color: #4CAF50;">$9.99/month</span> - Cancel anytime
+      </p>
+
+      <button class="upgrade-btn" onclick="upgradeToePremium()">
+        Upgrade to Premium Now
       </button>
-      <p style="color: #888; margin-top: 1rem; font-size: 0.9rem;" id="continue-description">
-        Complete at least one category to get personalized advice
+      
+      <p style="margin-top: 1rem; font-size: 0.9rem; color: #aaa;">
+        30-day money-back guarantee • Secure payment via Stripe
       </p>
     </div>
 
-    <!-- Additional Context Section - Premium Only -->
+    <!-- Continue Section -->
+    <div class="continue-section" style="padding: 2rem 2rem 1rem;">
+      <button class="continue-btn" onclick="proceedToAI()">
+        Continue to AI Advice →
+      </button>
+      <p style="color: #888; margin-top: 1rem; font-size: 0.9rem;" id="continue-description">
+        You can always add more categories or context later
+      </p>
+    </div>
+
+    <!-- Additional Context Section - Now Premium Only -->
     <div class="additional-context-section" id="additional-context-section">
-      <div class="context-title">✨ Share Your Story</div>
-      
+      <div class="context-title">✨ Tell Me More About You</div>
       <div class="premium-lock-overlay" id="context-premium-overlay">
         <div class="lock-content">
           <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
           <h3>Premium Feature</h3>
-          <p style="margin-bottom: 2rem;">Share additional context about your life for truly personalized AI advice that understands your unique situation.</p>
+          <p style="margin-bottom: 2rem;">Additional Context allows you to share your complete story for truly personalized AI advice.</p>
+          <div style="background: rgba(255, 193, 7, 0.1); padding: 1.5rem; border-radius: 15px; margin: 2rem 0; text-align: left;">
+            <strong style="color: #ffc107;">With Premium you can share:</strong><br><br>
+            💭 Unique life circumstances or challenges<br>
+            🌍 Cultural background and family traditions<br>
+            🎯 Past experiences that shape your decisions<br>
+            ❤️ Special interests, passions, or projects<br>
+            🔄 Major life transitions you're going through<br>
+            💫 Dreams, fears, and aspirations<br>
+            👥 Important relationships and influences<br>
+            ⚖️ Core values and non-negotiable principles<br>
+            🚧 Constraints or limitations to consider<br>
+            🎉 What success and happiness mean to YOU
+          </div>
+          <p style="font-size: 1.3rem; margin: 1.5rem 0; font-weight: 600;">
+            Only $9.99/month • Unlimited personalization
+          </p>
+          <button onclick="upgradeToePremium()" class="upgrade-btn">
+            Upgrade to Premium
+          </button>
+          <p style="margin-top: 1rem; font-size: 0.9rem; color: #aaa;">
+            30-day money-back guarantee • Cancel anytime
+          </p>
+        </div>
+      </div>
+      
+      <!-- Premium Content (hidden for free users) -->
+      <div class="context-content" id="context-content" style="display: none;">
+        <div class="context-subtitle" id="context-subtitle">
+          <span style="color: #4CAF50;">💎 Premium Feature Unlocked!</span><br>
+          Share your complete story for truly personalized AI advice. The more context you provide, the better I can understand your unique situation.
+        </div>
+        
+        <div class="context-prompts">
+          <h4>💭 Consider sharing about:</h4>
+          <ul>
+            <li>Unique life circumstances or challenges you're facing</li>
+            <li>Cultural background or family traditions that influence your decisions</li>
+            <li>Past experiences that shape how you approach choices</li>
+            <li>Special interests, passions, or projects that matter to you</li>
+            <li>Major life transitions or changes you're going through</li>
+            <li>Any fears, dreams, or aspirations that guide your thinking</li>
+            <li>Important relationships or people who influence your decisions</li>
+            <li>Values or principles that are non-negotiable for you</li>
+            <li>Any constraints or limitations I should be aware of</li>
+            <li>What success and happiness mean to you personally</li>
+          </ul>
+        </div>
+        
+        <textarea class="context-textarea" id="additional-context" 
+                  placeholder="Write freely here about anything that helps paint a complete picture of who you are and what matters most to you..."
+                  maxlength="2000"
+                  oninput="updateCharacterCount()"></textarea>
+        
+        <div class="character-count" id="char-count">0 / 2000 characters</div>
+        
+        <button class="save-context-btn" id="save-context-btn" onclick="saveAdditionalContext()">Save My Context</button>
+        <button class="skip-context-btn" onclick="skipContext()">Skip This Step</button>
+        
+        <!-- Status message area -->
+        <div id="status-message"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get user tier status
+    function getUserTier() {
+      return localStorage.getItem('userTier') || 'free';
+    }
+
+    function isPremiumUser() {
+      return getUserTier() === 'premium';
+    }
+
+    // Update tier status display
+    function updateTierStatus() {
+      const tierEl = document.getElementById('tier-status');
+      const isPremium = isPremiumUser();
+      
+      if (isPremium) {
+        tierEl.innerHTML = '💎 Premium Plan';
+        tierEl.className = 'tier-status tier-premium';
+      } else {
+        tierEl.innerHTML = '🆓 Free Plan';
+        tierEl.className = 'tier-status tier-free';
+      }
+    }
+
+    // Show premium modal when locked category is clicked
+    function showPremiumModal(categoryName) {
+      const modal = document.createElement('div');
+      modal.className = 'premium-modal';
+      modal.innerHTML = `
+        <div class="premium-modal-content">
+          <h3>🔒 Premium Feature</h3>
+          <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+            <strong>${getCategoryDisplayName(categoryName)}</strong> is available with Premium
+          </p>
           
           <div style="background: rgba(255, 193, 7, 0.1); padding: 1.5rem; border-radius: 15px; margin: 2rem 0; text-align: left;">
-            <strong style="color: #ffc107;">With Premium, share about:</strong><br><br>
-            💭 Unique life circumstances<br>
-            🌍 Cultural background & traditions<br>
-            🎯 Past experiences that shape decisions<br>
-            ❤️ Special interests & passions<br>
-            🔄 Major life transitions<br>
-            💫 Dreams, fears & aspirations
+            <strong style="color: #ffc107;">Premium includes:</strong><br><br>
+            ✅ All 12 life categories<br>
+            ✅ Unlimited AI advice sessions<br>
+            ✅ Advanced multi-step analysis<br>
+            ✅ Real-time data integration<br>
+            ✅ Complete decision history<br>
+            ✅ Export all your data
           </div>
+
+          <p style="font-size: 1.3rem; margin: 1.5rem 0; font-weight: 600;">
+            Only $9.99/month • Cancel anytime
+          </p>
           
-          <button onclick="upgradeToePremium()" class="upgrade-btn">
-            Unlock Premium Features
+          <button onclick="upgradeToePremium()" style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; border: none; padding: 15px 30px; border-radius: 25px; font-size: 1.1rem; cursor: pointer; margin: 10px;">
+            Upgrade to Premium
+          </button>
+          
+          <button onclick="closePremiumModal()" style="background: transparent; color: #aaa; border: 1px solid #666; padding: 12px 25px; border-radius: 25px; font-size: 1rem; cursor: pointer; margin: 10px;">
+            Maybe Later
           </button>
         </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function closePremiumModal() {
+      const modal = document.querySelector('.premium-modal');
+      if (modal) {
+        modal.remove();
+      }
+    }
+
+    function getCategoryDisplayName(category) {
+      const names = {
+        education: 'Education & Learning',
+        family: 'Family & Parenting', 
+        creativity: 'Creativity & Hobbies',
+        spirituality: 'Spirituality & Values',
+        travel: 'Travel & Adventure',
+        community: 'Community & Social Impact'
+      };
+      return names[category] || category;
+    }
+
+    // Upgrade to premium function
+    function upgradeToePremium() {
+      // Close any open modals
+      closePremiumModal();
+      
+      // Simulate upgrade process - replace with real Stripe integration
+      if (confirm('This would normally redirect to Stripe for payment.\n\nFor demo purposes, would you like to simulate upgrading to Premium?')) {
+        localStorage.setItem('userTier', 'premium');
+        localStorage.setItem('upgradeDate', new Date().toISOString());
+        alert('🎉 Welcome to Premium! You now have access to all categories and unlimited AI advice.');
+        location.reload();
+      }
+    }
+
+    // Update UI based on premium status
+    function updateUIForPremiumUser() {
+      if (isPremiumUser()) {
+        // Unlock premium categories
+        const premiumCategories = document.querySelectorAll('.category.premium-locked');
+        premiumCategories.forEach(category => {
+          category.classList.remove('premium-locked');
+          const categoryName = category.onclick.toString().match(/showPremiumModal\('(\w+)'\)/)?.[1];
+          if (categoryName) {
+            category.onclick = () => window.location.href = `category-form.html?category=${categoryName}`;
+          }
+        });
+
+        // Update section description
+        document.getElementById('premium-section-desc').textContent = 'Premium categories for comprehensive personalization - UNLOCKED';
+        
+        // Hide premium upsell
+        document.getElementById('premium-upsell').style.display = 'none';
+
+        // Unlock additional context section
+        const contextOverlay = document.getElementById('context-premium-overlay');
+        const contextContent = document.getElementById('context-content');
+        
+        if (contextOverlay && contextContent) {
+          contextOverlay.style.display = 'none';
+          contextContent.style.display = 'block';
+        }
+        
+      } else {
+        // Free user - show restrictions
+        updateFreeUserRestrictions();
+      }
+    }
+
+    function updateFreeUserRestrictions() {
+      // Update continue button text based on completion
+      updateContinueButton();
+      
+      // For free users, ensure context section is locked
+      const contextOverlay = document.getElementById('context-premium-overlay');
+      const contextContent = document.getElementById('context-content');
+      
+      if (contextOverlay && contextContent) {
+        contextOverlay.style.display = 'flex';
+        contextContent.style.display = 'none';
+      }
+    }
+
+    // Create floating particles
+    function createParticles() {
+      const container = document.body;
+      const particleCount = 30;
+
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = (Math.random() * 5 + 12) + 's';
+        container.appendChild(particle);
+      }
+    }
+
+    // Update character count
+    function updateCharacterCount() {
+      const textarea = document.getElementById('additional-context');
+      const counter = document.getElementById('char-count');
+      if (!textarea || !counter) return;
+      
+      const current = textarea.value.length;
+      const max = 2000;
+      
+      counter.textContent = `${current} / ${max} characters`;
+      
+      if (current > max * 0.9) {
+        counter.style.color = '#ff6b6b';
+      } else if (current > max * 0.7) {
+        counter.style.color = '#ffc107';
+      } else {
+        counter.style.color = '#888';
+      }
+    }
+
+    // Show status message
+    function showStatus(message, type = 'info') {
+      const statusDiv = document.getElementById('status-message');
+      if (!statusDiv) return;
+      
+      statusDiv.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+      
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        statusDiv.innerHTML = '';
+      }, 5000);
+    }
+
+    // Save additional context
+    function saveAdditionalContext() {
+      const contextTextarea = document.getElementById('additional-context');
+      if (!contextTextarea) return;
+      
+      const context = contextTextarea.value.trim();
+      
+      // Validation
+      if (!context) {
+        showStatus('❌ Please enter some additional context or click "Skip This Step"', 'error');
+        return;
+      }
+      
+      if (context.length < 20) {
+        showStatus('❌ Please provide more detail (at least 20 characters) or skip this step', 'error');
+        return;
+      }
+      
+      try {
+        // Save to localStorage
+        const contextData = {
+          content: context,
+          timestamp: new Date().toISOString(),
+          wordCount: context.split(' ').length,
+          tier: getUserTier()
+        };
+        
+        localStorage.setItem('additionalContext', JSON.stringify(contextData));
+        
+        // Also clear any draft
+        localStorage.removeItem('additionalContextDraft');
+        
+        // Visual feedback
+        const btn = document.getElementById('save-context-btn');
+        if (btn) {
+          const originalText = btn.textContent;
+          const originalStyle = btn.style.background;
+          
+          btn.textContent = '✓ Saved!';
+          btn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+          
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = originalStyle;
+          }, 3000);
+        }
+        
+        // Show success message
+        showStatus('✅ Your additional context has been saved successfully! The AI will use this information to provide better personalized advice.', 'success');
+        
+        // Update section styling to show it's saved
+        const section = document.querySelector('.additional-context-section');
+        const title = document.querySelector('.context-title');
+        if (section && title) {
+          section.style.border = '2px solid rgba(76, 175, 80, 0.5)';
+          title.innerHTML = '✅ Additional Context (Saved)';
+          title.style.color = '#4CAF50';
+        }
+        
+      } catch (error) {
+        console.error('Error saving context:', error);
+        showStatus('❌ Error saving context. Please try again.', 'error');
+      }
+    }
+
+    // Skip context
+    function skipContext() {
+      if (confirm('Are you sure you want to skip? Adding context helps the AI give you much better personalized advice.')) {
+        const section = document.querySelector('.additional-context-section');
+        if (section) {
+          section.style.opacity = '0.5';
+          section.style.transform = 'scale(0.95)';
+          section.style.pointerEvents = 'none';
+        }
+        showStatus('ℹ️ Context section skipped. You can always add this later for better AI advice.', 'info');
+      }
+    }
+
+    // Proceed to AI advice
+    function proceedToAI() {
+      // Check if user has completed at least one core category
+      const coreCategories = ['mentalHealthProfile', 'careerProfile', 'financeProfile', 'fitnessProfile', 'relationshipsProfile', 'lifestyleProfile'];
+      const completedCore = coreCategories.filter(cat => localStorage.getItem(cat)).length;
+      
+      if (completedCore === 0) {
+        showStatus('❌ Please complete at least one category to get personalized advice!', 'error');
+        return;
+      }
+      
+      if (completedCore < 2 && !isPremiumUser()) {
+        if (confirm('For best results, we recommend completing at least 2 categories. Continue anyway?')) {
+          window.location.href = 'ai-advice.html';
+        }
+      } else {
+        window.location.href = 'ai-advice.html';
+      }
+    }
+
+    // Load existing context if user returns
+    function loadExistingContext() {
+      const saved = localStorage.getItem('additionalContext');
+      if (saved && isPremiumUser()) {
+        try {
+          const data = JSON.parse(saved);
+          const contextTextarea = document.getElementById('additional-context');
+          if (contextTextarea) {
+            contextTextarea.value = data.content;
+            updateCharacterCount();
+            
+            // Show it's already saved
+            const section = document.querySelector('.additional-context-section');
+            const title = document.querySelector('.context-title');
+            if (section && title) {
+              section.style.border = '2px solid rgba(76, 175, 80, 0.5)';
+              title.innerHTML = '✅ Additional Context (Saved)';
+              title.style.color = '#4CAF50';
+            }
+            
+            showStatus('✅ Your saved additional context has been loaded.', 'success');
+          }
+        } catch (error) {
+          console.error('Error loading saved context:', error);
+          showStatus('⚠️ Error loading saved context. You may need to re-enter it.', 'error');
+        }
+      }
+    }
+
+    // Check which categories are completed and mark them
+    function markCompletedCategories() {
+      const categoryMappings = {
+        'mental-health': 'mentalHealthProfile',
+        'career': 'careerProfile', 
+        'finance': 'financeProfile',
+        'fitness': 'fitnessProfile',
+        'relationships': 'relationshipsProfile',
+        'lifestyle': 'lifestyleProfile'
+      };
+
+      // Check core categories
+      Object.keys(categoryMappings).forEach(categoryParam => {
+        const storageKey = categoryMappings[categoryParam];
+        const savedData = localStorage.getItem(storageKey);
+        
+        if (savedData) {
+          try {
+            const data = JSON.parse(savedData);
+            if (Object.keys(data).length > 0) {
+              const categoryElement = document.querySelector(`a[href="category-form.html?category=${categoryParam}"]`);
+              if (categoryElement) {
+                categoryElement.classList.add('completed');
+              }
+            }
+          } catch (error) {
+            console.error(`Error parsing ${storageKey}:`, error);
+          }
+        }
+      });
+
+      // Check premium categories if user is premium
+      if (isPremiumUser()) {
+        const premiumMappings = {
+          'education': 'educationProfile',
+          'family': 'familyProfile',
+          'creativity': 'creativityProfile',
+          'spirituality': 'spiritualityProfile',
+          'travel': 'travelProfile',
+          'community': 'communityProfile'
+        };
+
+        Object.keys(premiumMappings).forEach(categoryParam => {
+          const storageKey = premiumMappings[categoryParam];
+          const savedData = localStorage.getItem(storageKey);
+          
+          if (savedData) {
+            try {
+              const data = JSON.parse(savedData);
+              if (Object.keys(data).length > 0) {
+                const categoryElement = document.querySelector(`[onclick*="${categoryParam}"]`);
+                if (categoryElement) {
+                  categoryElement.classList.add('completed');
+                }
+              }
+            } catch (error) {
+              console.error(`Error parsing ${storageKey}:`, error);
+            }
+          }
+        });
+      }
+
+      updateContinueButton();
+    }
+
+    // Update continue button based on completion status
+    function updateContinueButton() {
+      const coreCategories = ['mentalHealthProfile', 'careerProfile', 'financeProfile', 'fitnessProfile', 'relationshipsProfile', 'lifestyleProfile'];
+      const completedCore = coreCategories.filter(cat => localStorage.getItem(cat)).length;
+      
+      const continueBtn = document.querySelector('.continue-btn');
+      const continueText = document.querySelector('#continue-description');
+      const isPremium = isPremiumUser();
+      
+      if (!continueBtn || !continueText) return;
+      
+      if (completedCore === 0) {
+        continueBtn.textContent = 'Complete at least 1 category first';
+        continueBtn.style.opacity = '0.6';
+        continueBtn.style.cursor = 'not-allowed';
+        continueText.textContent = 'Complete at least one category to get personalized AI advice';
+        continueText.style.color = '#ff9800';
+      } else if (completedCore < 2) {
+        continueBtn.textContent = 'Continue to AI Advice →';
+        continueBtn.style.opacity = '1';
+        continueBtn.style.cursor = 'pointer';
+        continueText.textContent = `${completedCore}/6 core categories completed${isPremium ? ' + premium categories available' : ''} • For best results, complete at least 2 categories`;
+        continueText.style.color = '#ffc107';
+      } else {
+        continueBtn.textContent = 'Continue to AI Advice →';
+        continueBtn.style.opacity = '1';
+        continueBtn.style.cursor = 'pointer';
+        continueText.textContent = `${completedCore}/6 core categories completed${isPremium ? ' + premium access unlocked' : ''} • Great job! You can always add more later`;
+        continueText.style.color = '#4CAF50';
+      }
+    }
+
+    // Initialize everything on page load
+    window.addEventListener('load', () => {
+      createParticles();
+      updateTierStatus();
+      updateUIForPremiumUser();
+      markCompletedCategories();
+      loadExistingContext();
+    });
+  </script>
+
+</body>
+</html>
