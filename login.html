@@ -195,15 +195,6 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
-    .info-box {
-      background: rgba(0, 255, 255, 0.1);
-      border: 1px solid rgba(0, 255, 255, 0.3);
-      border-radius: 8px;
-      padding: 15px;
-      margin: 20px 0;
-      font-size: 0.9rem;
-    }
   </style>
   <!-- Add Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -268,20 +259,12 @@
             <input type="password" id="signup-password" name="password" required minlength="6">
           </div>
           <div class="form-group">
-            <label for="signup-username">Display Name (optional)</label>
-            <input type="text" id="signup-username" name="username">
+            <label for="signup-username">Username</label>
+            <input type="text" id="signup-username" name="username" required>
           </div>
           <button type="submit">Create Account</button>
           <div id="signup-message"></div>
         </form>
-
-        <div class="info-box">
-          <strong>✨ With an account you get:</strong><br>
-          • Data synced across all devices<br>
-          • Decision history saved forever<br>
-          • Backup of all your profiles<br>
-          • Premium upgrade options
-        </div>
       </div>
 
       <div class="guest-option">
@@ -291,7 +274,7 @@
   </div>
 
   <script>
-    // Initialize Supabase with your credentials
+    // Initialize Supabase
     const SUPABASE_URL = 'https://hxxqhxavksfyhkiiwrze.supabase.co'
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4eHFoeGF2a3NmeWhraWl3cnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1NzEyMjAsImV4cCI6MjA3MDE0NzIyMH0.uwRVMMlNRvxhqkQzZ_KWgT1EF0Aefk4CXeLqJPkYiPU'
     
@@ -315,11 +298,8 @@
 
     // Tab switching
     function showTab(tabName) {
-      // Update tab buttons
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       event.target.classList.add('active');
-
-      // Update form sections
       document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
       document.getElementById(tabName + '-section').classList.add('active');
     }
@@ -341,7 +321,6 @@
       const messageEl = document.getElementById('signup-message');
       const submitBtn = e.target.querySelector('button[type="submit"]');
 
-      // Disable button and show loading
       submitBtn.disabled = true;
       submitBtn.textContent = 'Creating Account...';
       messageEl.innerHTML = '';
@@ -352,7 +331,7 @@
           password: password,
           options: {
             data: {
-              display_name: username || email.split('@')[0]
+              username: username
             }
           }
         });
@@ -360,19 +339,20 @@
         if (error) {
           messageEl.innerHTML = `<div class="error-message">${error.message}</div>`;
         } else {
+          // Create profile manually since we're using the existing profiles table
+          if (data.user) {
+            await createUserProfile(data.user, username, email);
+          }
+
           if (data.session) {
-            // User is logged in immediately (email confirmation disabled)
             messageEl.innerHTML = '<div class="success-message">Account created successfully!</div>';
-            setTimeout(() => {
-              showLoggedInState(data.user);
-            }, 1000);
+            setTimeout(() => showLoggedInState(data.user), 1000);
           } else {
-            // Email confirmation required
-            messageEl.innerHTML = '<div class="success-message">Account created! Please check your email to verify your account before logging in.</div>';
+            messageEl.innerHTML = '<div class="success-message">Account created! Please check your email to verify.</div>';
           }
         }
       } catch (err) {
-        messageEl.innerHTML = `<div class="error-message">An error occurred: ${err.message}</div>`;
+        messageEl.innerHTML = `<div class="error-message">Error: ${err.message}</div>`;
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Create Account';
@@ -388,7 +368,6 @@
       const messageEl = document.getElementById('login-message');
       const submitBtn = e.target.querySelector('button[type="submit"]');
 
-      // Disable button and show loading
       submitBtn.disabled = true;
       submitBtn.textContent = 'Signing In...';
       messageEl.innerHTML = '';
@@ -403,33 +382,56 @@
           messageEl.innerHTML = `<div class="error-message">${error.message}</div>`;
         } else {
           messageEl.innerHTML = '<div class="success-message">Login successful!</div>';
-          
-          setTimeout(() => {
-            showLoggedInState(data.user);
-          }, 1000);
+          setTimeout(() => showLoggedInState(data.user), 1000);
         }
       } catch (err) {
-        messageEl.innerHTML = `<div class="error-message">An error occurred: ${err.message}</div>`;
+        messageEl.innerHTML = `<div class="error-message">Error: ${err.message}</div>`;
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Login';
       }
     });
 
+    // Create user profile
+    async function createUserProfile(user, username, email) {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              id: user.id,
+              username: username,
+              email: email,
+              tier: 'free',
+              mental_health_profile: {},
+              finance_profile: {},
+              career_profile: {},
+              relationships_profile: {},
+              fitness_profile: {},
+              lifestyle_profile: {}
+            }
+          ]);
+
+        if (error) {
+          console.log('Profile creation error:', error);
+        }
+      } catch (err) {
+        console.log('Profile creation failed:', err);
+      }
+    }
+
     function showLoggedInState(user) {
       document.getElementById('loading-section').style.display = 'none';
       document.getElementById('auth-section').style.display = 'none';
       document.getElementById('logged-in-section').style.display = 'block';
       
-      // Show display name or email
-      const displayName = user.user_metadata?.display_name || user.email.split('@')[0];
+      const displayName = user.user_metadata?.username || user.email.split('@')[0];
       document.getElementById('username-display').textContent = displayName;
       
-      // Store user info for other pages
       localStorage.setItem('currentUser', JSON.stringify({
         id: user.id,
         email: user.email,
-        displayName: displayName
+        username: displayName
       }));
     }
 
@@ -448,16 +450,7 @@
       window.location.href = 'categories.html';
     }
 
-    // Listen for auth state changes
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') {
-        showLoggedInState(session.user);
-      } else if (event === 'SIGNED_OUT') {
-        showAuthSection();
-      }
-    });
-
-    // Make supabase available globally for other pages
+    // Make supabase available globally
     window.supabase = supabase;
   </script>
 
