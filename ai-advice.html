@@ -753,7 +753,6 @@
     createParticles();
 
     // Your Google Gemini API key (SECURITY WARNING: Move this to backend!)
-    const API_KEY = 'AIzaSyDJZ2skTvqRWDyFW5pezTFzX3Rw8u1WH_U';
 
     // Premium/Free tier management
     function getUserTier() {
@@ -1569,261 +1568,156 @@
       return sortedRelevant.length > 0 ? sortedRelevant.slice(0, 4) : ['mental', 'lifestyle'];
     }
 
-    // Enhanced AI advice function with premium/free differences
-    async function getAdvice() {
-      const question = document.getElementById('user-question').value.trim();
-      const adviceEl = document.getElementById('advice');
-      const btn = document.getElementById('advice-btn');
-      
-      if (!question) {
-        alert('💭 Please enter a question or decision you need help with');
-        return;
-      }
-      
-      // Check usage limits
-      if (!checkUsageLimit()) {
-        return;
-      }
-      
-      if (completedCategories.length === 0) {
-        handleNoProfileError(adviceEl);
-        return;
-      }
-      
-      const relevantCategories = detectRelevantCategories(question);
-      const confidence = calculateAdviceConfidence(profiles, question, relevantCategories);
-      const insights = analyzeInterconnections(profiles);
-      const isPremium = isPremiumUser();
-      
-      adviceEl.style.display = 'block';
-      adviceEl.innerHTML = `
-        <div class="advice-header">
-          🤖 ${isPremium ? 'Premium Analysis' : 'Analyzing'} your unique situation...
-          <span class="confidence-indicator ${confidence > 70 ? 'confidence-high' : confidence > 40 ? 'confidence-medium' : 'confidence-low'}">
-            ${confidence}% Confidence
-          </span>
-        </div>
-        <div class="loading">
-          <div class="spinner"></div>
-          <span>Processing ${relevantCategories.length} relevant life areas...</span>
-          <div style="margin-top: 15px; font-size: 0.9em; color: #aaa;">
-            ${isPremium ? 'Premium: Multi-step analysis active' : 'Free: Basic analysis'}
-          </div>
-        </div>
-      `;
-      
-      btn.disabled = true;
-      btn.innerHTML = 'Analyzing... <div class="spinner" style="width: 16px; height: 16px; display: inline-block; margin-left: 10px;"></div>';
-      
-      try {
-        // Clear draft since we're processing the question
-        localStorage.removeItem('draftQuestion');
-        
-        const userProfileText = createProfileSummary();
-        const insightsText = insights.length > 0 ? '\n\nCROSS-CATEGORY INSIGHTS:\n' + insights.join('\n') : '';
-        
-        // Get additional context properly
-        const additionalContext = localStorage.getItem('additionalContext');
-        let contextText = '';
-        if (additionalContext) {
-          try {
-            const contextData = JSON.parse(additionalContext);
-            if (contextData.content) {
-              contextText = `\n\nADDITIONAL USER CONTEXT:\n${contextData.content}`;
-            }
-          } catch (e) {
-            console.log('Error parsing additional context:', e);
-          }
-        }
-        
-        const complexity = calculateQuestionComplexity(question);
-        const questionTags = extractTags(question);
-        
-        let finalPrompt;
-        
-        if (isPremium) {
-          // Premium: Full multi-step analysis
-          finalPrompt = `You are Knowme AI, an advanced personal decision advisor with deep psychological and analytical capabilities.
-
-USER'S COMPLETE PROFILE:
-${userProfileText}${contextText}
-
-INTERCONNECTED INSIGHTS:
-${insightsText}
-
-USER'S QUESTION: "${question}"
-
-PREMIUM ANALYSIS CONTEXT:
-- Confidence Level: ${confidence}% (based on relevant data completeness)
-- Relevant Categories: ${relevantCategories.join(', ')}
-- Question Complexity: ${complexity}
-- Question Tags: ${questionTags.join(', ') || 'none'}
-- Total Profile Completion: ${completionPercentage}%
-- Analysis Type: PREMIUM MULTI-STEP
-
-PREMIUM INSTRUCTIONS:
-1. Provide a comprehensive 4-step analysis: Assessment → Context → Options → Recommendation
-2. Reference specific data points from their profile to show deep understanding
-3. Consider the psychological and emotional context, not just facts
-4. Address potential risks, blind spots, and long-term consequences
-5. Give 4-5 specific, actionable steps they can take immediately
-6. Include timeline suggestions and success metrics
-7. Consider how this decision connects to their other life areas
-8. Provide follow-up questions for deeper reflection
-9. Use a warm, supportive but honest tone
-10. Format with clear sections and include confidence reasoning
-
-Be exceptionally insightful, practical, and genuinely helpful. This is premium-tier analysis.`;
-        } else {
-          // Free: Simplified single-step analysis
-          finalPrompt = `You are Knowme AI, a personal decision advisor.
-
-USER'S PROFILE SUMMARY:
-${userProfileText}${contextText}
-
-USER'S QUESTION: "${question}"
-
-FREE TIER ANALYSIS:
-- Confidence Level: ${confidence}%
-- Relevant Areas: ${relevantCategories.join(', ')}
-- Profile Completion: ${completionPercentage}%
-
-INSTRUCTIONS:
-1. Provide helpful, personalized advice based on their profile
-2. Give 2-3 practical action steps
-3. Keep response focused and actionable
-4. Reference their specific situation when possible
-5. Be supportive and encouraging
-6. Mention that premium offers deeper multi-step analysis
-
-Provide good advice while staying within free tier scope.`;
-        }
-
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: finalPrompt
-              }]
-            }],
-            generationConfig: {
-              temperature: 0.8,
-              topK: 40,
-              topP: 0.95,
-              maxOutputTokens: isPremium ? 2000 : 1200
-            }
-          })
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`API Error: ${errorData.error?.message || 'Request failed'}`);
-        }
-        
-        const data = await response.json();
-        const advice = data.candidates[0].content.parts[0].text;
-        
-        // Save decision to history
-        const decisionId = saveDecision(question, advice, confidence, relevantCategories, []);
-        
-        // Format the advice with better styling
-        const formattedAdvice = advice
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\n\n/g, '</p><p>')
-          .replace(/\n/g, '<br>');
-        
-        adviceEl.innerHTML = `
-          <div class="advice-header">
-            💡 Your ${isPremium ? 'Premium' : ''} Personalized Advice
-            <span class="confidence-indicator ${confidence > 70 ? 'confidence-high' : confidence > 40 ? 'confidence-medium' : 'confidence-low'}">
-              ${confidence}% Confidence
-            </span>
-          </div>
-          
-          <div style="background: rgba(118,169,255,0.05); padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #76a9ff;">
-            <strong>Your Question:</strong> "${question}"
-            ${questionTags.length > 0 ? `<br><small>Tags: ${questionTags.join(', ')}</small>` : ''}
-            ${isPremium ? '<br><small style="color: #4CAF50;">💎 Premium Analysis Applied</small>' : '<br><small style="color: #ff9800;">🆓 Free Tier Analysis</small>'}
-          </div>
-          
-          ${insights.length > 0 ? `
-          <div class="insight-box">
-            <strong>🔗 Profile Insights:</strong><br>
-            ${insights.map(insight => `• ${insight}`).join('<br>')}
-          </div>
-          ` : ''}
-          
-          ${contextText ? `
-          <div class="context-indicator">
-            <strong>✨ Using Your Additional Context:</strong><br>
-            Your personal context has been considered in this advice.
-          </div>
-          ` : ''}
-          
-          <div style="margin-top: 20px; padding-top: 15px; border-top: 2px solid #e2e8f0;">
-            <p>${formattedAdvice}</p>
-          </div>
-          
-          ${!isPremium ? `
-          <div style="background: rgba(255, 152, 0, 0.1); border: 2px solid rgba(255, 152, 0, 0.3); border-radius: 15px; padding: 20px; margin: 20px 0; text-align: center;">
-            <h4 style="color: #ff9800; margin-bottom: 1rem;">🚀 Want Deeper Analysis?</h4>
-            <p>Premium users get multi-step analysis, more detailed insights, and unlimited questions.</p>
-            <button onclick="showUpgradeModal()" style="background: linear-gradient(135deg, #4CAF50, #45a049); margin-top: 10px; width: auto; padding: 10px 20px;">
-              Upgrade to Premium - $9.99/month
-            </button>
-          </div>
-          ` : ''}
-          
-          <div style="text-align: center; margin-top: 20px; padding: 15px; background: rgba(118, 169, 255, 0.05); border-radius: 10px;">
-            <h4>How helpful was this advice?</h4>
-            <button class="rating-btn" onclick="rateAdvice(${decisionId}, 1)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">1 - Not helpful</button>
-            <button class="rating-btn" onclick="rateAdvice(${decisionId}, 2)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">2 - Somewhat</button>
-            <button class="rating-btn" onclick="rateAdvice(${decisionId}, 3)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">3 - Helpful</button>
-            <button class="rating-btn" onclick="rateAdvice(${decisionId}, 4)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">4 - Very helpful</button>
-            <button class="rating-btn" onclick="rateAdvice(${decisionId}, 5)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">5 - Excellent</button>
-          </div>
-          
-          <div style="margin-top: 25px; padding: 15px; background: rgba(118,169,255,0.05); border-radius: 10px; text-align: center;">
-            <small style="color: #718096;">
-              💾 This advice has been saved to your decision history. 
-              ${confidence < 60 ? 'Complete more profile categories for higher confidence advice.' : 'High confidence - advice based on comprehensive profile data.'}
-            </small>
-          </div>
-        `;
-        
-      } catch (error) {
-        console.error('Error:', error);
-        
-        adviceEl.innerHTML = `
-          <div class="advice-header">❌ Unable to Generate Advice</div>
-          <div style="background: rgba(244, 67, 54, 0.1); padding: 20px; border-radius: 10px; margin-top: 15px; border: 2px solid #f44336;">
-            <h4 style="margin-top: 0; color: #f44336;">Something went wrong:</h4>
-            <p style="color: #ffcdd2;">${error.message}</p>
-            
-            <div style="margin-top: 20px;">
-              <strong style="color: #fff;">Try these solutions:</strong><br>
-              • Check your internet connection<br>
-              • Try asking a simpler, more specific question<br>
-              • Refresh the page and try again<br>
-              • Complete more profile sections for better results<br>
-              • Break complex questions into smaller parts
-            </div>
-            
-            <button onclick="getAdvice()" style="margin-top: 15px; background: #f44336;">
-              🔄 Try Again
-            </button>
-          </div>
-        `;
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = 'Get AI-Powered Advice <span class="typing-indicator">|</span>';
-      }
+async function getAdvice() {
+  const question = document.getElementById('user-question').value.trim();
+  const adviceEl = document.getElementById('advice');
+  const btn = document.getElementById('advice-btn');
+  
+  if (!question) {
+    alert('💭 Please enter a question or decision you need help with');
+    return;
+  }
+  
+  // Check usage limits
+  if (!checkUsageLimit()) {
+    return;
+  }
+  
+  if (completedCategories.length === 0) {
+    handleNoProfileError(adviceEl);
+    return;
+  }
+  
+  const relevantCategories = detectRelevantCategories(question);
+  const confidence = calculateAdviceConfidence(profiles, question, relevantCategories);
+  const insights = analyzeInterconnections(profiles);
+  const isPremium = isPremiumUser();
+  
+  adviceEl.style.display = 'block';
+  adviceEl.innerHTML = `
+    <div class="advice-header">
+      🤖 ${isPremium ? 'Premium Analysis' : 'Analyzing'} your unique situation...
+      <span class="confidence-indicator ${confidence > 70 ? 'confidence-high' : confidence > 40 ? 'confidence-medium' : 'confidence-low'}">
+        ${confidence}% Confidence
+      </span>
+    </div>
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Processing ${relevantCategories.length} relevant life areas...</span>
+      <div style="margin-top: 15px; font-size: 0.9em; color: #aaa;">
+        ${isPremium ? 'Premium: Multi-step analysis active' : 'Free: Basic analysis'}
+      </div>
+    </div>
+  `;
+  
+  btn.disabled = true;
+  btn.innerHTML = 'Analyzing... <div class="spinner" style="width: 16px; height: 16px; display: inline-block; margin-left: 10px;"></div>';
+  
+  try {
+    // Clear draft since we're processing the question
+    localStorage.removeItem('draftQuestion');
+    
+    // Call our secure API instead of Google directly
+    const response = await fetch('/api/advice', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        question: question,
+        profile: profiles
+      })
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Request failed');
     }
-
+    
+    const data = await response.json();
+    const advice = data.advice;
+    
+    // Save decision to history
+    const decisionId = saveDecision(question, advice, confidence, relevantCategories, []);
+    
+    // Format the advice with better styling
+    const formattedAdvice = advice
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n/g, '<br>');
+    
+    adviceEl.innerHTML = `
+      <div class="advice-header">
+        💡 Your ${isPremium ? 'Premium' : ''} Personalized Advice
+        <span class="confidence-indicator ${confidence > 70 ? 'confidence-high' : confidence > 40 ? 'confidence-medium' : 'confidence-low'}">
+          ${confidence}% Confidence
+        </span>
+      </div>
+      
+      <div style="background: rgba(118,169,255,0.05); padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #76a9ff;">
+        <strong>Your Question:</strong> "${question}"
+        ${isPremium ? '<br><small style="color: #4CAF50;">💎 Premium Analysis Applied</small>' : '<br><small style="color: #ff9800;">🆓 Free Tier Analysis</small>'}
+      </div>
+      
+      <div style="margin-top: 20px; padding-top: 15px; border-top: 2px solid #e2e8f0;">
+        <p>${formattedAdvice}</p>
+      </div>
+      
+      ${!isPremium ? `
+      <div style="background: rgba(255, 152, 0, 0.1); border: 2px solid rgba(255, 152, 0, 0.3); border-radius: 15px; padding: 20px; margin: 20px 0; text-align: center;">
+        <h4 style="color: #ff9800; margin-bottom: 1rem;">🚀 Want Deeper Analysis?</h4>
+        <p>Premium users get multi-step analysis, more detailed insights, and unlimited questions.</p>
+        <button onclick="showUpgradeModal()" style="background: linear-gradient(135deg, #4CAF50, #45a049); margin-top: 10px; width: auto; padding: 10px 20px;">
+          Upgrade to Premium - $9.99/month
+        </button>
+      </div>
+      ` : ''}
+      
+      <div style="text-align: center; margin-top: 20px; padding: 15px; background: rgba(118, 169, 255, 0.05); border-radius: 10px;">
+        <h4>How helpful was this advice?</h4>
+        <button class="rating-btn" onclick="rateAdvice(${decisionId}, 1)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">1 - Not helpful</button>
+        <button class="rating-btn" onclick="rateAdvice(${decisionId}, 2)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">2 - Somewhat</button>
+        <button class="rating-btn" onclick="rateAdvice(${decisionId}, 3)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">3 - Helpful</button>
+        <button class="rating-btn" onclick="rateAdvice(${decisionId}, 4)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">4 - Very helpful</button>
+        <button class="rating-btn" onclick="rateAdvice(${decisionId}, 5)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">5 - Excellent</button>
+      </div>
+      
+      <div style="margin-top: 25px; padding: 15px; background: rgba(118,169,255,0.05); border-radius: 10px; text-align: center;">
+        <small style="color: #718096;">
+          💾 This advice has been saved to your decision history. 
+          ${confidence < 60 ? 'Complete more profile categories for higher confidence advice.' : 'High confidence - advice based on comprehensive profile data.'}
+        </small>
+      </div>
+    `;
+    
+  } catch (error) {
+    console.error('Error:', error);
+    
+    adviceEl.innerHTML = `
+      <div class="advice-header">❌ Unable to Generate Advice</div>
+      <div style="background: rgba(244, 67, 54, 0.1); padding: 20px; border-radius: 10px; margin-top: 15px; border: 2px solid #f44336;">
+        <h4 style="margin-top: 0; color: #f44336;">Something went wrong:</h4>
+        <p style="color: #ffcdd2;">${error.message}</p>
+        
+        <div style="margin-top: 20px;">
+          <strong style="color: #fff;">Try these solutions:</strong><br>
+          • Check your internet connection<br>
+          • Try asking a simpler, more specific question<br>
+          • Refresh the page and try again<br>
+          • Complete more profile sections for better results<br>
+          • Break complex questions into smaller parts
+        </div>
+        
+        <button onclick="getAdvice()" style="margin-top: 15px; background: #f44336;">
+          🔄 Try Again
+        </button>
+      </div>
+    `;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Get AI-Powered Advice <span class="typing-indicator">|</span>';
+  }
+}
     // Rate advice functionality
     function rateAdvice(decisionId, rating) {
       const history = JSON.parse(localStorage.getItem('decisionHistory') || '[]');
@@ -1930,4 +1824,5 @@ Provide good advice while staying within free tier scope.`;
     localStorage.setItem('lastKnownVersion', currentVersion);
   </script>
 </body>
+
 </html>
