@@ -826,6 +826,18 @@
       }
     }
   </style>
+<!-- Add this before your closing </head> tag in categories.html -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // Replace these with your actual Supabase credentials
+  const SUPABASE_URL = 'https://hxxqhxavksfyhkiiwrze.supabase.co'  // Replace with your Project URL
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4eHFoeGF2a3NmeWhraWl3cnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1NzEyMjAsImV4cCI6MjA3MDE0NzIyMH0.uwRVMMlNRvxhqkQzZ_KWgT1EF0Aefk4CXeLqJPkYiPU'  // Replace with your anon public key
+  
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  
+  // Test connection
+  console.log('Supabase client initialized:', supabase)
+</script>
 </head>
 <body>
 
@@ -1510,5 +1522,6 @@
 
 </body>
 </html>
+
 
 
