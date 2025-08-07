@@ -124,6 +124,12 @@
       background: #00cccc;
     }
 
+    button:disabled {
+      background: #555;
+      color: #888;
+      cursor: not-allowed;
+    }
+
     .error-message {
       color: #ff5722;
       margin-top: 10px;
@@ -133,13 +139,6 @@
     .success-message {
       color: #4caf50;
       margin-top: 10px;
-      font-size: 0.9rem;
-    }
-
-    .form-footer {
-      text-align: center;
-      margin-top: 20px;
-      color: #888;
       font-size: 0.9rem;
     }
 
@@ -176,12 +175,49 @@
     .logout-btn:hover {
       background: #d84315;
     }
+
+    .loading {
+      text-align: center;
+      color: #888;
+    }
+
+    .spinner {
+      border: 2px solid #333;
+      border-top: 2px solid cyan;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .info-box {
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
   </style>
+  <!-- Add Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
   <div class="login-container">
-    <!-- Welcome back section (hidden initially) -->
+    <!-- Loading section -->
+    <div id="loading-section" class="loading">
+      <div class="spinner"></div>
+      <p>Checking authentication...</p>
+    </div>
+
+    <!-- Welcome back section -->
     <div id="logged-in-section" class="user-info" style="display: none;">
       <div class="logo">
         <h1>🧠 Knowme AI</h1>
@@ -193,7 +229,7 @@
     </div>
 
     <!-- Login/Signup section -->
-    <div id="auth-section">
+    <div id="auth-section" style="display: none;">
       <div class="logo">
         <h1>🧠 Knowme AI</h1>
         <p>Your Personal Decision Assistant</p>
@@ -208,8 +244,8 @@
       <div class="form-section active" id="login-section">
         <form id="login-form">
           <div class="form-group">
-            <label for="login-username">Username</label>
-            <input type="text" id="login-username" name="username" required>
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" name="email" required>
           </div>
           <div class="form-group">
             <label for="login-password">Password</label>
@@ -224,36 +260,58 @@
       <div class="form-section" id="signup-section">
         <form id="signup-form">
           <div class="form-group">
-            <label for="signup-username">Choose Username</label>
-            <input type="text" id="signup-username" name="username" required>
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" name="email" required>
           </div>
           <div class="form-group">
-            <label for="signup-password">Password</label>
-            <input type="password" id="signup-password" name="password" required>
+            <label for="signup-password">Password (min 6 characters)</label>
+            <input type="password" id="signup-password" name="password" required minlength="6">
           </div>
           <div class="form-group">
-            <label for="signup-email">Email (optional)</label>
-            <input type="email" id="signup-email" name="email">
+            <label for="signup-username">Display Name (optional)</label>
+            <input type="text" id="signup-username" name="username">
           </div>
           <button type="submit">Create Account</button>
           <div id="signup-message"></div>
         </form>
+
+        <div class="info-box">
+          <strong>✨ With an account you get:</strong><br>
+          • Data synced across all devices<br>
+          • Decision history saved forever<br>
+          • Backup of all your profiles<br>
+          • Premium upgrade options
+        </div>
       </div>
 
       <div class="guest-option">
-        <a href="categories.html" class="guest-link">Continue as guest (data won't be saved)</a>
+        <a href="categories.html" class="guest-link">Continue as guest (data stays local only)</a>
       </div>
     </div>
   </div>
 
   <script>
-    // Check if user is already logged in
-    window.addEventListener('load', () => {
-      const currentUser = localStorage.getItem('currentUser');
-      if (currentUser) {
-        showLoggedInState(currentUser);
+    // Initialize Supabase with your credentials
+    const SUPABASE_URL = 'https://hxxqhxavksfyhkiiwrze.supabase.co'
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4eHFoeGF2a3NmeWhraWl3cnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1NzEyMjAsImV4cCI6MjA3MDE0NzIyMH0.uwRVMMlNRvxhqkQzZ_KWgT1EF0Aefk4CXeLqJPkYiPU'
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+    // Check authentication status on page load
+    window.addEventListener('load', async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (session) {
+          showLoggedInState(session.user)
+        } else {
+          showAuthSection()
+        }
+      } catch (error) {
+        console.error('Error checking session:', error)
+        showAuthSection()
       }
-    });
+    })
 
     // Tab switching
     function showTab(tabName) {
@@ -266,149 +324,141 @@
       document.getElementById(tabName + '-section').classList.add('active');
     }
 
-    // Simple user storage system (localStorage based)
-    function getUsers() {
-      return JSON.parse(localStorage.getItem('users') || '{}');
-    }
-
-    function saveUsers(users) {
-      localStorage.setItem('users', JSON.stringify(users));
-    }
-
-    function saveUserProfile(username, profileData) {
-      const userProfiles = JSON.parse(localStorage.getItem('userProfiles') || '{}');
-      if (!userProfiles[username]) {
-        userProfiles[username] = {};
-      }
-      Object.assign(userProfiles[username], profileData);
-      localStorage.setItem('userProfiles', JSON.stringify(userProfiles));
-    }
-
-    function loadUserProfile(username) {
-      const userProfiles = JSON.parse(localStorage.getItem('userProfiles') || '{}');
-      return userProfiles[username] || {};
+    // Show auth section
+    function showAuthSection() {
+      document.getElementById('loading-section').style.display = 'none'
+      document.getElementById('logged-in-section').style.display = 'none'
+      document.getElementById('auth-section').style.display = 'block'
     }
 
     // Signup handler
-    document.getElementById('signup-form').addEventListener('submit', (e) => {
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const username = document.getElementById('signup-username').value.trim();
-      const password = document.getElementById('signup-password').value;
       const email = document.getElementById('signup-email').value.trim();
+      const password = document.getElementById('signup-password').value;
+      const username = document.getElementById('signup-username').value.trim();
       const messageEl = document.getElementById('signup-message');
+      const submitBtn = e.target.querySelector('button[type="submit"]');
 
-      if (username.length < 3) {
-        messageEl.innerHTML = '<div class="error-message">Username must be at least 3 characters</div>';
-        return;
+      // Disable button and show loading
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating Account...';
+      messageEl.innerHTML = '';
+
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              display_name: username || email.split('@')[0]
+            }
+          }
+        });
+
+        if (error) {
+          messageEl.innerHTML = `<div class="error-message">${error.message}</div>`;
+        } else {
+          if (data.session) {
+            // User is logged in immediately (email confirmation disabled)
+            messageEl.innerHTML = '<div class="success-message">Account created successfully!</div>';
+            setTimeout(() => {
+              showLoggedInState(data.user);
+            }, 1000);
+          } else {
+            // Email confirmation required
+            messageEl.innerHTML = '<div class="success-message">Account created! Please check your email to verify your account before logging in.</div>';
+          }
+        }
+      } catch (err) {
+        messageEl.innerHTML = `<div class="error-message">An error occurred: ${err.message}</div>`;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Account';
       }
-
-      if (password.length < 4) {
-        messageEl.innerHTML = '<div class="error-message">Password must be at least 4 characters</div>';
-        return;
-      }
-
-      const users = getUsers();
-      
-      if (users[username]) {
-        messageEl.innerHTML = '<div class="error-message">Username already exists</div>';
-        return;
-      }
-
-      // Create new user
-      users[username] = {
-        password: password, // In real app, this would be hashed
-        email: email,
-        createdAt: new Date().toISOString()
-      };
-
-      saveUsers(users);
-      localStorage.setItem('currentUser', username);
-      
-      messageEl.innerHTML = '<div class="success-message">Account created successfully!</div>';
-      
-      setTimeout(() => {
-        showLoggedInState(username);
-      }, 1000);
     });
 
     // Login handler
-    document.getElementById('login-form').addEventListener('submit', (e) => {
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const username = document.getElementById('login-username').value.trim();
+      const email = document.getElementById('login-email').value.trim();
       const password = document.getElementById('login-password').value;
       const messageEl = document.getElementById('login-message');
+      const submitBtn = e.target.querySelector('button[type="submit"]');
 
-      const users = getUsers();
-      
-      if (!users[username]) {
-        messageEl.innerHTML = '<div class="error-message">Username not found</div>';
-        return;
-      }
+      // Disable button and show loading
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Signing In...';
+      messageEl.innerHTML = '';
 
-      if (users[username].password !== password) {
-        messageEl.innerHTML = '<div class="error-message">Incorrect password</div>';
-        return;
-      }
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
 
-      localStorage.setItem('currentUser', username);
-      
-      // Load user's profile data
-      const userProfile = loadUserProfile(username);
-      
-      // Set individual profile data back to localStorage for the app to use
-      Object.keys(userProfile).forEach(key => {
-        if (userProfile[key]) {
-          localStorage.setItem(key, JSON.stringify(userProfile[key]));
+        if (error) {
+          messageEl.innerHTML = `<div class="error-message">${error.message}</div>`;
+        } else {
+          messageEl.innerHTML = '<div class="success-message">Login successful!</div>';
+          
+          setTimeout(() => {
+            showLoggedInState(data.user);
+          }, 1000);
         }
-      });
-
-      messageEl.innerHTML = '<div class="success-message">Login successful!</div>';
-      
-      setTimeout(() => {
-        showLoggedInState(username);
-      }, 1000);
+      } catch (err) {
+        messageEl.innerHTML = `<div class="error-message">An error occurred: ${err.message}</div>`;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Login';
+      }
     });
 
-    function showLoggedInState(username) {
+    function showLoggedInState(user) {
+      document.getElementById('loading-section').style.display = 'none';
       document.getElementById('auth-section').style.display = 'none';
       document.getElementById('logged-in-section').style.display = 'block';
-      document.getElementById('username-display').textContent = username;
+      
+      // Show display name or email
+      const displayName = user.user_metadata?.display_name || user.email.split('@')[0];
+      document.getElementById('username-display').textContent = displayName;
+      
+      // Store user info for other pages
+      localStorage.setItem('currentUser', JSON.stringify({
+        id: user.id,
+        email: user.email,
+        displayName: displayName
+      }));
     }
 
-    function logout() {
-      localStorage.removeItem('currentUser');
-      // Optionally clear profile data
-      const profileKeys = ['mentalHealthProfile', 'financeProfile', 'careerProfile', 'relationshipsProfile', 'fitnessProfile', 'lifestyleProfile'];
-      profileKeys.forEach(key => localStorage.removeItem(key));
-      
-      location.reload();
+    async function logout() {
+      try {
+        await supabase.auth.signOut();
+        localStorage.removeItem('currentUser');
+        location.reload();
+      } catch (error) {
+        console.error('Error signing out:', error);
+        alert('Error signing out. Please try again.');
+      }
     }
 
     function goToApp() {
       window.location.href = 'categories.html';
     }
 
-    // Save profile data when user completes forms (call this from your profile forms)
-    function saveCurrentUserProfile() {
-      const currentUser = localStorage.getItem('currentUser');
-      if (currentUser) {
-        const profileData = {
-          mentalHealthProfile: JSON.parse(localStorage.getItem('mentalHealthProfile') || '{}'),
-          financeProfile: JSON.parse(localStorage.getItem('financeProfile') || '{}'),
-          careerProfile: JSON.parse(localStorage.getItem('careerProfile') || '{}'),
-          relationshipsProfile: JSON.parse(localStorage.getItem('relationshipsProfile') || '{}'),
-          fitnessProfile: JSON.parse(localStorage.getItem('fitnessProfile') || '{}'),
-          lifestyleProfile: JSON.parse(localStorage.getItem('lifestyleProfile') || '{}')
-        };
-        
-        saveUserProfile(currentUser, profileData);
+    // Listen for auth state changes
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        showLoggedInState(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        showAuthSection();
       }
-    }
+    });
 
-    // Make this function available globally for other pages to use
-    window.saveCurrentUserProfile = saveCurrentUserProfile;
+    // Make supabase available globally for other pages
+    window.supabase = supabase;
   </script>
 
 </body>
