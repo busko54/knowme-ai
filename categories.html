@@ -1414,35 +1414,77 @@
     }
 
     // Check which categories are completed and mark them
-    function markCompletedCategories() {
-      const categoryMappings = {
-        'mental-health': 'mentalHealthProfile',
-        'career': 'careerProfile', 
-        'finance': 'financeProfile',
-        'fitness': 'fitnessProfile',
-        'relationships': 'relationshipsProfile',
-        'lifestyle': 'lifestyleProfile'
-      };
+    // Check which categories are completed and mark them
+async function markCompletedCategories() {
+  const categoryMappings = {
+    'mental-health': 'mental_health_profile',
+    'career': 'career_profile', 
+    'finance': 'finance_profile',
+    'fitness': 'fitness_profile',
+    'relationships': 'relationships_profile',
+    'lifestyle': 'lifestyle_profile'
+  };
 
-      // Check core categories
-      Object.keys(categoryMappings).forEach(categoryParam => {
-        const storageKey = categoryMappings[categoryParam];
-        const savedData = localStorage.getItem(storageKey);
-        
-        if (savedData) {
-          try {
-            const data = JSON.parse(savedData);
-            if (Object.keys(data).length > 0) {
-              const categoryElement = document.querySelector(`a[href="category-form.html?category=${categoryParam}"]`);
-              if (categoryElement) {
-                categoryElement.classList.add('completed');
-              }
+  // Get current user
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  
+  if (currentUser.id) {
+    // Load from Supabase
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .single();
+
+      if (data) {
+        // Check each category
+        Object.keys(categoryMappings).forEach(categoryParam => {
+          const dbColumn = categoryMappings[categoryParam];
+          const profileData = data[dbColumn];
+          
+          if (profileData && Object.keys(profileData).length > 0) {
+            const categoryElement = document.querySelector(`a[href="category-form.html?category=${categoryParam}"]`);
+            if (categoryElement) {
+              categoryElement.classList.add('completed');
             }
-          } catch (error) {
-            console.error(`Error parsing ${storageKey}:`, error);
           }
+        });
+      }
+    } catch (error) {
+      console.log('Error loading profile data:', error);
+      // Fallback to localStorage
+      loadFromLocalStorage();
+    }
+  } else {
+    // Not logged in, use localStorage
+    loadFromLocalStorage();
+  }
+  
+  updateContinueButton();
+
+  // Fallback function for localStorage
+  function loadFromLocalStorage() {
+    Object.keys(categoryMappings).forEach(categoryParam => {
+      const storageKey = categoryMappings[categoryParam].replace('_profile', 'Profile');
+      const savedData = localStorage.getItem(storageKey);
+      
+      if (savedData) {
+        try {
+          const data = JSON.parse(savedData);
+          if (Object.keys(data).length > 0) {
+            const categoryElement = document.querySelector(`a[href="category-form.html?category=${categoryParam}"]`);
+            if (categoryElement) {
+              categoryElement.classList.add('completed');
+            }
+          }
+        } catch (error) {
+          console.error(`Error parsing ${storageKey}:`, error);
         }
-      });
+      }
+    });
+  }
+}
 
       // Check premium categories if user is premium
       if (isPremiumUser()) {
@@ -1522,6 +1564,7 @@
 
 </body>
 </html>
+
 
 
 
