@@ -1170,35 +1170,84 @@
     }
 
     // Form submission handlers
-    function collectFormData(formId, profileKey, categoryName) {
-      const form = document.getElementById(formId);
-      if (!form) return;
-      
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(form);
-        const data = {};
-        
-        // Collect all form data
-        for (let [key, value] of formData.entries()) {
-          if (key.includes('Priorities')) {
-            // Handle checkbox arrays
-            if (!data[key]) data[key] = [];
-            data[key].push(value);
-          } else {
-            data[key] = value;
-          }
-        }
-        
-        // Add timestamp
-        data.completedAt = new Date().toISOString();
-        
-        localStorage.setItem(profileKey, JSON.stringify(data));
-        redirectToAdvice(categoryName);
-      });
+   function collectFormData(formId, profileKey, categoryName) {
+  const form = document.getElementById(formId);
+  if (!form) return;
+  
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(form);
+    const data = {};
+    
+    // Collect all form data
+    for (let [key, value] of formData.entries()) {
+      if (key.includes('Priorities')) {
+        // Handle checkbox arrays
+        if (!data[key]) data[key] = [];
+        data[key].push(value);
+      } else {
+        data[key] = value;
+      }
     }
+    
+    // Add timestamp
+    data.completedAt = new Date().toISOString();
+    
+    // Get current user
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    
+    if (currentUser.id) {
+      // Save to Supabase
+      await saveToSupabase(currentUser.id, profileKey, data);
+    } else {
+      // Save to localStorage (guest mode)
+      localStorage.setItem(profileKey, JSON.stringify(data));
+    }
+    
+    redirectToAdvice(categoryName);
+  });
+}
 
+// Function to save profile data to Supabase
+async function saveToSupabase(userId, profileKey, data) {
+  try {
+    // Convert profileKey to database column name
+    const columnMapping = {
+      'mentalHealthProfile': 'mental_health_profile',
+      'financeProfile': 'finance_profile',
+      'careerProfile': 'career_profile',
+      'relationshipsProfile': 'relationships_profile',
+      'fitnessProfile': 'fitness_profile',
+      'lifestyleProfile': 'lifestyle_profile'
+    };
+    
+    const dbColumn = columnMapping[profileKey];
+    if (!dbColumn) return;
+    
+    const updateData = {};
+    updateData[dbColumn] = data;
+    
+    const { error } = await supabase
+      .from('profiles')
+      .update(updateData)
+      .eq('id', userId);
+    
+    if (error) {
+      console.error('Error saving to Supabase:', error);
+      // Fallback to localStorage
+      localStorage.setItem(profileKey, JSON.stringify(data));
+    } else {
+      console.log('Data saved to Supabase successfully');
+      // Also save to localStorage for offline use
+      localStorage.setItem(profileKey, JSON.stringify(data));
+    }
+  } catch (error) {
+    console.error('Error in saveToSupabase:', error);
+    // Fallback to localStorage
+    localStorage.setItem(profileKey, JSON.stringify(data));
+  }
+}
     // Initialize form handlers for all categories
     const categoryMappings = {
       'mental': { key: 'mentalHealthProfile', name: 'Mental Health' },
@@ -1235,4 +1284,5 @@
   </script>
 
 </body>
+
 </html>
