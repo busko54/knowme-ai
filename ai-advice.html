@@ -655,6 +655,14 @@
       }
     }
   </style>
+  <!-- Add Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://hxxqhxavksfyhkiiwrze.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4eHFoeGF2a3NmeWhraWl3cnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1NzEyMjAsImV4cCI6MjA3MDE0NzIyMH0.uwRVMMlNRvxhqkQzZ_KWgT1EF0Aefk4CXeLqJPkYiPU'
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+</script>
+</head>
 </head>
 <body>
   <!-- Auto-save indicator -->
@@ -875,16 +883,65 @@
     }
 
     // Load all profile data from localStorage
-    const profiles = {
-      personal: JSON.parse(localStorage.getItem('userProfile') || '{}'),
-      mental: JSON.parse(localStorage.getItem('mentalHealthProfile') || '{}'),
-      finance: JSON.parse(localStorage.getItem('financeProfile') || '{}'),
-      career: JSON.parse(localStorage.getItem('careerProfile') || '{}'),
-      relationships: JSON.parse(localStorage.getItem('relationshipsProfile') || '{}'),
-      fitness: JSON.parse(localStorage.getItem('fitnessProfile') || '{}'),
-      lifestyle: JSON.parse(localStorage.getItem('lifestyleProfile') || '{}')
-    };
+ // Load all profile data from Supabase or localStorage
+let profiles = {
+  personal: {},
+  mental: {},
+  finance: {},
+  career: {},
+  relationships: {},
+  fitness: {},
+  lifestyle: {}
+};
 
+// Function to load profile data
+async function loadProfileData() {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  
+  if (currentUser.id) {
+    // Load from Supabase
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .single();
+
+      if (data) {
+        profiles = {
+          personal: {},
+          mental: data.mental_health_profile || {},
+          finance: data.finance_profile || {},
+          career: data.career_profile || {},
+          relationships: data.relationships_profile || {},
+          fitness: data.fitness_profile || {},
+          lifestyle: data.lifestyle_profile || {}
+        };
+      }
+    } catch (error) {
+      console.log('Error loading from Supabase, using localStorage:', error);
+      loadFromLocalStorage();
+    }
+  } else {
+    // Load from localStorage (guest mode)
+    loadFromLocalStorage();
+  }
+  
+  // Update the UI after loading data
+  updateProfileDisplay();
+}
+
+function loadFromLocalStorage() {
+  profiles = {
+    personal: JSON.parse(localStorage.getItem('userProfile') || '{}'),
+    mental: JSON.parse(localStorage.getItem('mentalHealthProfile') || '{}'),
+    finance: JSON.parse(localStorage.getItem('financeProfile') || '{}'),
+    career: JSON.parse(localStorage.getItem('careerProfile') || '{}'),
+    relationships: JSON.parse(localStorage.getItem('relationshipsProfile') || '{}'),
+    fitness: JSON.parse(localStorage.getItem('fitnessProfile') || '{}'),
+    lifestyle: JSON.parse(localStorage.getItem('lifestyleProfile') || '{}')
+  };
+}
     const categoryInfo = {
       personal: { name: '👤 Personal', param: 'profile' },
       mental: { name: '🧠 Mental Health', param: 'mental-health' },
@@ -1785,7 +1842,12 @@ async function getAdvice() {
     });
 
     // Initialize with enhanced features
-    updateSmartQuestions();
+async function initializePage() {
+  await loadProfileData();
+  updateSmartQuestions();
+}
+
+initializePage();
 
     // Auto-refresh suggestions every 45 seconds if user is active
     let lastActivity = Date.now();
@@ -1826,3 +1888,4 @@ async function getAdvice() {
 </body>
 
 </html>
+
