@@ -928,8 +928,10 @@ async function loadProfileData() {
   }
   
   // Update the UI after loading data
-  updateProfileDisplay();
-}
+// Update the UI after loading data
+document.getElementById('profile-summary').textContent = createProfileSummary();
+updateSmartQuestions();
+markCompletedCategories();}
 
 function loadFromLocalStorage() {
   profiles = {
@@ -1888,4 +1890,5 @@ initializePage();
 </body>
 
 </html>
+
 
