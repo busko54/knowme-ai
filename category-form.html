@@ -1033,17 +1033,133 @@
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category') || 'mental-health';
 
+    // Function to load existing data when the form is displayed
+    async function loadExistingData(categoryType, profileKey) {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      let existingData = null;
+
+      if (currentUser.id) {
+        // Try to load from Supabase first
+        try {
+          const columnMapping = {
+            'mentalHealthProfile': 'mental_health_profile',
+            'financeProfile': 'finance_profile',
+            'careerProfile': 'career_profile',
+            'relationshipsProfile': 'relationships_profile',
+            'fitnessProfile': 'fitness_profile',
+            'lifestyleProfile': 'lifestyle_profile',
+            'educationProfile': 'education_profile',
+            'familyProfile': 'family_profile',
+            'creativityProfile': 'creativity_profile',
+            'spiritualityProfile': 'spirituality_profile',
+            'travelProfile': 'travel_profile',
+            'communityProfile': 'community_profile'
+          };
+
+          const dbColumn = columnMapping[profileKey];
+          if (dbColumn) {
+            const { data, error } = await supabase
+              .from('profiles')
+              .select(dbColumn)
+              .eq('id', currentUser.id)
+              .single();
+
+            if (data && data[dbColumn] && Object.keys(data[dbColumn]).length > 0) {
+              existingData = data[dbColumn];
+            }
+          }
+        } catch (error) {
+          console.log('Error loading from Supabase, using localStorage:', error);
+        }
+      }
+
+      // Fallback to localStorage if Supabase didn't work or no user
+      if (!existingData) {
+        const stored = localStorage.getItem(profileKey);
+        if (stored) {
+          try {
+            existingData = JSON.parse(stored);
+          } catch (error) {
+            console.error('Error parsing stored data:', error);
+            return;
+          }
+        }
+      }
+
+      if (!existingData || Object.keys(existingData).length === 0) {
+        return; // No existing data to load
+      }
+
+      // Populate the form fields
+      const form = document.getElementById(categoryType + '-form');
+      if (!form) return;
+
+      Object.keys(existingData).forEach(key => {
+        if (key === 'completedAt') return; // Skip timestamp
+
+        const elements = form.querySelectorAll(`[name="${key}"]`);
+        if (elements.length === 0) return;
+
+        const value = existingData[key];
+
+        if (elements[0].type === 'checkbox') {
+          // Handle checkbox arrays (like priorities)
+          if (Array.isArray(value)) {
+            elements.forEach(checkbox => {
+              checkbox.checked = value.includes(checkbox.value);
+            });
+          } else {
+            elements[0].checked = value;
+          }
+        } else if (elements[0].type === 'range') {
+          elements[0].value = value;
+          // Trigger the display update function
+          const event = new Event('input');
+          elements[0].dispatchEvent(event);
+        } else {
+          elements[0].value = value;
+        }
+      });
+
+      // Update data quality indicator after loading
+      updateDataQuality(categoryType);
+      
+      console.log(`Loaded existing data for ${categoryType}:`, existingData);
+    }
+
     // Show the correct form
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       const forms = document.querySelectorAll('.category-form');
       forms.forEach(form => form.classList.remove('active'));
       
       const targetForm = document.getElementById(category);
       if (targetForm) {
         targetForm.classList.add('active');
+        
+        // Load existing data for the current category
+        const categoryMappings = {
+          'mental-health': { key: 'mentalHealthProfile', type: 'mental' },
+          'finance': { key: 'financeProfile', type: 'finance' },
+          'career': { key: 'careerProfile', type: 'career' },
+          'relationships': { key: 'relationshipsProfile', type: 'relationships' },
+          'fitness': { key: 'fitnessProfile', type: 'fitness' },
+          'lifestyle': { key: 'lifestyleProfile', type: 'lifestyle' },
+          'education': { key: 'educationProfile', type: 'education' },
+          'family': { key: 'familyProfile', type: 'family' },
+          'creativity': { key: 'creativityProfile', type: 'creativity' },
+          'spirituality': { key: 'spiritualityProfile', type: 'spirituality' },
+          'travel': { key: 'travelProfile', type: 'travel' },
+          'community': { key: 'communityProfile', type: 'community' }
+        };
+        
+        const mapping = categoryMappings[category];
+        if (mapping) {
+          await loadExistingData(mapping.type, mapping.key);
+        }
       } else {
         // Default to mental health if invalid category
         document.getElementById('mental-health').classList.add('active');
+        await loadExistingData('mental', 'mentalHealthProfile');
       }
       
       // Update profile completion on load
@@ -1053,6 +1169,7 @@
     // Range slider display functions
     function updateStressDisplay(value) {
       const display = document.getElementById('stress-display');
+      if (!display) return;
       const labels = {
         1: '1 - Very calm', 2: '2 - Mostly calm', 3: '3 - Slightly stressed',
         4: '4 - Somewhat stressed', 5: '5 - Moderate stress', 6: '6 - Pretty stressed',
@@ -1064,6 +1181,7 @@
 
     function updateJobDisplay(value) {
       const display = document.getElementById('job-display');
+      if (!display) return;
       const labels = {
         1: '1 - Hate it', 2: '2 - Really dislike', 3: '3 - Dislike', 4: '4 - Below average',
         5: '5 - It\'s okay', 6: '6 - Pretty good', 7: '7 - Good', 8: '8 - Really good',
@@ -1074,6 +1192,7 @@
 
     function updateSocialDisplay(value) {
       const display = document.getElementById('social-display');
+      if (!display) return;
       const labels = {
         1: '1 - Very lonely', 2: '2 - Quite lonely', 3: '3 - Somewhat lonely',
         4: '4 - Could be better', 5: '5 - It\'s okay', 6: '6 - Pretty good',
@@ -1084,6 +1203,7 @@
 
     function updateFitnessDisplay(value) {
       const display = document.getElementById('fitness-display');
+      if (!display) return;
       const labels = {
         1: '1 - Very unfit', 2: '2 - Poor', 3: '3 - Below average', 4: '4 - Slightly below',
         5: '5 - Average', 6: '6 - Above average', 7: '7 - Good', 8: '8 - Very good',
@@ -1094,6 +1214,7 @@
 
     function updateLifestyleDisplay(value) {
       const display = document.getElementById('lifestyle-display');
+      if (!display) return;
       const labels = {
         1: '1 - Very unhappy', 2: '2 - Unhappy', 3: '3 - Somewhat unhappy',
         4: '4 - Could be better', 5: '5 - It\'s okay', 6: '6 - Pretty good',
@@ -1104,6 +1225,7 @@
 
     function updateCreativityDisplay(value) {
       const display = document.getElementById('creativity-display');
+      if (!display) return;
       const labels = {
         1: '1 - Not creative', 2: '2 - Slightly creative', 3: '3 - Somewhat creative',
         4: '4 - Below average', 5: '5 - Moderately creative', 6: '6 - Above average',
@@ -1114,6 +1236,7 @@
 
     function updateAdventureDisplay(value) {
       const display = document.getElementById('adventure-display');
+      if (!display) return;
       const labels = {
         1: '1 - Very cautious', 2: '2 - Cautious', 3: '3 - Somewhat cautious',
         4: '4 - Below average', 5: '5 - Moderately adventurous', 6: '6 - Above average',
@@ -1179,90 +1302,91 @@
     }
 
     // Form submission handlers
-   function collectFormData(formId, profileKey, categoryName) {
-  const form = document.getElementById(formId);
-  if (!form) return;
-  
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(form);
-    const data = {};
-    
-    // Collect all form data
-    for (let [key, value] of formData.entries()) {
-      if (key.includes('Priorities')) {
-        // Handle checkbox arrays
-        if (!data[key]) data[key] = [];
-        data[key].push(value);
-      } else {
-        data[key] = value;
+    function collectFormData(formId, profileKey, categoryName) {
+      const form = document.getElementById(formId);
+      if (!form) return;
+      
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        const data = {};
+        
+        // Collect all form data
+        for (let [key, value] of formData.entries()) {
+          if (key.includes('Priorities')) {
+            // Handle checkbox arrays
+            if (!data[key]) data[key] = [];
+            data[key].push(value);
+          } else {
+            data[key] = value;
+          }
+        }
+        
+        // Add timestamp
+        data.completedAt = new Date().toISOString();
+        
+        // Get current user
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        
+        if (currentUser.id) {
+          // Save to Supabase
+          await saveToSupabase(currentUser.id, profileKey, data);
+        } else {
+          // Save to localStorage (guest mode)
+          localStorage.setItem(profileKey, JSON.stringify(data));
+        }
+        
+        redirectToAdvice(categoryName);
+      });
+    }
+
+    // Function to save profile data to Supabase
+    async function saveToSupabase(userId, profileKey, data) {
+      try {
+        // Convert profileKey to database column name
+        const columnMapping = {
+          'mentalHealthProfile': 'mental_health_profile',
+          'financeProfile': 'finance_profile',
+          'careerProfile': 'career_profile',
+          'relationshipsProfile': 'relationships_profile',
+          'fitnessProfile': 'fitness_profile',
+          'lifestyleProfile': 'lifestyle_profile',
+          'educationProfile': 'education_profile',
+          'familyProfile': 'family_profile',
+          'creativityProfile': 'creativity_profile',
+          'spiritualityProfile': 'spirituality_profile',
+          'travelProfile': 'travel_profile',
+          'communityProfile': 'community_profile'
+        };
+        
+        const dbColumn = columnMapping[profileKey];
+        if (!dbColumn) return;
+        
+        const updateData = {};
+        updateData[dbColumn] = data;
+        
+        const { error } = await supabase
+          .from('profiles')
+          .update(updateData)
+          .eq('id', userId);
+        
+        if (error) {
+          console.error('Error saving to Supabase:', error);
+          // Fallback to localStorage
+          localStorage.setItem(profileKey, JSON.stringify(data));
+        } else {
+          console.log('Data saved to Supabase successfully');
+          // Also save to localStorage for offline use
+          localStorage.setItem(profileKey, JSON.stringify(data));
+        }
+      } catch (error) {
+        console.error('Error in saveToSupabase:', error);
+        // Fallback to localStorage
+        localStorage.setItem(profileKey, JSON.stringify(data));
       }
     }
-    
-    // Add timestamp
-    data.completedAt = new Date().toISOString();
-    
-    // Get current user
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    
-    if (currentUser.id) {
-      // Save to Supabase
-      await saveToSupabase(currentUser.id, profileKey, data);
-    } else {
-      // Save to localStorage (guest mode)
-      localStorage.setItem(profileKey, JSON.stringify(data));
-    }
-    
-    redirectToAdvice(categoryName);
-  });
-}
 
-// Function to save profile data to Supabase
-async function saveToSupabase(userId, profileKey, data) {
-  try {
-    // Convert profileKey to database column name
-   const columnMapping = {
-  'mentalHealthProfile': 'mental_health_profile',
-  'financeProfile': 'finance_profile',
-  'careerProfile': 'career_profile',
-  'relationshipsProfile': 'relationships_profile',
-  'fitnessProfile': 'fitness_profile',
-  'lifestyleProfile': 'lifestyle_profile',
-  'educationProfile': 'education_profile',
-  'familyProfile': 'family_profile',
-  'creativityProfile': 'creativity_profile',
-  'spiritualityProfile': 'spirituality_profile',
-  'travelProfile': 'travel_profile',
-  'communityProfile': 'community_profile'
-};
-    
-    const dbColumn = columnMapping[profileKey];
-    if (!dbColumn) return;
-    
-    const updateData = {};
-    updateData[dbColumn] = data;
-    
-    const { error } = await supabase
-      .from('profiles')
-      .update(updateData)
-      .eq('id', userId);
-    
-    if (error) {
-      console.error('Error saving to Supabase:', error);
-      // Fallback to localStorage
-      localStorage.setItem(profileKey, JSON.stringify(data));
-    } else {
-      console.log('Data saved to Supabase successfully');
-      // Also save to localStorage for offline use
-      localStorage.setItem(profileKey, JSON.stringify(data));
-    }
-  } catch (error) {
-    console.error('Error in saveToSupabase:', error);
-    // Fallback to localStorage
-    localStorage.setItem(profileKey, JSON.stringify(data));
-  }
-}
     // Initialize form handlers for all categories
     const categoryMappings = {
       'mental': { key: 'mentalHealthProfile', name: 'Mental Health' },
@@ -1301,5 +1425,3 @@ async function saveToSupabase(userId, profileKey, data) {
 </body>
 
 </html>
-
-
