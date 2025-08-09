@@ -929,9 +929,10 @@ async function loadProfileData() {
   
   // Update the UI after loading data
 // Update the UI after loading data
+// Update the UI after loading data
 document.getElementById('profile-summary').textContent = createProfileSummary();
 updateSmartQuestions();
-markCompletedCategories();}
+updateCompletionDisplay();
 
 function loadFromLocalStorage() {
   profiles = {
@@ -1022,6 +1023,21 @@ function loadFromLocalStorage() {
         indicator.classList.remove('show');
       }, 2000);
     }
+
+  function updateCompletionDisplay() {
+  // Calculate completion percentage
+  const completedCategories = Object.keys(profiles).filter(key => 
+    Object.keys(profiles[key]).length > 0
+  );
+  const totalCategories = Object.keys(profiles).length;
+  const completionPercentage = Math.round((completedCategories.length / totalCategories) * 100);
+
+  // Update completion display with animation
+  document.getElementById('completion-percentage').textContent = completionPercentage + '%';
+  setTimeout(() => {
+    document.getElementById('completion-bar').style.width = completionPercentage + '%';
+  }, 500);
+}
 
     function autoSaveDraft() {
       const question = document.getElementById('user-question').value.trim();
@@ -1890,5 +1906,6 @@ initializePage();
 </body>
 
 </html>
+
 
 
