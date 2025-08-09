@@ -1506,11 +1506,25 @@
         // Clear draft since we're processing the question
         localStorage.removeItem('draftQuestion');
         
-        // Simulate API call for now - replace with real API
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Call your actual API
+        const response = await fetch('/api/advice', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            question: question,
+            profile: profiles
+          })
+        });
         
-        // Generate mock advice
-        const advice = generateMockAdvice(question, profiles, relevantCategories, isPremium);
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Request failed');
+        }
+        
+        const data = await response.json();
+        const advice = data.advice;
         
         // Save decision to history
         const decisionId = saveDecision(question, advice, confidence, relevantCategories, []);
@@ -1592,67 +1606,6 @@
         btn.disabled = false;
         btn.innerHTML = 'Get AI-Powered Advice <span class="typing-indicator">|</span>';
       }
-    }
-
-    // Generate mock advice based on profile data
-    function generateMockAdvice(question, profiles, relevantCategories, isPremium) {
-      const categoryData = relevantCategories.map(cat => profiles[cat]).filter(data => Object.keys(data).length > 0);
-      
-      let advice = `Based on your profile data, here's my personalized advice for: "${question}"\n\n`;
-      
-      if (categoryData.length === 0) {
-        advice += "I notice you haven't completed your profile yet. To give you truly personalized advice, I'd recommend completing the relevant categories first.\n\n";
-        advice += "**For now, here's some general guidance:**\n\n";
-        advice += "1. Take time to clearly define what success looks like for this decision\n";
-        advice += "2. Consider both short-term and long-term consequences\n";
-        advice += "3. Seek input from trusted friends or mentors\n";
-        advice += "4. Trust your instincts after gathering the facts\n\n";
-        advice += "Once you complete your profile, I can provide much more specific and actionable advice tailored to your unique situation.";
-      } else {
-        if (isPremium) {
-          advice += "**Premium Multi-Step Analysis:**\n\n";
-        }
-        
-        advice += "**Key Insights Based on Your Profile:**\n\n";
-        
-        // Add insights based on completed categories
-        relevantCategories.forEach(cat => {
-          if (profiles[cat] && Object.keys(profiles[cat]).length > 0) {
-            const data = profiles[cat];
-            advice += `• **${categoryInfo[cat].name}:** `;
-            
-            // Add category-specific insights
-            if (cat === 'mental' && data.stressLevel) {
-              advice += `Given your stress level of ${data.stressLevel}/10, `;
-            }
-            if (cat === 'finance' && data.monthlyIncome) {
-              advice += `Considering your financial situation, `;
-            }
-            if (cat === 'career' && data.jobSatisfaction) {
-              advice += `With your current job satisfaction level, `;
-            }
-            
-            advice += "this decision should align with your current situation.\n";
-          }
-        });
-        
-        advice += "\n**Recommended Action Steps:**\n\n";
-        advice += "1. **Immediate:** Take 24 hours to reflect on this decision without pressure\n";
-        advice += "2. **Short-term:** Gather any additional information you might need\n";
-        advice += "3. **Long-term:** Consider how this aligns with your broader life goals\n\n";
-        
-        if (isPremium) {
-          advice += "**Premium Risk Analysis:**\n";
-          advice += "• Low risk: This decision appears manageable based on your profile\n";
-          advice += "• Potential benefits outweigh the risks\n";
-          advice += "• Consider creating a backup plan for peace of mind\n\n";
-        }
-        
-        advice += "**Final Recommendation:**\n";
-        advice += "Based on your unique situation, I recommend moving forward thoughtfully. Your profile suggests you have the resources and mindset to handle this decision well.";
-      }
-      
-      return advice;
     }
 
     // Rate advice functionality
