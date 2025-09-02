@@ -662,6 +662,8 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4eHFoeGF2a3NmeWhraWl3cnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1NzEyMjAsImV4cCI6MjA3MDE0NzIyMH0.uwRVMMlNRvxhqkQzZ_KWgT1EF0Aefk4CXeLqJPkYiPU'
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 </script>
+ <script src="https://js.stripe.com/v3/"></script>
+</head>
 </head>
 <body>
   <!-- Auto-save indicator -->
@@ -1749,6 +1751,17 @@
     }
     
     localStorage.setItem('lastKnownVersion', currentVersion);
+
+
+ const stripe = Stripe('pk_test_51S30xIAFY6soEJiWzZAwJ6tmkN0mmhowla9SJjNGIv7xxWH7U5tXZNP0MA0sABWp4UxFSTy7YtUqdRNgVHzrShYC00lkSM44ZB');
+  
+  function showUpgradeModal() {
+    // New upgrade modal code...
+  }
+
+
+    
   </script>
 </body>
 </html>
+
