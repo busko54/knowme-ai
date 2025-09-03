@@ -656,14 +656,14 @@
     }
   </style>
   <!-- Add Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://hxxqhxavksfyhkiiwrze.supabase.co'
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4eHFoeGF2a3NmeWhraWl3cnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1NzEyMjAsImV4cCI6MjA3MDE0NzIyMH0.uwRVMMlNRvxhqkQzZ_KWgT1EF0Aefk4CXeLqJPkYiPU'
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-</script>
- <script src="https://js.stripe.com/v3/"></script>
-</head>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://hxxqhxavksfyhkiiwrze.supabase.co'
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4eHFoeGF2a3NmeWhraWl3cnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1NzEyMjAsImV4cCI6MjA3MDE0NzIyMH0.uwRVMMlNRvxhqkQzZ_KWgT1EF0Aefk4CXeLqJPkYiPU'
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  </script>
+  <!-- Add Stripe -->
+  <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
   <!-- Auto-save indicator -->
@@ -747,6 +747,9 @@
   </div>
 
   <script>
+    // Initialize Stripe with your publishable key
+    const stripe = Stripe('pk_test_51S30xIAFY6soEJiWzZAwJ6tmkN0mmhowla9SJjNGIv7xxWH7U5tXZNP0MA0sABWp4UxFSTy7YtUqdRNgVHzrShYC00lkSM44ZB');
+
     // Global variables
     let profiles = {
       personal: {},
@@ -860,15 +863,75 @@
       }
     }
 
-    function startUpgrade() {
-      // Simulate upgrade process - replace with real Stripe integration
-      if (confirm('This would normally redirect to Stripe for payment. For demo purposes, would you like to simulate upgrading to Premium?')) {
-        localStorage.setItem('userTier', 'premium');
-        localStorage.setItem('upgradeDate', new Date().toISOString());
-        closeUpgradeModal();
-        updateUsageDisplay();
-        alert('🎉 Welcome to Premium! You now have unlimited access to all features.');
-        location.reload();
+    // UPDATED: Real Stripe integration
+    async function startUpgrade() {
+      try {
+        // Get current user
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        
+        if (!currentUser.id) {
+          alert('Please sign in first to upgrade to Premium.');
+          window.location.href = 'login.html';
+          return;
+        }
+
+        // Create checkout session
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify({
+            priceId: 'price_1S30yLAFY6soEJiWwK2q3CL5', // Replace with your actual price ID
+            userId: currentUser.id,
+            userEmail: currentUser.email
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to create checkout session');
+        }
+
+        const { sessionId } = await response.json();
+        
+        // Redirect to Stripe Checkout
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: sessionId
+        });
+
+        if (error) {
+          console.error('Stripe error:', error);
+          alert('Payment error: ' + error.message);
+        }
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error creating payment session. Please try again.');
+      }
+    }
+
+    // Handle successful payment
+    async function handleSuccessfulPayment(userId) {
+      try {
+        // Update user tier in Supabase
+        const { error } = await supabase
+          .from('profiles')
+          .update({ tier: 'premium' })
+          .eq('id', userId);
+
+        if (error) {
+          console.error('Error updating user tier:', error);
+        } else {
+          // Update localStorage
+          localStorage.setItem('userTier', 'premium');
+          
+          // Update UI
+          updateUsageDisplay();
+          alert('🎉 Welcome to Premium! You now have unlimited access.');
+        }
+      } catch (error) {
+        console.error('Error handling successful payment:', error);
       }
     }
 
@@ -1509,8 +1572,6 @@
         localStorage.removeItem('draftQuestion');
         
         // Call your actual API
-        console.log('Calling API with:', { question, profile: profiles });
-        
         const response = await fetch('/api/advice', {
           method: 'POST',
           headers: {
@@ -1522,29 +1583,12 @@
           })
         });
         
-        console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers);
-        
-        // Check if response is JSON
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          const textResponse = await response.text();
-          console.log('Non-JSON response:', textResponse);
-          throw new Error(`Expected JSON but got: ${contentType}. Response: ${textResponse.substring(0, 100)}...`);
-        }
-        
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || `HTTP ${response.status}: Request failed`);
+          throw new Error(errorData.error || 'Request failed');
         }
         
         const data = await response.json();
-        console.log('API response data:', data);
-        
-        if (!data.advice) {
-          throw new Error('No advice received from API');
-        }
-        
         const advice = data.advice;
         
         // Save decision to history
@@ -1711,6 +1755,15 @@
       
       // Update usage display
       updateUsageDisplay();
+
+      // Check for successful payment on page load
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('success') === 'true') {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (currentUser.id) {
+          handleSuccessfulPayment(currentUser.id);
+        }
+      }
     }
 
     // Initialize everything when page loads
@@ -1751,17 +1804,6 @@
     }
     
     localStorage.setItem('lastKnownVersion', currentVersion);
-
-
- const stripe = Stripe('pk_test_51S30xIAFY6soEJiWzZAwJ6tmkN0mmhowla9SJjNGIv7xxWH7U5tXZNP0MA0sABWp4UxFSTy7YtUqdRNgVHzrShYC00lkSM44ZB');
-  
-  function showUpgradeModal() {
-    // New upgrade modal code...
-  }
-
-
-    
   </script>
 </body>
 </html>
-
