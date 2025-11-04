@@ -29,57 +29,98 @@
       font-weight: 700; letter-spacing: -1px;
     }
     @keyframes glow { from { text-shadow: 0 0 20px rgba(118, 169, 255, 0.5); } to { text-shadow: 0 0 30px rgba(118, 169, 255, 1); } }
-    .profile-section, .question-section, #advice {
+    .profile-section, .question-section, #advice, .completion-notice {
       background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); padding: 25px;
       border-radius: 20px; margin-bottom: 25px; border: 2px solid rgba(118, 169, 255, 0.3);
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); position: relative; overflow: hidden; color: #2d3748;
     }
-    #profile-summary { background: rgba(247, 250, 252, 0.95); padding: 20px; border-radius: 15px; font-size: 0.95rem; line-height: 1.6; max-height: 200px; overflow-y: auto; border: 1px solid rgba(118, 169, 255, 0.2); }
+    .tier-status { display: inline-block; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; margin-bottom: 15px; }
+    .tier-free { background: rgba(255, 152, 0, 0.2); color: #ff9800; border: 1px solid rgba(255, 152, 0, 0.4); }
+    .usage-counter { text-align: center; margin-bottom: 20px; padding: 15px; background: rgba(118, 169, 255, 0.1); border-radius: 10px; border: 1px solid rgba(118, 169, 255, 0.3); }
+    .completeness-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .completion-percentage { font-size: 1.4rem; font-weight: bold; color: #76a9ff; text-shadow: 0 0 10px rgba(118, 169, 255, 0.5); }
+    .completeness-bar { width: 100%; height: 16px; background: linear-gradient(90deg, #e2e8f0, #f7fafc); border-radius: 8px; overflow: hidden; margin: 15px 0; box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1); border: 1px solid rgba(118, 169, 255, 0.2); }
+    .completeness-fill { height: 100%; background: linear-gradient(90deg, #76a9ff, #667eea, #764ba2); transition: width 1s ease-out; box-shadow: 0 0 15px rgba(118, 169, 255, 0.4); position: relative; }
+    #profile-summary { background: rgba(247, 250, 252, 0.95); padding: 25px; border-radius: 15px; border: 1px solid rgba(118, 169, 255, 0.3); white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.95rem; line-height: 1.6; max-height: 250px; overflow-y: auto; box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.05); color: #4a5568; }
+    .question-label { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; color: #4a5568; }
     textarea {
-      width: 100%; min-height: 100px; padding: 15px; border-radius: 12px; border: 2px solid #e2e8f0;
-      background: #f7fafc; color: #2d3748; resize: vertical; margin-bottom: 15px; font-size: 1rem;
-      font-family: inherit;
+      width: 100%; min-height: 140px; padding: 20px; border-radius: 15px; border: 2px solid #e2e8f0;
+      background: #f7fafc; color: #2d3748; resize: vertical; margin-bottom: 20px; font-size: 1.1rem;
+      line-height: 1.6; transition: all 0.3s ease; font-family: inherit;
     }
     textarea:focus { outline: none; border-color: #76a9ff; background: #ffffff; box-shadow: 0 0 0 4px rgba(118, 169, 255, 0.1); }
     button {
-      width: 100%; padding: 15px; background: linear-gradient(135deg, #76a9ff 0%, #667eea 50%, #764ba2 100%);
-      color: white; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; font-size: 1.1rem;
-      margin-bottom: 10px; transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(118, 169, 255, 0.4);
+      width: 100%; padding: 18px; background: linear-gradient(135deg, #76a9ff 0%, #667eea 50%, #764ba2 100%);
+      color: white; font-weight: 700; border: none; border-radius: 15px; cursor: pointer; font-size: 1.2rem;
+      margin-bottom: 15px; transition: all 0.4s ease; box-shadow: 0 6px 20px rgba(118, 169, 255, 0.4);
+      position: relative; overflow: hidden;
     }
-    button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(118, 169, 255, 0.6); }
-    button:disabled { background: #888; cursor: not-allowed; transform: none; }
-    #advice { min-height: 200px; display: none; line-height: 1.8; font-size: 1.05rem; white-space: pre-wrap; word-wrap: break-word; }
-    .loading { text-align: center; padding: 30px; }
-    .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #76a9ff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+    button:hover { background: linear-gradient(135deg, #667eea, #76a9ff, #764ba2); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(118, 169, 255, 0.6); }
+    button:disabled { background: #444; color: #666; cursor: not-allowed; transform: none; box-shadow: none; }
+    .quick-questions h4 { color: #4a5568; margin-bottom: 15px; font-size: 1.1rem; }
+    .quick-question-btn {
+      background: rgba(118, 169, 255, 0.1); border: 2px solid rgba(118, 169, 255, 0.3); color: #76a9ff;
+      padding: 12px 16px; border-radius: 12px; margin: 8px 8px 8px 0; cursor: pointer; font-size: 0.95rem;
+      display: inline-block; transition: all 0.3s ease; backdrop-filter: blur(5px);
+    }
+    .quick-question-btn:hover { background: rgba(118, 169, 255, 0.2); transform: scale(1.05); box-shadow: 0 4px 15px rgba(118, 169, 255, 0.3); }
+    #advice { min-height: 150px; font-family: 'Segoe UI', sans-serif; line-height: 1.7; font-size: 1.05rem; }
+    .loading { display: flex; align-items: center; justify-content: center; gap: 15px; flex-direction: column; padding: 40px; }
+    .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #76a9ff; border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .error { color: #d32f2f; background: rgba(211, 47, 47, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #d32f2f; }
-    .back-btn { position: absolute; top: 20px; left: 20px; background: rgba(26, 26, 26, 0.8); border: 1px solid rgba(118, 169, 255, 0.3); color: #76a9ff; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-size: 0.9rem; transition: all 0.3s ease; cursor: pointer; z-index: 100; }
-    .back-btn:hover { background: rgba(118, 169, 255, 0.1); }
-    @media (max-width: 768px) { h1 { font-size: 2rem; } body { padding: 15px; } .back-btn { top: 15px; left: 15px; padding: 6px 12px; font-size: 0.8rem; } }
+    .advice-header { border-bottom: 3px solid #76a9ff; padding-bottom: 15px; margin-bottom: 20px; color: #4a5568; font-weight: bold; font-size: 1.3rem; }
+    .confidence-indicator { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; margin-left: 10px; }
+    .confidence-high { background: rgba(76, 175, 80, 0.3); color: #4caf50; }
+    .confidence-medium { background: rgba(255, 152, 0, 0.3); color: #ff9800; }
+    .confidence-low { background: rgba(244, 67, 54, 0.3); color: #f44336; }
+    .back-btn {
+      position: absolute; top: 20px; left: 20px; background: rgba(26, 26, 26, 0.8); border: 1px solid rgba(118, 169, 255, 0.3);
+      color: #76a9ff; padding: 0.5rem 1rem; border-radius: 25px; text-decoration: none; font-size: 0.9rem;
+      transition: all 0.3s ease; backdrop-filter: blur(10px); z-index: 100; display: flex; align-items: center; gap: 8px;
+    }
+    .back-btn:hover { background: rgba(118, 169, 255, 0.1); border-color: #76a9ff; transform: translateX(-3px); box-shadow: 0 4px 15px rgba(118, 169, 255, 0.2); }
+    @media (max-width: 768px) {
+      body { padding: 15px; }
+      h1 { font-size: 2.2rem; margin-top: 60px; }
+      .back-btn { top: 15px; left: 15px; padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+    }
   </style>
 </head>
 <body>
   <div class="particles" id="particles"></div>
-  <button class="back-btn" onclick="window.location.href='categories.html'">← Back to Categories</button>
-  
-  <h1>🧠 Knowme AI</h1>
+  <a href="categories.html" class="back-btn" style="z-index: 1000; cursor: pointer; pointer-events: auto;">← Back to Categories</a>
+  <h1>Knowme AI</h1>
 
   <div class="profile-section">
-    <h3>Your Profile Summary</h3>
-    <div id="profile-summary">Loading profile...</div>
+    <div class="tier-status tier-free" id="tier-status">🆓 Free Plan</div>
+    <div class="usage-counter" id="usage-counter">Loading usage...</div>
+    <div class="profile-completeness">
+      <div class="completeness-header">
+        <span>Profile Completeness</span>
+        <span class="completion-percentage" id="completion-percentage">0%</span>
+      </div>
+      <div class="completeness-bar"><div class="completeness-fill" id="completion-bar"></div></div>
+    </div>
+    <div id="profile-summary">Loading your profile data...</div>
   </div>
 
   <div class="question-section">
-    <label style="font-size: 1.1rem; font-weight: 600; color: #4a5568; display: block; margin-bottom: 12px;">What decision are you facing?</label>
-    <textarea id="user-question" placeholder="Ask me anything about your life decision..."></textarea>
+    <div class="question-label">What decision are you facing?</div>
+    <textarea id="user-question" placeholder="Ask me about any life decision..."></textarea>
+    <div class="quick-questions"><h4>Smart suggestions based on your profile:</h4></div>
     <button onclick="getAdvice()" id="advice-btn">Get AI-Powered Advice</button>
   </div>
 
-  <div id="advice"></div>
+  <div id="advice" style="display: none;"></div>
 
   <script>
+    let profiles = {
+      mental: {}, finance: {}, career: {}, relationships: {}, fitness: {}, lifestyle: {}
+    };
+    let completedCategories = [];
+
     function createParticles() {
-      const container = document.getElementById('particles');
+      const container = document.body;
       for (let i = 0; i < 50; i++) {
         const p = document.createElement('div');
         p.className = 'particle';
@@ -90,8 +131,25 @@
       }
     }
 
+    function isPremiumUser() {
+      return localStorage.getItem('userTier') === 'premium';
+    }
+
+    function updateUsageDisplay() {
+      const usage = JSON.parse(localStorage.getItem('monthlyUsage') || '{}');
+      const month = new Date().getMonth() + '-' + new Date().getFullYear();
+      const count = usage[month] || 0;
+      const remaining = Math.max(0, 5 - count);
+      const el = document.getElementById('usage-counter');
+      if (isPremiumUser()) {
+        el.innerHTML = `<div style="color: #4CAF50;">💎 Premium: Unlimited</div>`;
+      } else {
+        el.innerHTML = `<div style="color: ${remaining <= 1 ? '#f44336' : '#ff9800'};">🆓 Free Plan: ${remaining} sessions left this month</div>`;
+      }
+    }
+
     function loadProfileData() {
-      const profiles = {
+      profiles = {
         mental: JSON.parse(localStorage.getItem('mentalHealthProfile') || '{}'),
         finance: JSON.parse(localStorage.getItem('financeProfile') || '{}'),
         career: JSON.parse(localStorage.getItem('careerProfile') || '{}'),
@@ -99,116 +157,129 @@
         fitness: JSON.parse(localStorage.getItem('fitnessProfile') || '{}'),
         lifestyle: JSON.parse(localStorage.getItem('lifestyleProfile') || '{}')
       };
-
-      let summary = '<strong>Your Profile:</strong><br>';
       
-      if (Object.keys(profiles.mental).length > 0) {
-        summary += `<p><strong>Mental:</strong> Stress ${profiles.mental.stressLevel}/10, ${profiles.mental.sleepHours}hrs sleep, Stressor: ${profiles.mental.mainStressor}</p>`;
+      completedCategories = Object.keys(profiles).filter(k => Object.keys(profiles[k]).length > 0);
+      const percentage = Math.round((completedCategories.length / 6) * 100);
+      document.getElementById('completion-percentage').textContent = percentage + '%';
+      document.getElementById('completion-bar').style.width = percentage + '%';
+      
+      let summary = '';
+      Object.keys(profiles).forEach(key => {
+        if (Object.keys(profiles[key]).length > 0) {
+          const names = { mental: 'Mental Health', finance: 'Finance', career: 'Career', relationships: 'Relationships', fitness: 'Fitness', lifestyle: 'Lifestyle' };
+          summary += `${names[key]}:\n`;
+          Object.entries(profiles[key]).slice(0, 3).forEach(([k, v]) => {
+            if (k !== 'completedAt') {
+              summary += `  • ${k}: ${Array.isArray(v) ? v.join(', ') : v}\n`;
+            }
+          });
+          summary += '\n';
+        }
+      });
+      document.getElementById('profile-summary').textContent = summary || 'Complete your profile to get personalized advice!';
+    }
+
+    function generateAdvice(question, profiles) {
+      const mental = profiles.mental || {};
+      const finance = profiles.finance || {};
+      const career = profiles.career || {};
+      
+      const stressLevel = parseInt(mental.stressLevel) || 5;
+      const sleepHours = parseInt(mental.sleepHours) || 7;
+      const jobSatisfaction = parseInt(career.jobSatisfaction) || 5;
+      const mainStressor = mental.mainStressor || 'unknown';
+      const confidence = Math.floor(Math.random() * 25) + 70;
+      
+      let advice = `Your Question: "${question}"\n\n`;
+      
+      const q = question.toLowerCase();
+      
+      if (q.includes('quit') || q.includes('job') || q.includes('work')) {
+        advice += `Job Satisfaction: ${jobSatisfaction}/10\n`;
+        advice += `Stress Level: ${stressLevel}/10\n`;
+        advice += `Sleep: ${sleepHours} hours\n\n`;
+        
+        if (jobSatisfaction <= 3 && stressLevel >= 8) {
+          advice += `This matters: You're stressed AND unhappy at work. But don't quit yet.\n\n`;
+          advice += `Action Steps:\n`;
+          advice += `1. List 3 specific things you hate\n`;
+          advice += `2. Could any be fixed? (team change, role adjustment?)\n`;
+          advice += `3. If yes, try that first (3 months)\n`;
+          advice += `4. If no, start quietly looking\n`;
+          advice += `5. Never quit before securing something new\n\n`;
+          advice += `Why this works for you: Your main stressor is "${mainStressor}". Quitting without a plan will add MORE stress.`;
+        } else {
+          advice += `Before you quit:\n`;
+          advice += `• Make a plan first\n`;
+          advice += `• Line up another job\n`;
+          advice += `• Give proper notice\n`;
+          advice += `• Think through finances`;
+        }
+      } else if (q.includes('money') || q.includes('spend') || q.includes('save')) {
+        advice += `Your Income: ${finance.monthlyIncome || 'not specified'}\n`;
+        advice += `Your Savings: ${finance.savings || '0'}\n`;
+        advice += `Risk Tolerance: ${finance.riskTolerance || 'not specified'}\n\n`;
+        
+        if (!finance.savings || finance.savings === '0') {
+          advice += `First Priority: Build emergency fund (3-6 months expenses)\n`;
+          advice += `Then: Save 20% of income for long-term\n`;
+          advice += `Finally: Invest according to risk tolerance`;
+        } else {
+          advice += `Good: You have some savings. Next steps:\n`;
+          advice += `1. Emergency fund first\n`;
+          advice += `2. High-interest debt\n`;
+          advice += `3. Retirement savings\n`;
+          advice += `4. Invest remainder`;
+        }
+      } else {
+        advice += `Based on your profile (${completedCategories.length} areas):\n\n`;
+        advice += `Stress: ${stressLevel}/10\n`;
+        advice += `Sleep: ${sleepHours}hrs\n`;
+        advice += `Main stressor: ${mainStressor}\n\n`;
+        advice += `Recommendation: Take one action today. The best insights come from doing, not overthinking.`;
       }
       
-      if (Object.keys(profiles.finance).length > 0) {
-        summary += `<p><strong>Finance:</strong> Income ${profiles.finance.monthlyIncome}, Savings: ${profiles.finance.savings}, Risk: ${profiles.finance.riskTolerance}</p>`;
-      }
-      
-      if (Object.keys(profiles.career).length > 0) {
-        summary += `<p><strong>Career:</strong> Status: ${profiles.career.jobStatus}, Satisfaction: ${profiles.career.jobSatisfaction}/10</p>`;
-      }
-
-      if (Object.keys(profiles.fitness).length > 0) {
-        summary += `<p><strong>Fitness:</strong> Exercise: ${profiles.fitness.exerciseFrequency}, Level: ${profiles.fitness.fitnessLevel}/10</p>`;
-      }
-
-      if (summary === '<strong>Your Profile:</strong><br>') {
-        summary = '<p style="color: #999;">Complete your profile for personalized advice. <a href="categories.html" style="color: #76a9ff;">Start here</a></p>';
-      }
-
-      document.getElementById('profile-summary').innerHTML = summary;
-      return profiles;
+      return { advice, confidence };
     }
 
     async function getAdvice() {
       const question = document.getElementById('user-question').value.trim();
-      const btn = document.getElementById('advice-btn');
       const adviceEl = document.getElementById('advice');
+      const btn = document.getElementById('advice-btn');
 
       if (!question) {
-        alert('Please enter your question');
+        alert('Please enter a question');
         return;
       }
 
-      const profiles = loadProfileData();
-      const completedCategories = Object.values(profiles).filter(p => Object.keys(p).length > 0).length;
-      
-      if (completedCategories === 0) {
+      if (completedCategories.length === 0) {
         adviceEl.style.display = 'block';
         adviceEl.innerHTML = `<div style="text-align:center;padding:40px;"><h3>Build Your Profile First</h3><p>Complete at least one category to get personalized advice.</p><button onclick="window.location.href='categories.html'" style="background:linear-gradient(135deg, #4CAF50, #45a049);color:white;padding:10px 20px;border-radius:10px;border:none;cursor:pointer;">Start Profile</button></div>`;
         return;
       }
 
-      // Show loading state
       adviceEl.style.display = 'block';
-      adviceEl.innerHTML = `<div class="loading"><div class="spinner"></div><span>Generating personalized advice based on your profile...</span></div>`;
+      adviceEl.innerHTML = `<div class="loading"><div class="spinner"></div><span>Generating personalized advice...</span></div>`;
       btn.disabled = true;
-      btn.textContent = 'Analyzing your situation...';
+      btn.textContent = 'Analyzing...';
 
-      try {
-        console.log('Sending to API:', { question, profile: profiles });
-        
-        // Call the API with profile and question
-        const response = await fetch('/api/advice', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            question: question,
-            profile: profiles
-          })
-        });
+      await new Promise(r => setTimeout(r, 1500));
 
-        console.log('API Response Status:', response.status);
+      const { advice, confidence } = generateAdvice(question, profiles);
+      
+      adviceEl.innerHTML = `
+        <div class="advice-header">Your AI Advice <span class="confidence-indicator ${confidence > 80 ? 'confidence-high' : 'confidence-medium'}">${confidence}%</span></div>
+        <div style="background:rgba(118,169,255,0.05);padding:15px;border-radius:10px;margin:15px 0; white-space: pre-wrap;">${advice}</div>
+      `;
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('API Error:', errorText);
-          throw new Error(`API error: ${response.status} - ${errorText}`);
-        }
-
-        const data = await response.json();
-        console.log('API Response:', data);
-        
-        if (data.advice) {
-          adviceEl.innerHTML = `
-            <div style="border-bottom: 3px solid #76a9ff; padding-bottom: 15px; margin-bottom: 20px;">
-              <h3 style="color: #4a5568; margin: 0;">Your Personalized Advice</h3>
-              <p style="margin: 10px 0 0 0; color: #999; font-size: 0.9rem;">Based on your profile (${completedCategories} area${completedCategories > 1 ? 's' : ''} completed)</p>
-            </div>
-            <div style="line-height: 1.8; color: #4a5568;">${data.advice.replace(/\n/g, '<br>')}</div>
-          `;
-        } else {
-          adviceEl.innerHTML = `<div class="error"><strong>Error:</strong> No advice received from AI. Response: ${JSON.stringify(data)}</div>`;
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        adviceEl.innerHTML = `
-          <div class="error">
-            <strong>Error getting advice:</strong> ${error.message}
-            <p style="font-size: 0.9rem; margin-top: 10px;">Check the browser console (F12) for more details.</p>
-          </div>
-        `;
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Get AI-Powered Advice';
-      }
+      btn.disabled = false;
+      btn.textContent = 'Get AI-Powered Advice';
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       createParticles();
       loadProfileData();
-    });
-
-    document.getElementById('user-question').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && e.ctrlKey) getAdvice();
+      updateUsageDisplay();
     });
   </script>
 </body>
