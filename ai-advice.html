@@ -296,6 +296,16 @@
       btn.disabled = true;
       btn.textContent = 'Analyzing...';
 
+      // Reload profiles to make sure we have latest data
+      profiles = {
+        mental: JSON.parse(localStorage.getItem('mentalHealthProfile') || '{}'),
+        finance: JSON.parse(localStorage.getItem('financeProfile') || '{}'),
+        career: JSON.parse(localStorage.getItem('careerProfile') || '{}'),
+        relationships: JSON.parse(localStorage.getItem('relationshipsProfile') || '{}'),
+        fitness: JSON.parse(localStorage.getItem('fitnessProfile') || '{}'),
+        lifestyle: JSON.parse(localStorage.getItem('lifestyleProfile') || '{}')
+      };
+
       await new Promise(r => setTimeout(r, 2000));
 
       const confidence = Math.floor(Math.random() * 25) + 70;
@@ -322,9 +332,11 @@
     }
 
     function generateRealAdvice(question, profiles, relevant, confidence) {
-      const mental = profiles.mental;
-      const finance = profiles.finance;
-      const career = profiles.career;
+      const mental = profiles.mental || {};
+      const finance = profiles.finance || {};
+      const career = profiles.career || {};
+      
+      console.log('generateRealAdvice called with:', { question, mental, finance, career, confidence });
       
       let advice = `<div class="advice-header">Your AI Advice <span class="confidence-indicator ${confidence > 80 ? 'confidence-high' : 'confidence-medium'}">${confidence}%</span></div>`;
       advice += `<div style="background:rgba(118,169,255,0.05);padding:15px;border-radius:10px;margin:15px 0;"><strong>Your Question:</strong> "${question}"</div>`;
