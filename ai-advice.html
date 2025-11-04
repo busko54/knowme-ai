@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Knowme AI - Advice</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🧠 Knowme AI - Advice</title>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+    
     body {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #2d3748;
@@ -15,187 +17,991 @@
       margin: 0 auto;
       min-height: 100vh;
     }
+    
+    /* Animated background particles */
     .particles {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
     }
+    
     .particle {
-      position: absolute; width: 2px; height: 2px; background: rgba(118, 169, 255, 0.3);
-      border-radius: 50%; animation: float 20s infinite linear; opacity: 0.6;
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(118, 169, 255, 0.3);
+      border-radius: 50%;
+      animation: float 20s infinite linear;
+      opacity: 0.6;
     }
-    @keyframes float { 0% { transform: translateY(100vh) rotate(0deg); } 100% { transform: translateY(-100vh) rotate(360deg); } }
+    
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); }
+      100% { transform: translateY(-100vh) rotate(360deg); }
+    }
+    
     h1 {
-      color: #76a9ff; text-align: center; margin-bottom: 30px; font-size: 2.8rem;
-      text-shadow: 0 0 30px rgba(118, 169, 255, 0.8); animation: glow 2s ease-in-out infinite alternate;
-      font-weight: 700; letter-spacing: -1px;
+      color: #76a9ff;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.8rem;
+      text-shadow: 0 0 30px rgba(118, 169, 255, 0.8);
+      animation: glow 2s ease-in-out infinite alternate;
+      font-weight: 700;
+      letter-spacing: -1px;
     }
-    @keyframes glow { from { text-shadow: 0 0 20px rgba(118, 169, 255, 0.5); } to { text-shadow: 0 0 30px rgba(118, 169, 255, 1); } }
-    .profile-section, .question-section, #advice, .completion-notice {
-      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); padding: 25px;
-      border-radius: 20px; margin-bottom: 25px; border: 2px solid rgba(118, 169, 255, 0.3);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); position: relative; overflow: hidden; color: #2d3748;
+    
+    @keyframes glow {
+      from { text-shadow: 0 0 20px rgba(118, 169, 255, 0.5); }
+      to { text-shadow: 0 0 30px rgba(118, 169, 255, 1); }
     }
-    .tier-status { display: inline-block; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; margin-bottom: 15px; }
-    .tier-free { background: rgba(255, 152, 0, 0.2); color: #ff9800; border: 1px solid rgba(255, 152, 0, 0.4); }
-    .tier-premium { background: rgba(76, 175, 80, 0.2); color: #4CAF50; border: 1px solid rgba(76, 175, 80, 0.4); }
-    .usage-counter { text-align: center; margin-bottom: 20px; padding: 15px; background: rgba(118, 169, 255, 0.1); border-radius: 10px; border: 1px solid rgba(118, 169, 255, 0.3); }
-    .completeness-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .completion-percentage { font-size: 1.4rem; font-weight: bold; color: #76a9ff; text-shadow: 0 0 10px rgba(118, 169, 255, 0.5); }
-    .completeness-bar { width: 100%; height: 16px; background: linear-gradient(90deg, #e2e8f0, #f7fafc); border-radius: 8px; overflow: hidden; margin: 15px 0; box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1); border: 1px solid rgba(118, 169, 255, 0.2); }
-    .completeness-fill { height: 100%; background: linear-gradient(90deg, #76a9ff, #667eea, #764ba2); transition: width 1s ease-out; box-shadow: 0 0 15px rgba(118, 169, 255, 0.4); position: relative; }
-    #profile-summary { background: rgba(247, 250, 252, 0.95); padding: 25px; border-radius: 15px; border: 1px solid rgba(118, 169, 255, 0.3); white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.95rem; line-height: 1.6; max-height: 250px; overflow-y: auto; box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.05); color: #4a5568; }
-    .ai-brain-visual { text-align: center; margin: 30px 0; }
-    .brain-icon { font-size: 4rem; color: #76a9ff; animation: pulse 2s infinite; text-shadow: 0 0 20px rgba(118, 169, 255, 0.6); }
-    @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
-    .missing-categories { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
-    .category-tag { background: linear-gradient(135deg, rgba(118, 169, 255, 0.2), rgba(102, 126, 234, 0.2)); padding: 10px 18px; border-radius: 25px; font-size: 0.9rem; cursor: pointer; transition: all 0.4s ease; border: 2px solid rgba(118, 169, 255, 0.3); position: relative; color: #76a9ff; }
-    .category-tag:hover { background: linear-gradient(135deg, rgba(118, 169, 255, 0.3), rgba(102, 126, 234, 0.3)); transform: translateY(-3px) scale(1.05); box-shadow: 0 6px 20px rgba(118, 169, 255, 0.2); }
-    .category-tag.completed { background: linear-gradient(135deg, #4caf50, #43a047); color: #81c784; border-color: #4caf50; box-shadow: 0 0 15px rgba(76, 175, 80, 0.4); }
-    .question-label { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; color: #4a5568; }
+    
+    .profile-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      padding: 25px;
+      border-radius: 20px;
+      margin-bottom: 25px;
+      border: 2px solid rgba(118, 169, 255, 0.3);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      color: #2d3748;
+    }
+    
+    .profile-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(118, 169, 255, 0.1), transparent);
+      animation: shimmer 3s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    /* Premium status indicator */
+    .tier-status {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .tier-free {
+      background: rgba(255, 152, 0, 0.2);
+      color: #ff9800;
+      border: 1px solid rgba(255, 152, 0, 0.4);
+    }
+
+    .tier-premium {
+      background: rgba(76, 175, 80, 0.2);
+      color: #4CAF50;
+      border: 1px solid rgba(76, 175, 80, 0.4);
+    }
+
+    /* Usage counter */
+    .usage-counter {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(118, 169, 255, 0.1);
+      border-radius: 10px;
+      border: 1px solid rgba(118, 169, 255, 0.3);
+    }
+    
+    .profile-completeness {
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .completeness-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .completion-percentage {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #76a9ff;
+      text-shadow: 0 0 10px rgba(118, 169, 255, 0.5);
+    }
+    
+    .completeness-bar {
+      width: 100%;
+      height: 16px;
+      background: linear-gradient(90deg, #e2e8f0, #f7fafc);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 15px 0;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(118, 169, 255, 0.2);
+    }
+    
+    .completeness-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #76a9ff, #667eea, #764ba2);
+      transition: width 1s ease-out;
+      box-shadow: 0 0 15px rgba(118, 169, 255, 0.4);
+      position: relative;
+    }
+    
+    .completeness-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: progressShine 2s infinite;
+    }
+    
+    @keyframes progressShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    #profile-summary {
+      background: rgba(247, 250, 252, 0.95);
+      padding: 25px;
+      border-radius: 15px;
+      border: 1px solid rgba(118, 169, 255, 0.3);
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-height: 250px;
+      overflow-y: auto;
+      box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.05);
+      color: #4a5568;
+    }
+    
+    .ai-brain-visual {
+      text-align: center;
+      margin: 30px 0;
+    }
+    
+    .brain-icon {
+      font-size: 4rem;
+      color: #76a9ff;
+      animation: pulse 2s infinite;
+      text-shadow: 0 0 20px rgba(118, 169, 255, 0.6);
+    }
+    
+    .ai-brain-visual p {
+      color: #718096;
+      font-style: italic;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+    
+    .completion-notice {
+      background: linear-gradient(135deg, rgba(118, 169, 255, 0.1), rgba(102, 126, 234, 0.1));
+      border: 2px solid #76a9ff;
+      color: #76a9ff;
+      padding: 25px;
+      border-radius: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 25px rgba(118, 169, 255, 0.3);
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+    
+    .completion-notice::before {
+      content: '⚡';
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      font-size: 2rem;
+      animation: bounce 1s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .missing-categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    
+    .category-tag {
+      background: linear-gradient(135deg, rgba(118, 169, 255, 0.2), rgba(102, 126, 234, 0.2));
+      padding: 10px 18px;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      border: 2px solid rgba(118, 169, 255, 0.3);
+      position: relative;
+      color: #76a9ff;
+    }
+    
+    .category-tag:hover {
+      background: linear-gradient(135deg, rgba(118, 169, 255, 0.3), rgba(102, 126, 234, 0.3));
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 6px 20px rgba(118, 169, 255, 0.2);
+    }
+    
+    .category-tag.completed {
+      background: linear-gradient(135deg, #4caf50, #43a047);
+      color: #81c784;
+      border-color: #4caf50;
+      box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
+    }
+    
+    .question-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      padding: 30px;
+      border-radius: 20px;
+      margin-bottom: 25px;
+      border: 2px solid rgba(118, 169, 255, 0.3);
+      position: relative;
+      color: #2d3748;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .question-label {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #4a5568;
+      text-shadow: none;
+    }
+    
     textarea {
-      width: 100%; min-height: 140px; padding: 20px; border-radius: 15px; border: 2px solid #e2e8f0;
-      background: #f7fafc; color: #2d3748; resize: vertical; margin-bottom: 20px; font-size: 1.1rem;
-      line-height: 1.6; transition: all 0.3s ease; font-family: inherit;
+      width: 100%;
+      min-height: 140px;
+      padding: 20px;
+      border-radius: 15px;
+      border: 2px solid #e2e8f0;
+      background: #f7fafc;
+      color: #2d3748;
+      resize: vertical;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      transition: all 0.3s ease;
+      font-family: inherit;
     }
-    textarea:focus { outline: none; border-color: #76a9ff; background: #ffffff; box-shadow: 0 0 0 4px rgba(118, 169, 255, 0.1); }
+    
+    textarea:focus {
+      outline: none;
+      border-color: #76a9ff;
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(118, 169, 255, 0.1);
+    }
+    
     button {
-      width: 100%; padding: 18px; background: linear-gradient(135deg, #76a9ff 0%, #667eea 50%, #764ba2 100%);
-      color: white; font-weight: 700; border: none; border-radius: 15px; cursor: pointer; font-size: 1.2rem;
-      margin-bottom: 15px; transition: all 0.4s ease; box-shadow: 0 6px 20px rgba(118, 169, 255, 0.4);
-      position: relative; overflow: hidden;
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #76a9ff 0%, #667eea 50%, #764ba2 100%);
+      color: white;
+      font-weight: 700;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      transition: all 0.4s ease;
+      box-shadow: 0 6px 20px rgba(118, 169, 255, 0.4);
+      position: relative;
+      overflow: hidden;
     }
-    button:hover { background: linear-gradient(135deg, #667eea, #76a9ff, #764ba2); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(118, 169, 255, 0.6); }
-    button:disabled { background: #444; color: #666; cursor: not-allowed; transform: none; box-shadow: none; }
-    .quick-questions h4 { color: #4a5568; margin-bottom: 15px; font-size: 1.1rem; }
+    
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+    
+    button:hover::before {
+      left: 100%;
+    }
+    
+    button:hover {
+      background: linear-gradient(135deg, #667eea, #76a9ff, #764ba2);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(118, 169, 255, 0.6);
+    }
+    
+    button:disabled {
+      background: #444;
+      color: #666;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .quick-questions {
+      margin-top: 20px;
+    }
+    
+    .quick-questions h4 {
+      color: #4a5568;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      text-shadow: none;
+    }
+    
     .quick-question-btn {
-      background: rgba(118, 169, 255, 0.1); border: 2px solid rgba(118, 169, 255, 0.3); color: #76a9ff;
-      padding: 12px 16px; border-radius: 12px; margin: 8px 8px 8px 0; cursor: pointer; font-size: 0.95rem;
-      display: inline-block; transition: all 0.3s ease; backdrop-filter: blur(5px);
+      background: rgba(118, 169, 255, 0.1);
+      border: 2px solid rgba(118, 169, 255, 0.3);
+      color: #76a9ff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin: 8px 8px 8px 0;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: inline-block;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
     }
-    .quick-question-btn:hover { background: rgba(118, 169, 255, 0.2); transform: scale(1.05); box-shadow: 0 4px 15px rgba(118, 169, 255, 0.3); }
-    #advice { min-height: 150px; font-family: 'Segoe UI', sans-serif; line-height: 1.7; font-size: 1.05rem; }
-    .loading { display: flex; align-items: center; justify-content: center; gap: 15px; flex-direction: column; padding: 40px; }
-    .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #76a9ff; border-radius: 50%; animation: spin 1s linear infinite; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .advice-header { border-bottom: 3px solid #76a9ff; padding-bottom: 15px; margin-bottom: 20px; color: #4a5568; font-weight: bold; font-size: 1.3rem; }
-    .confidence-indicator { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; margin-left: 10px; }
+    
+    .quick-question-btn:hover {
+      background: rgba(118, 169, 255, 0.2);
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(118, 169, 255, 0.3);
+    }
+    
+    #advice {
+      background: rgba(247, 250, 252, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      margin-top: 25px;
+      white-space: pre-wrap;
+      min-height: 150px;
+      border: 2px solid rgba(118, 169, 255, 0.3);
+      font-family: 'Segoe UI', sans-serif;
+      line-height: 1.7;
+      font-size: 1.05rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      color: #2d3748;
+    }
+    
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      flex-direction: column;
+      padding: 40px;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e2e8f0;
+      border-top: 4px solid #76a9ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .advice-header {
+      border-bottom: 3px solid #76a9ff;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+      color: #4a5568;
+      font-weight: bold;
+      font-size: 1.3rem;
+      text-shadow: none;
+    }
+    
+    .confidence-indicator {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      margin-left: 10px;
+    }
+    
     .confidence-high { background: rgba(76, 175, 80, 0.3); color: #4caf50; }
     .confidence-medium { background: rgba(255, 152, 0, 0.3); color: #ff9800; }
     .confidence-low { background: rgba(244, 67, 54, 0.3); color: #f44336; }
-    .action-buttons { display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap; }
-    .action-btn { flex: 1; min-width: 200px; padding: 15px; font-size: 1rem; border-radius: 12px; transition: all 0.3s ease; }
-    .export-btn { background: linear-gradient(135deg, #4CAF50, #45a049); }
-    .clear-btn { background: linear-gradient(135deg, #f44336, #d32f2f); }
-    .back-btn {
-      position: absolute; top: 20px; left: 20px; background: rgba(26, 26, 26, 0.8); border: 1px solid rgba(118, 169, 255, 0.3);
-      color: #76a9ff; padding: 0.5rem 1rem; border-radius: 25px; text-decoration: none; font-size: 0.9rem;
-      transition: all 0.3s ease; backdrop-filter: blur(10px); z-index: 100; display: flex; align-items: center; gap: 8px;
+    
+    .insight-box {
+      background: linear-gradient(135deg, rgba(118, 169, 255, 0.1), rgba(102, 126, 234, 0.1));
+      border: 2px solid rgba(118, 169, 255, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 4px 15px rgba(118, 169, 255, 0.2);
     }
-    .back-btn:hover { background: rgba(118, 169, 255, 0.1); border-color: #76a9ff; transform: translateX(-3px); box-shadow: 0 4px 15px rgba(118, 169, 255, 0.2); }
+    
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .action-btn {
+      flex: 1;
+      min-width: 200px;
+      padding: 15px;
+      font-size: 1rem;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+    
+    .export-btn {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+    }
+    
+    .clear-btn {
+      background: linear-gradient(135deg, #f44336, #d32f2f);
+    }
+    
+    .add-categories-btn {
+      background: linear-gradient(135deg, #76a9ff, #667eea);
+      color: white;
+    }
+    
+    .add-categories-btn:hover {
+      background: linear-gradient(135deg, #667eea, #76a9ff);
+    }
+
+    /* Upgrade modal styles */
+    .upgrade-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .upgrade-content {
+      background: linear-gradient(135deg, #1a1a1a, #2d1b69);
+      padding: 3rem;
+      border-radius: 20px;
+      max-width: 500px;
+      text-align: center;
+      border: 2px solid #76a9ff;
+      color: white;
+    }
+
+    .upgrade-content h3 {
+      color: #76a9ff;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+    }
+
+    .upgrade-benefits {
+      margin: 2rem 0;
+      text-align: left;
+    }
+
+    .upgrade-benefits div {
+      padding: 0.5rem 0;
+      font-size: 1.1rem;
+    }
+
+    .upgrade-btn {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      padding: 1rem 2rem;
+      margin: 0.5rem;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      width: auto;
+    }
+
+    .maybe-later-btn {
+      background: transparent;
+      border: 1px solid #666;
+      color: #aaa;
+      padding: 0.8rem 1.5rem;
+      margin: 0.5rem;
+      font-size: 1rem;
+      width: auto;
+    }
+
+    .typing-indicator {
+      display: inline-block;
+      width: 20px;
+      animation: typing 1.5s infinite;
+    }
+    
+    @keyframes typing {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* Back button styling */
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(26, 26, 26, 0.8);
+      border: 1px solid rgba(118, 169, 255, 0.3);
+      color: #76a9ff;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back-btn:hover {
+      background: rgba(118, 169, 255, 0.1);
+      border-color: #76a9ff;
+      transform: translateX(-3px);
+      box-shadow: 0 4px 15px rgba(118, 169, 255, 0.2);
+    }
+    
+    .auto-save-indicator {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(76, 175, 80, 0.9);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+    }
+
+    .auto-save-indicator.show {
+      opacity: 1;
+    }
+    
+    .context-indicator {
+      background: rgba(255, 193, 7, 0.1);
+      border: 2px solid rgba(255, 193, 7, 0.3);
+      border-radius: 15px;
+      padding: 15px;
+      margin: 15px 0;
+      color: #ffc107;
+    }
+    
     @media (max-width: 768px) {
-      body { padding: 15px; }
-      h1 { font-size: 2.2rem; margin-top: 60px; }
-      .back-btn { top: 15px; left: 15px; padding: 0.4rem 0.8rem; font-size: 0.8rem; }
-      .action-buttons { flex-direction: column; }
-      .action-btn { min-width: auto; }
+      body {
+        padding: 15px;
+      }
+      
+      h1 {
+        font-size: 2.2rem;
+        margin-top: 60px;
+      }
+      
+      .back-btn {
+        top: 15px;
+        left: 15px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+      
+      .category-tag {
+        font-size: 0.85rem;
+        padding: 8px 15px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .action-btn {
+        min-width: auto;
+      }
+
+      .upgrade-content {
+        margin: 1rem;
+        padding: 2rem;
+      }
     }
   </style>
+  <!-- Add Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://hxxqhxavksfyhkiiwrze.supabase.co'
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4eHFoeGF2a3NmeWhraWl3cnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1NzEyMjAsImV4cCI6MjA3MDE0NzIyMH0.uwRVMMlNRvxhqkQzZ_KWgT1EF0Aefk4CXeLqJPkYiPU'
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  </script>
+  <!-- Add Stripe -->
+  <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
-  <div class="particles" id="particles"></div>
-  <a href="categories.html" class="back-btn" style="z-index: 1000; cursor: pointer; pointer-events: auto;">← Back to Categories</a>
-  <h1>Knowme AI</h1>
-  <div class="ai-brain-visual">
-    <div class="brain-icon">🧠</div>
-    <p style="margin: 10px 0; color: #76a9ff; font-style: italic;">Your personal decision intelligence</p>
+  <!-- Auto-save indicator -->
+  <div class="auto-save-indicator" id="auto-save-indicator">
+    ✓ Draft saved
   </div>
 
+  <!-- Animated background particles -->
+  <div class="particles" id="particles"></div>
+  
+  <!-- Back to Categories Button -->
+  <a href="categories.html" class="back-btn">← Back to Categories</a>
+  
+  <h1>🧠 Knowme AI</h1>
+  
+  <div class="ai-brain-visual">
+    <div class="brain-icon">🤖</div>
+    <p style="margin: 10px 0; color: #76a9ff; font-style: italic;">Your personal decision intelligence</p>
+  </div>
+  
   <div class="profile-section">
-    <div class="tier-status tier-free" id="tier-status">🆓 Free Plan</div>
-    <div class="usage-counter" id="usage-counter">Loading usage...</div>
+    <!-- Tier Status -->
+    <div class="tier-status" id="tier-status">
+      🆓 Free Plan
+    </div>
+
+    <!-- Usage Counter -->
+    <div class="usage-counter" id="usage-counter">
+      Loading usage...
+    </div>
+
     <div class="profile-completeness">
       <div class="completeness-header">
         <span>Profile Completeness</span>
         <span class="completion-percentage" id="completion-percentage">0%</span>
       </div>
-      <div class="completeness-bar"><div class="completeness-fill" id="completion-bar"></div></div>
+      <div class="completeness-bar">
+        <div class="completeness-fill" id="completion-bar"></div>
+      </div>
     </div>
-    <div id="profile-summary">Loading your profile data...</div>
-  </div>
 
+    <div id="profile-summary">Loading your profile data...</div>
+    
+    <!-- Additional Context Indicator -->
+    <div id="context-indicator" class="context-indicator" style="display: none;">
+      <strong>✨ Additional Context Added:</strong>
+      <div id="context-preview"></div>
+    </div>
+  </div>
+  
   <div id="completion-notice" class="completion-notice" style="display: none;">
-    <h3>Unlock Better Insights</h3>
-    <p>Complete more categories for deeper, more accurate advice:</p>
+    <h3>💡 Unlock Better Insights</h3>
+    <p>Complete more categories for deeper, more accurate advice that considers your full life context:</p>
     <div class="missing-categories" id="missing-categories"></div>
-    <button class="add-categories-btn" onclick="window.location.href='categories.html'">Complete More Categories</button>
+    <button class="add-categories-btn" onclick="window.location.href='categories.html'">
+      Complete More Categories
+    </button>
   </div>
 
   <div class="question-section">
     <div class="question-label">What decision are you facing?</div>
-    <textarea id="user-question" placeholder="Ask me about any life decision..."></textarea>
-    <div class="quick-questions"><h4>Smart suggestions based on your profile:</h4></div>
-    <button onclick="getAdvice()" id="advice-btn">Get AI-Powered Advice <span class="typing-indicator">|</span></button>
+    <textarea id="user-question" placeholder="Ask me about any life decision - career, relationships, finances, health, or anything else..."></textarea>
+    
+    <div class="quick-questions">
+      <h4>💡 Smart suggestions based on your profile:</h4>
+    </div>
+    
+    <button onclick="getAdvice()" id="advice-btn">
+      Get AI-Powered Advice
+      <span class="typing-indicator">|</span>
+    </button>
   </div>
-
+  
   <div id="advice" style="display: none;"></div>
-
+  
   <div class="action-buttons">
-    <button onclick="exportData()" class="action-btn export-btn">Export My Data</button>
-    <button onclick="clearAllData()" class="action-btn clear-btn">Reset All Data</button>
-    <button onclick="showHistory()" class="action-btn" style="background: linear-gradient(135deg, #76a9ff, #667eea);">Decision History</button>
-    <button onclick="manageSubscription()" class="action-btn" style="background: linear-gradient(135deg, #ff9800, #f57c00);">Manage Plan</button>
+    <button onclick="exportData()" class="action-btn export-btn">📥 Export My Data</button>
+    <button onclick="clearAllData()" class="action-btn clear-btn">🗑️ Reset All Data</button>
+    <button onclick="showHistory()" class="action-btn" style="background: linear-gradient(135deg, #76a9ff, #667eea);">📊 Decision History</button>
+    <button onclick="manageSubscription()" class="action-btn" style="background: linear-gradient(135deg, #ff9800, #f57c00);">⚙️ Manage Plan</button>
   </div>
 
   <script>
+    // Initialize Stripe with your publishable key
+    const stripe = Stripe('pk_test_51S30xIAFY6soEJiWzZAwJ6tmkN0mmhowla9SJjNGIv7xxWH7U5tXZNP0MA0sABWp4UxFSTy7YtUqdRNgVHzrShYC00lkSM44ZB');
+
+    // Global variables
     let profiles = {
-      mental: {}, finance: {}, career: {}, relationships: {}, fitness: {}, lifestyle: {}
+      personal: {},
+      mental: {},
+      finance: {},
+      career: {},
+      relationships: {},
+      fitness: {},
+      lifestyle: {}
     };
+    
     let completedCategories = [];
-    const totalCategories = 6;
+    let totalCategories = 7;
+    let completionPercentage = 0;
 
-    const categoryInfo = {
-      mental: { name: 'Mental Health', param: 'mental-health' },
-      finance: { name: 'Finance', param: 'finance' },
-      career: { name: 'Career', param: 'career' },
-      relationships: { name: 'Relationships', param: 'relationships' },
-      fitness: { name: 'Fitness', param: 'fitness' },
-      lifestyle: { name: 'Lifestyle', param: 'lifestyle' }
-    };
-
+    // Create animated background particles
     function createParticles() {
-      const container = document.getElementById('particles');
+      const particlesContainer = document.getElementById('particles');
       for (let i = 0; i < 50; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        p.style.left = Math.random() * 100 + '%';
-        p.style.animationDelay = Math.random() * 20 + 's';
-        p.style.animationDuration = (Math.random() * 10 + 15) + 's';
-        container.appendChild(p);
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+        particlesContainer.appendChild(particle);
       }
     }
 
+    // Premium/Free tier management
+    function getUserTier() {
+      return localStorage.getItem('userTier') || 'free';
+    }
+
     function isPremiumUser() {
-      return localStorage.getItem('userTier') === 'premium';
+      return getUserTier() === 'premium';
+    }
+
+    function checkUsageLimit() {
+      const usage = JSON.parse(localStorage.getItem('monthlyUsage') || '{}');
+      const currentMonth = new Date().getMonth() + '-' + new Date().getFullYear();
+      
+      if (!usage[currentMonth]) usage[currentMonth] = 0;
+      
+      const isPremium = isPremiumUser();
+      const freeLimit = 5;
+      
+      if (!isPremium && usage[currentMonth] >= freeLimit) {
+        showUpgradeModal();
+        return false;
+      }
+      
+      // Increment usage
+      usage[currentMonth]++;
+      localStorage.setItem('monthlyUsage', JSON.stringify(usage));
+      updateUsageDisplay();
+      return true;
     }
 
     function updateUsageDisplay() {
       const usage = JSON.parse(localStorage.getItem('monthlyUsage') || '{}');
-      const month = new Date().getMonth() + '-' + new Date().getFullYear();
-      const count = usage[month] || 0;
-      const remaining = Math.max(0, 5 - count);
-      const el = document.getElementById('usage-counter');
+      const currentMonth = new Date().getMonth() + '-' + new Date().getFullYear();
+      const monthUsage = usage[currentMonth] || 0;
+      const isPremium = isPremiumUser();
+      
+      const usageEl = document.getElementById('usage-counter');
       const tierEl = document.getElementById('tier-status');
-      if (isPremiumUser()) {
-        el.innerHTML = `<div style="color: #4CAF50;">💎 Premium: Unlimited</div>`;
+      
+      if (isPremium) {
+        usageEl.innerHTML = `<div style="color: #4CAF50;">✨ Premium: Unlimited AI advice this month</div>`;
         tierEl.innerHTML = '💎 Premium Plan';
         tierEl.className = 'tier-status tier-premium';
       } else {
-        el.innerHTML = `<div style="color: ${remaining <= 1 ? '#f44336' : '#ff9800'};">🆓 Free Plan: ${remaining} sessions left this month</div>`;
+        const remaining = Math.max(0, 5 - monthUsage);
+        usageEl.innerHTML = `
+          <div style="color: ${remaining <= 1 ? '#f44336' : '#ff9800'};">
+            🆓 Free Plan: ${remaining} advice sessions remaining this month
+          </div>
+          ${remaining <= 1 ? '<div style="font-size: 0.9rem; margin-top: 5px;">Upgrade for unlimited access!</div>' : ''}
+        `;
         tierEl.className = 'tier-status tier-free';
       }
     }
 
-    function loadProfileData() {
+    function showUpgradeModal() {
+      const modal = document.createElement('div');
+      modal.className = 'upgrade-modal';
+      modal.innerHTML = `
+        <div class="upgrade-content">
+          <h3>🚀 Unlock Your Full Potential</h3>
+          <p>You've used all 5 free sessions this month!</p>
+          <div class="upgrade-benefits">
+            <div>✅ Unlimited AI advice</div>
+            <div>✅ All 12 life categories</div>
+            <div>✅ Advanced multi-step analysis</div>
+            <div>✅ Real-time insights & data</div>
+            <div>✅ Complete decision history</div>
+            <div>✅ Export all your data</div>
+          </div>
+          <p style="font-size: 1.3rem; margin: 1rem 0;"><strong>Only $9.99/month</strong></p>
+          <button onclick="startUpgrade()" class="upgrade-btn">Upgrade to Premium</button>
+          <button onclick="closeUpgradeModal()" class="maybe-later-btn">Maybe Later</button>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function closeUpgradeModal() {
+      const modal = document.querySelector('.upgrade-modal');
+      if (modal) {
+        modal.remove();
+      }
+    }
+
+    // UPDATED: Real Stripe integration
+    async function startUpgrade() {
+      try {
+        // Get current user
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        
+        if (!currentUser.id) {
+          alert('Please sign in first to upgrade to Premium.');
+          window.location.href = 'login.html';
+          return;
+        }
+
+        // Create checkout session
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify({
+            priceId: 'YOUR_PRICE_ID_HERE', // Replace with your actual price ID
+            userId: currentUser.id,
+            userEmail: currentUser.email
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to create checkout session');
+        }
+
+        const { sessionId } = await response.json();
+        
+        // Redirect to Stripe Checkout
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: sessionId
+        });
+
+        if (error) {
+          console.error('Stripe error:', error);
+          alert('Payment error: ' + error.message);
+        }
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error creating payment session. Please try again.');
+      }
+    }
+
+    // Handle successful payment
+    async function handleSuccessfulPayment(userId) {
+      try {
+        // Update user tier in Supabase
+        const { error } = await supabase
+          .from('profiles')
+          .update({ tier: 'premium' })
+          .eq('id', userId);
+
+        if (error) {
+          console.error('Error updating user tier:', error);
+        } else {
+          // Update localStorage
+          localStorage.setItem('userTier', 'premium');
+          
+          // Update UI
+          updateUsageDisplay();
+          alert('🎉 Welcome to Premium! You now have unlimited access.');
+        }
+      } catch (error) {
+        console.error('Error handling successful payment:', error);
+      }
+    }
+
+    function manageSubscription() {
+      const isPremium = isPremiumUser();
+      
+      if (isPremium) {
+        const upgradeDate = localStorage.getItem('upgradeDate');
+        const dateStr = upgradeDate ? new Date(upgradeDate).toLocaleDateString() : 'Unknown';
+        
+        if (confirm(`Premium Plan Status:\n- Subscribed: ${dateStr}\n- Next billing: ${new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString()}\n- Status: Active\n\nWould you like to cancel your subscription?`)) {
+          if (confirm('Are you sure? You\'ll lose access to Premium features at the end of this billing period.')) {
+            localStorage.setItem('userTier', 'free');
+            localStorage.removeItem('upgradeDate');
+            updateUsageDisplay();
+            alert('Subscription cancelled. You\'ll retain Premium access until the end of this billing period.');
+            location.reload();
+          }
+        }
+      } else {
+        if (confirm('You\'re currently on the Free plan. Would you like to upgrade to Premium for unlimited access and advanced features?')) {
+          showUpgradeModal();
+        }
+      }
+    }
+
+    // Function to load profile data
+    async function loadProfileData() {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      
+      if (currentUser.id) {
+        // Load from Supabase
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', currentUser.id)
+            .single();
+
+          if (data) {
+            profiles = {
+              personal: {},
+              mental: data.mental_health_profile || {},
+              finance: data.finance_profile || {},
+              career: data.career_profile || {},
+              relationships: data.relationships_profile || {},
+              fitness: data.fitness_profile || {},
+              lifestyle: data.lifestyle_profile || {}
+            };
+          }
+        } catch (error) {
+          console.log('Error loading from Supabase, using localStorage:', error);
+          loadFromLocalStorage();
+        }
+      } else {
+        // Load from localStorage (guest mode)
+        loadFromLocalStorage();
+      }
+      
+      // Update the UI after loading data
+      updateCompletionCalculations();
+      document.getElementById('profile-summary').textContent = createProfileSummary();
+      updateSmartQuestions();
+      updateCompletionDisplay();
+      showCompletionNoticeIfNeeded();
+    }
+
+    function loadFromLocalStorage() {
       profiles = {
+        personal: JSON.parse(localStorage.getItem('userProfile') || '{}'),
         mental: JSON.parse(localStorage.getItem('mentalHealthProfile') || '{}'),
         finance: JSON.parse(localStorage.getItem('financeProfile') || '{}'),
         career: JSON.parse(localStorage.getItem('careerProfile') || '{}'),
@@ -203,269 +1009,801 @@
         fitness: JSON.parse(localStorage.getItem('fitnessProfile') || '{}'),
         lifestyle: JSON.parse(localStorage.getItem('lifestyleProfile') || '{}')
       };
-      updateCompletionDisplay();
-      displayProfileSummary();
-      showCompletionNotice();
-      updateSmartQuestions();
+    }
+
+    const categoryInfo = {
+      personal: { name: '👤 Personal', param: 'profile' },
+      mental: { name: '🧠 Mental Health', param: 'mental-health' },
+      finance: { name: '💸 Finance', param: 'finance' },
+      career: { name: '💼 Career', param: 'career' },
+      relationships: { name: '💬 Relationships', param: 'relationships' },
+      fitness: { name: '🏃 Fitness', param: 'fitness' },
+      lifestyle: { name: '🏠 Lifestyle', param: 'lifestyle' }
+    };
+
+    // Enhanced category-specific question suggestions
+    const categoryQuestions = {
+      mental: [
+        "How can I reduce my daily stress and anxiety?", 
+        "Should I start therapy or counseling?", 
+        "How do I improve my sleep quality?",
+        "What can I do about feeling overwhelmed?",
+        "How can I build better mental resilience?"
+      ],
+      finance: [
+        "How much should I save monthly for my goals?", 
+        "Is now a good time to invest?", 
+        "Should I pay off debt or save first?",
+        "How can I improve my credit score?",
+        "What's the best budgeting strategy for me?"
+      ],
+      career: [
+        "Should I ask for a raise or promotion?", 
+        "Is it time to change careers?", 
+        "How do I improve job satisfaction?",
+        "Should I pursue additional education or training?",
+        "How can I better network in my field?"
+      ],
+      relationships: [
+        "How can I communicate better with my partner?", 
+        "Should I set stronger boundaries?", 
+        "How do I build stronger friendships?",
+        "How can I resolve conflicts more effectively?",
+        "How do I deal with difficult family dynamics?"
+      ],
+      fitness: [
+        "What exercise routine fits my lifestyle?", 
+        "How can I stay motivated to work out?", 
+        "Should I change my diet approach?",
+        "How do I build healthy habits that stick?",
+        "What's the best way to prevent workout injuries?"
+      ],
+      lifestyle: [
+        "How do I find better work-life balance?", 
+        "Should I move to a new city?", 
+        "How can I build more productive habits?",
+        "What changes would improve my daily routine?",
+        "How can I make time for what matters most?"
+      ]
+    };
+
+    function updateCompletionCalculations() {
+      // Calculate completion percentage
+      completedCategories = Object.keys(profiles).filter(key => 
+        Object.keys(profiles[key]).length > 0
+      );
+      totalCategories = Object.keys(profiles).length;
+      completionPercentage = Math.round((completedCategories.length / totalCategories) * 100);
     }
 
     function updateCompletionDisplay() {
-      completedCategories = Object.keys(profiles).filter(k => Object.keys(profiles[k]).length > 0);
-      const percentage = Math.round((completedCategories.length / totalCategories) * 100);
-      document.getElementById('completion-percentage').textContent = percentage + '%';
+      // Update completion display with animation
+      document.getElementById('completion-percentage').textContent = completionPercentage + '%';
       setTimeout(() => {
-        document.getElementById('completion-bar').style.width = percentage + '%';
+        document.getElementById('completion-bar').style.width = completionPercentage + '%';
       }, 500);
     }
 
-    function displayProfileSummary() {
-      let summary = '';
-      Object.keys(profiles).forEach(key => {
-        if (Object.keys(profiles[key]).length > 0) {
-          summary += `${categoryInfo[key].name}:\n`;
-          Object.entries(profiles[key]).slice(0, 3).forEach(([k, v]) => {
-            if (k !== 'completedAt') {
-              summary += `  • ${k}: ${Array.isArray(v) ? v.join(', ') : v}\n`;
-            }
-          });
-          summary += '\n';
-        }
-      });
-      document.getElementById('profile-summary').textContent = summary || 'Complete your profile to get personalized advice!';
-    }
-
-    function showCompletionNotice() {
+    function showCompletionNoticeIfNeeded() {
+      // Show completion notice with enhanced recommendations
       if (completedCategories.length < totalCategories) {
         const notice = document.getElementById('completion-notice');
-        const container = document.getElementById('missing-categories');
+        const missingContainer = document.getElementById('missing-categories');
+        
         notice.style.display = 'block';
-        container.innerHTML = '';
+        missingContainer.innerHTML = ''; // Clear existing tags
+        
         Object.keys(profiles).forEach(key => {
           const tag = document.createElement('div');
           tag.className = 'category-tag';
           tag.textContent = categoryInfo[key].name;
+          
           if (Object.keys(profiles[key]).length > 0) {
             tag.classList.add('completed');
+            tag.title = 'Completed ✓';
           } else {
-            tag.onclick = () => window.location.href = `category-form.html?category=${categoryInfo[key].param}`;
+            tag.onclick = () => {
+              window.location.href = `category-form.html?category=${categoryInfo[key].param}`;
+            };
+            tag.title = 'Click to complete';
           }
-          container.appendChild(tag);
+          
+          missingContainer.appendChild(tag);
         });
       }
     }
 
+    // Auto-save functionality
+    let autoSaveTimeout;
+    function showAutoSaveIndicator() {
+      const indicator = document.getElementById('auto-save-indicator');
+      indicator.classList.add('show');
+      setTimeout(() => {
+        indicator.classList.remove('show');
+      }, 2000);
+    }
+
+    function autoSaveDraft() {
+      const question = document.getElementById('user-question').value.trim();
+      if (question) {
+        localStorage.setItem('draftQuestion', question);
+        showAutoSaveIndicator();
+      }
+    }
+
+    // Check for additional context and display indicator
+    function checkAdditionalContext() {
+      const additionalContext = localStorage.getItem('additionalContext');
+      if (additionalContext) {
+        try {
+          const contextData = JSON.parse(additionalContext);
+          const indicator = document.getElementById('context-indicator');
+          const preview = document.getElementById('context-preview');
+          
+          if (contextData.content) {
+            indicator.style.display = 'block';
+            const previewText = contextData.content.length > 100 
+              ? contextData.content.substring(0, 100) + '...' 
+              : contextData.content;
+            preview.textContent = previewText;
+          }
+        } catch (e) {
+          console.log('Error parsing additional context:', e);
+        }
+      }
+    }
+
+    // Auto-save while typing
+    document.getElementById('user-question').addEventListener('input', () => {
+      clearTimeout(autoSaveTimeout);
+      autoSaveTimeout = setTimeout(autoSaveDraft, 1000);
+    });
+
+    // Enhanced smart questions with ML-like recommendations
     function updateSmartQuestions() {
-      const div = document.querySelector('.quick-questions');
-      div.innerHTML = '<h4>Smart suggestions based on your profile:</h4>';
-      const suggestions = [
-        "Should I quit my job?",
-        "How can I save more money?",
-        "Is this relationship healthy?",
-        "How do I reduce stress?",
-        "What career move should I make?"
-      ];
-      suggestions.forEach(q => {
+      const quickQuestionsDiv = document.querySelector('.quick-questions');
+      if (!quickQuestionsDiv) return;
+      
+      quickQuestionsDiv.innerHTML = '<h4>💡 Smart suggestions based on your profile:</h4>';
+      
+      const history = JSON.parse(localStorage.getItem('decisionHistory') || '[]');
+      
+      // Add category-specific questions based on completion
+      const incompleteCategoriesWithQuestions = Object.keys(profiles)
+        .filter(key => Object.keys(profiles[key]).length === 0 && categoryQuestions[key])
+        .slice(0, 2);
+      
+      incompleteCategoriesWithQuestions.forEach(key => {
+        const questions = categoryQuestions[key];
+        const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
         const btn = document.createElement('div');
         btn.className = 'quick-question-btn';
-        btn.textContent = q;
-        btn.onclick = () => {
-          document.getElementById('user-question').value = q;
-        };
-        div.appendChild(btn);
+        btn.textContent = `${categoryInfo[key].name.split(' ')[0]} ${randomQuestion}`;
+        btn.onclick = () => fillQuestion(randomQuestion);
+        quickQuestionsDiv.appendChild(btn);
       });
+      
+      // Add personalized questions for completed categories
+      const completedCategoriesWithData = Object.keys(profiles)
+        .filter(key => Object.keys(profiles[key]).length > 2 && categoryQuestions[key])
+        .slice(0, 2);
+      
+      completedCategoriesWithData.forEach(key => {
+        const questions = categoryQuestions[key];
+        const contextualQuestion = questions[Math.floor(Math.random() * questions.length)];
+        const btn = document.createElement('div');
+        btn.className = 'quick-question-btn';
+        btn.textContent = `📊 ${contextualQuestion}`;
+        btn.onclick = () => fillQuestion(contextualQuestion);
+        quickQuestionsDiv.appendChild(btn);
+      });
+      
+      // Add time-sensitive questions
+      const timeOfDay = new Date().getHours();
+      let timeQuestion = '';
+      if (timeOfDay < 12) {
+        timeQuestion = "What should I focus on today to align with my goals?";
+      } else if (timeOfDay < 18) {
+        timeQuestion = "How can I make the most of the rest of my day?";
+      } else {
+        timeQuestion = "What can I reflect on from today to improve tomorrow?";
+      }
+      
+      const timeBtn = document.createElement('div');
+      timeBtn.className = 'quick-question-btn';
+      timeBtn.textContent = `⏰ ${timeQuestion}`;
+      timeBtn.onclick = () => fillQuestion(timeQuestion);
+      quickQuestionsDiv.appendChild(timeBtn);
     }
 
-    async function getAdvice() {
-      const question = document.getElementById('user-question').value.trim();
-      const adviceEl = document.getElementById('advice');
-      const btn = document.getElementById('advice-btn');
+    // Enhanced profile summary with better formatting
+    function createProfileSummary() {
+      let summary = '';
+      let totalFields = 0;
+      let completedFields = 0;
+      
+      Object.keys(profiles).forEach(key => {
+        const profile = profiles[key];
+        const categoryName = categoryInfo[key].name;
+        
+        if (Object.keys(profile).length > 0) {
+          summary += `${categoryName}:\n`;
+          const keyFields = Object.entries(profile)
+            .filter(([k, v]) => v && v.toString().trim() !== '' && k !== 'completedAt')
+            .slice(0, 5);
+          
+          keyFields.forEach(([k, v]) => {
+            let displayValue = v;
+            if (Array.isArray(v)) {
+              displayValue = v.join(', ');
+            } else if (typeof v === 'string' && v.length > 60) {
+              displayValue = v.substring(0, 60) + '...';
+            }
+            summary += `  • ${k.replace(/([A-Z])/g, ' $1').toLowerCase()}: ${displayValue}\n`;
+            completedFields++;
+          });
+          summary += '\n';
+        }
+        totalFields += 6; // Assuming ~6 key fields per category
+      });
+      
+      const completionRate = totalFields > 0 ? Math.round((completedFields / totalFields) * 100) : 0;
 
-      if (!question) {
-        alert('Please enter a question');
-        return;
+      // Add tier information
+      const tierInfo = isPremiumUser() ? 
+        '💎 Premium Member - Unlimited access to all features\n\n' : 
+        '🆓 Free Plan - Upgrade for unlimited access and advanced features\n\n';
+
+      // Add additional context to summary
+      const additionalContext = localStorage.getItem('additionalContext');
+      if (additionalContext) {
+        try {
+          const contextData = JSON.parse(additionalContext);
+          if (contextData.content) {
+            summary += `🌟 Additional Context:\n  ${contextData.content.substring(0, 150)}${contextData.content.length > 150 ? '...' : ''}\n\n`;
+          }
+        } catch (e) {
+          console.log('Error parsing additional context:', e);
+        }
       }
-
-      if (completedCategories.length === 0) {
-        adviceEl.style.display = 'block';
-        adviceEl.innerHTML = `<div style="text-align:center;padding:40px;"><h3>Build Your Profile First</h3><p>Complete at least one category to get personalized advice.</p><button onclick="window.location.href='categories.html'" style="background:linear-gradient(135deg, #4CAF50, #45a049);color:white;padding:10px 20px;border-radius:10px;border:none;cursor:pointer;">Start Profile</button></div>`;
-        return;
+      
+      if (summary === '') {
+        return `${tierInfo}🚀 Ready to get started!\n\nComplete your profile to get personalized AI advice tailored to your unique situation.\n\nThe more I know about you, the better advice I can provide.`;
       }
+      
+      return `${tierInfo}📊 Profile Status: ${completionRate}% complete (${completedFields}/${totalFields} key details)\n\n${summary}`;
+    }
 
+    // Enhanced error handling with user-friendly messages
+    function handleNoProfileError(adviceEl) {
       adviceEl.style.display = 'block';
-      adviceEl.innerHTML = `<div class="loading"><div class="spinner"></div><span>Generating personalized advice...</span></div>`;
-      btn.disabled = true;
-      btn.textContent = 'Analyzing...';
-
-      // Reload profiles to make sure we have latest data
-      profiles = {
-        mental: JSON.parse(localStorage.getItem('mentalHealthProfile') || '{}'),
-        finance: JSON.parse(localStorage.getItem('financeProfile') || '{}'),
-        career: JSON.parse(localStorage.getItem('careerProfile') || '{}'),
-        relationships: JSON.parse(localStorage.getItem('relationshipsProfile') || '{}'),
-        fitness: JSON.parse(localStorage.getItem('fitnessProfile') || '{}'),
-        lifestyle: JSON.parse(localStorage.getItem('lifestyleProfile') || '{}')
-      };
-
-      await new Promise(r => setTimeout(r, 2000));
-
-      const confidence = Math.floor(Math.random() * 25) + 70;
-      const relevantCategories = detectRelevantCategories(question);
-      const advice = generateRealAdvice(question, profiles, relevantCategories, confidence);
-
-      adviceEl.innerHTML = advice;
-      btn.disabled = false;
-      btn.textContent = 'Get AI-Powered Advice';
-
-      saveDecision(question, confidence);
+      adviceEl.innerHTML = `
+        <div style="text-align: center; padding: 40px;">
+          <div style="font-size: 3rem; margin-bottom: 20px;">📝</div>
+          <h3 style="color: #76a9ff; margin-bottom: 15px;">Let's Get You Started!</h3>
+          <p style="margin-bottom: 25px;">I need to understand your unique situation to give you personalized advice that actually works for your life.</p>
+          <div style="background: rgba(118,169,255,0.1); padding: 20px; border-radius: 15px; margin: 20px 0;">
+            <strong>Quick Start Options:</strong><br><br>
+            • <strong>Fast Track (5 min):</strong> Complete just 2-3 key categories<br>
+            • <strong>Complete Profile (15 min):</strong> Full personalization for best results
+          </div>
+          <button onclick="window.location.href='categories.html'" style="background: linear-gradient(135deg, #4CAF50, #45a049); margin-right: 10px;">
+            🚀 Start My Profile
+          </button>
+        </div>
+      `;
     }
 
+    // Fill question from suggestions
+    function fillQuestion(question) {
+      document.getElementById('user-question').value = question;
+      document.getElementById('user-question').focus();
+      localStorage.removeItem('draftQuestion'); // Clear draft since we're using a suggestion
+      document.getElementById('user-question').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Enhanced relevance detection with better keyword matching
     function detectRelevantCategories(question) {
-      const q = question.toLowerCase();
+      const questionLower = question.toLowerCase();
       const relevant = [];
-      if (q.includes('money') || q.includes('spend') || q.includes('invest') || q.includes('$')) relevant.push('finance');
-      if (q.includes('job') || q.includes('quit') || q.includes('work') || q.includes('career')) relevant.push('career');
-      if (q.includes('stress') || q.includes('anxiety') || q.includes('sleep') || q.includes('health')) relevant.push('mental');
-      if (q.includes('relationship') || q.includes('dating') || q.includes('friend') || q.includes('love')) relevant.push('relationships');
-      if (q.includes('exercise') || q.includes('fit') || q.includes('weight')) relevant.push('fitness');
-      if (q.includes('life') || q.includes('happy') || q.includes('balance')) relevant.push('lifestyle');
-      return relevant.length > 0 ? relevant : completedCategories;
-    }
-
-    function generateRealAdvice(question, profiles, relevant, confidence) {
-      const mental = profiles.mental || {};
-      const finance = profiles.finance || {};
-      const career = profiles.career || {};
       
-      // Show debug info on page
-      const debugInfo = `Debug - Stress: ${mental.stressLevel || 'MISSING'}, Sleep: ${mental.sleepHours || 'MISSING'}, Stressor: ${mental.mainStressor || 'MISSING'}`;
-      console.log(debugInfo);
+      const categoryKeywords = {
+        mental: [
+          'stress', 'anxiety', 'mental', 'mood', 'sleep', 'therapy', 'depression', 
+          'overwhelmed', 'burnout', 'worry', 'panic', 'counseling', 'meditation',
+          'mindfulness', 'emotional', 'feelings', 'sad', 'angry', 'frustrated'
+        ],
+        finance: [
+          'money', 'invest', 'save', 'debt', 'budget', 'credit', 'loan', 'financial',
+          'salary', 'income', 'expenses', 'retirement', 'emergency fund', 'mortgage',
+          'insurance', 'taxes', 'stocks', 'bonds', 'crypto', 'spending'
+        ],
+        career: [
+          'job', 'career', 'work', 'salary', 'promotion', 'boss', 'workplace', 
+          'profession', 'interview', 'resume', 'skills', 'training', 'education',
+          'networking', 'industry', 'freelance', 'business', 'startup', 'quit'
+        ],
+        relationships: [
+          'relationship', 'friend', 'family', 'partner', 'social', 'communication',
+          'conflict', 'dating', 'marriage', 'divorce', 'children', 'parents',
+          'boundaries', 'trust', 'love', 'breakup', 'argument', 'lonely'
+        ],
+        fitness: [
+          'exercise', 'fitness', 'health', 'diet', 'workout', 'nutrition', 'weight',
+          'gym', 'running', 'walking', 'strength', 'cardio', 'yoga', 'sports',
+          'energy', 'tired', 'fatigue', 'muscle', 'physical'
+        ],
+        lifestyle: [
+          'habit', 'routine', 'balance', 'time', 'productivity', 'lifestyle', 'living',
+          'morning', 'evening', 'schedule', 'organization', 'clutter', 'space',
+          'travel', 'hobbies', 'interests', 'goals', 'priorities', 'change'
+        ]
+      };
       
-      let advice = `<div style="background:rgba(0,0,0,0.05);padding:10px;border-radius:8px;margin-bottom:15px;font-size:0.85rem;color:#666;"><strong>📊 Debug:</strong> ${debugInfo}</div>`;
-      advice += `<div class="advice-header">Your AI Advice <span class="confidence-indicator ${confidence > 80 ? 'confidence-high' : 'confidence-medium'}">${confidence}%</span></div>`;
-      advice += `<div style="background:rgba(118,169,255,0.05);padding:15px;border-radius:10px;margin:15px 0;"><strong>Your Question:</strong> "${question}"</div>`;
-
-      // Financial decisions with money/spending involved
-      const q = question.toLowerCase();
-      if (q.includes('spend') || q.includes('100k') || q.includes('100000') || q.includes('money')) {
-        const stressLevel = parseInt(mental.stressLevel) || 5;
-        const sleepHours = parseInt(mental.sleepHours) || 7;
-        const mainStressor = mental.mainStressor || 'unknown';
-
-        advice += `<p style="line-height:1.8;margin:20px 0;"><strong>⚠️ MAJOR FINANCIAL DECISION:</strong> Spending $100k is serious. Let me analyze your situation:</p>`;
+      Object.keys(categoryKeywords).forEach(category => {
+        const matches = categoryKeywords[category].filter(keyword => 
+          questionLower.includes(keyword)
+        ).length;
         
-        advice += `<p><strong>Your Current State:</strong></p><ul style="line-height:1.8;margin:10px 0;">
-          <li>Stress Level: ${stressLevel}/10 ${stressLevel >= 8 ? '(HIGH - Red flag for decisions)' : stressLevel >= 6 ? '(MODERATE - Proceed carefully)' : '(OK - You\'re thinking clearly)'}</li>
-          <li>Sleep: ${sleepHours} hours ${sleepHours <= 5 ? '(Sleep-deprived - your judgment is impaired)' : ''}</li>
-          <li>Main Stressor: ${mainStressor}</li>
-        </ul>`;
-        
-        if (stressLevel >= 8 || sleepHours <= 5) {
-          advice += `<p style="color:#d32f2f;background:rgba(244,67,54,0.1);padding:15px;border-radius:8px;border-left:4px solid #f44336;"><strong>🛑 HOLD UP:</strong> You're stressed and sleep-deprived. This is exactly when people make financial mistakes. Before you spend $100k, give yourself 2 weeks to get sleep and reduce stress. Then decide.</p>`;
+        if (matches > 0) {
+          relevant.push({ category, strength: matches });
         }
-
-        advice += `<p style="margin:20px 0;"><strong>Critical Questions (Answer These First):</strong></p><ol style="line-height:2;margin:15px 0;">
-          <li>Why $100k specifically? What are you buying/doing?</li>
-          <li>How many months of income is $100k for you?</li>
-          <li>If you don't do this now, will you regret it in 5 years?</li>
-          <li>Are you running TOWARD something or AWAY from stress?</li>
-          <li>Could you do this more cheaply or on a smaller scale first?</li>
-        </ol>`;
-
-        advice += `<p><strong>Action Plan (Do This NOW):</strong></p><ol style="line-height:1.8;">
-          <li><strong>Write it down:</strong> Exactly what, why, when. Leave it alone for 48 hours.</li>
-          <li><strong>Sleep:</strong> Get 8 hours tonight. Decisions made tired are usually wrong.</li>
-          <li><strong>Talk to someone:</strong> Tell a friend/family member. Say it out loud.</li>
-          <li><strong>Calculate:</strong> What % of your wealth is $100k? Is that worth it?</li>
-          <li><strong>Wait:</strong> If still want it after 1 week, then act. Not before.</li>
-        </ol>`;
-      }
-      // Career decisions
-      else if (q.includes('job') || q.includes('quit') || q.includes('career')) {
-        const jobSatisfaction = parseInt(career.jobSatisfaction) || 5;
-        const stressLevel = parseInt(mental.stressLevel) || 5;
-
-        advice += `<p style="line-height:1.8;margin:20px 0;"><strong>Recommendation:</strong> Your job satisfaction is ${jobSatisfaction}/10 and stress is ${stressLevel}/10.</p>`;
-        
-        if (jobSatisfaction <= 4) {
-          advice += `<p><strong>This matters:</strong> Low satisfaction + high stress = you need change. But don't react, plan.</p>`;
-          advice += `<p><strong>Action Steps:</strong></p><ol style="line-height:1.8;">
-            <li>List 3 specific things you hate about the job</li>
-            <li>Could any of those be fixed (different team, role adjustment)?</li>
-            <li>If yes, try that first (takes 3 months)</li>
-            <li>If no, start quietly looking for new jobs</li>
-            <li>Never quit before securing something new</li>
-          </ol>`;
-        } else {
-          advice += `<p><strong>Your take:</strong> Job satisfaction is moderate. Before making changes, clarify what you actually want.</p>`;
-        }
-      }
-      // Generic advice
-      else {
-        advice += `<p style="line-height:1.8;margin:20px 0;"><strong>My recommendation:</strong> Take one small action toward this decision today.</p>
-          <p><strong>Why:</strong> You've completed ${completedCategories.length} life areas in your profile. I understand your situation enough to say: the best insight comes from moving forward, not overthinking.</p>
-          <p><strong>Next Step:</strong> Do ONE thing in the next 60 minutes that moves you toward this decision.</p>`;
-      }
-
-      if (!isPremiumUser()) {
-        advice += `<div style="background:rgba(255,152,0,0.1);padding:20px;border-radius:15px;margin:20px 0;text-align:center;border:2px solid rgba(255,152,0,0.3);">
-          <h4>Want Deeper Analysis?</h4>
-          <p>Upgrade to Premium for unlimited advice sessions and all 12 life categories.</p>
-          <button onclick="alert('Stripe integration coming soon')" style="background:#4CAF50;padding:10px 20px;border-radius:10px;border:none;color:white;cursor:pointer;font-weight:bold;">Upgrade – $9.99/mo</button>
-        </div>`;
-      }
-
-      advice += `<div style="text-align:center;margin-top:20px;">
-        <h4>Rate this advice:</h4>
-        ${[1,2,3,4,5].map(n => `<button onclick="alert('Thanks for rating!')" style="margin:0 5px;padding:8px 12px;border-radius:20px;border:2px solid #ddd;background:white;cursor:pointer;">${'⭐'.repeat(n)}</button>`).join('')}
-      </div>`;
-
-      return advice;
-    }
-
-    function saveDecision(question, confidence) {
-      const history = JSON.parse(localStorage.getItem('decisionHistory') || '[]');
-      history.push({
-        date: new Date().toISOString(),
-        question: question,
-        confidence: confidence
       });
-      localStorage.setItem('decisionHistory', JSON.stringify(history.slice(-100)));
-    }
-
-    function exportData() {
-      alert('Export feature coming soon!');
-    }
-
-    function clearAllData() {
-      if (confirm('Are you sure? This will delete all your data.')) {
-        localStorage.clear();
-        location.reload();
+      
+      // Sort by relevance strength and return category names
+      const sortedRelevant = relevant
+        .sort((a, b) => b.strength - a.strength)
+        .map(item => item.category);
+      
+      // Always include at least 2 categories for cross-category insights
+      if (sortedRelevant.length === 1) {
+        // Add most likely related category
+        const primary = sortedRelevant[0];
+        const related = {
+          mental: ['lifestyle', 'relationships'],
+          finance: ['career', 'lifestyle'],
+          career: ['mental', 'finance'],
+          relationships: ['mental', 'lifestyle'],
+          fitness: ['mental', 'lifestyle'],
+          lifestyle: ['mental', 'career']
+        };
+        
+        if (related[primary]) {
+          sortedRelevant.push(related[primary][0]);
+        }
       }
+      
+      return sortedRelevant.length > 0 ? sortedRelevant.slice(0, 4) : ['mental', 'lifestyle'];
+    }
+
+    // Enhanced confidence calculation with learning
+    function calculateAdviceConfidence(profiles, question, relevantCategories) {
+      const weights = {
+        dataCompleteness: 0.4,
+        questionClarity: 0.2,
+        crossCategoryAlignment: 0.2,
+        historicalAccuracy: 0.1,
+        urgencyMatch: 0.1
+      };
+      
+      // Data completeness score
+      const totalRelevant = relevantCategories.length;
+      const completedRelevant = relevantCategories.filter(cat => 
+        profiles[cat] && Object.keys(profiles[cat]).length > 0
+      ).length;
+      const dataScore = totalRelevant > 0 ? (completedRelevant / totalRelevant) * 100 : 0;
+      
+      // Question clarity score
+      const clarityScore = question.length > 20 && question.length < 300 && 
+                          !question.includes('?') ? 80 : 
+                          question.includes('?') ? 90 : 70;
+      
+      // Cross-category alignment (check for conflicting data)
+      const alignmentScore = 85; // Default high score
+      
+      // Historical accuracy (placeholder - would use actual feedback data)
+      const historyScore = 85; // Default high score, improve with user feedback
+      
+      // Urgency matching
+      const urgencyKeywords = ['urgent', 'asap', 'emergency', 'deadline'];
+      const hasUrgency = urgencyKeywords.some(word => question.toLowerCase().includes(word));
+      const urgencyScore = hasUrgency ? 90 : 85; // Slightly lower for urgent questions
+      
+      const finalScore = Math.round(
+        dataScore * weights.dataCompleteness +
+        clarityScore * weights.questionClarity +
+        alignmentScore * weights.crossCategoryAlignment +
+        historyScore * weights.historicalAccuracy +
+        urgencyScore * weights.urgencyMatch
+      );
+      
+      return Math.min(Math.max(finalScore, 10), 100); // Clamp between 10-100
+    }
+
+    // Decision history functions
+    function saveDecision(question, advice, confidence, categories, steps = []) {
+      const history = JSON.parse(localStorage.getItem('decisionHistory') || '[]');
+      const decision = {
+        id: Date.now(),
+        date: new Date().toISOString(),
+        question,
+        advice,
+        confidence,
+        categories,
+        steps,
+        outcome: null,
+        followUp: null,
+        rating: null,
+        tier: getUserTier()
+      };
+      
+      history.push(decision);
+      if (history.length > 100) history.shift(); // Keep last 100 decisions
+      localStorage.setItem('decisionHistory', JSON.stringify(history));
+      
+      return decision.id;
     }
 
     function showHistory() {
       const history = JSON.parse(localStorage.getItem('decisionHistory') || '[]');
       if (history.length === 0) {
-        alert('No decisions yet. Ask a question first!');
+        alert('No decision history found yet. Ask some questions to build your history!');
         return;
       }
-      let historyText = 'Your Decision History:\n\n';
-      history.slice(-10).reverse().forEach((item, i) => {
-        const date = new Date(item.date).toLocaleDateString();
-        historyText += `${i + 1}. [${date}] ${item.question}\n`;
+      
+      let historyHTML = '<h3>📊 Your Decision History</h3>';
+      
+      const recentDecisions = history.slice(-10).reverse();
+      
+      // Show recent decisions
+      historyHTML += '<h4>Recent Decisions:</h4>';
+      recentDecisions.forEach(decision => {
+        const date = new Date(decision.date).toLocaleDateString();
+        const ratingDisplay = decision.rating ? `⭐ ${decision.rating}/5` : '';
+        const tierBadge = decision.tier === 'premium' ? '💎' : '🆓';
+        historyHTML += `
+          <div style="background: rgba(118,169,255,0.1); padding: 15px; margin: 10px 0; border-radius: 10px;">
+            <strong>${date}:</strong> ${decision.question}<br>
+            <small style="color: #aaa;">
+              ${tierBadge} ${decision.tier || 'free'} | 
+              Confidence: ${decision.confidence}% 
+              ${ratingDisplay}
+            </small>
+          </div>
+        `;
       });
-      alert(historyText);
+      
+      const adviceEl = document.getElementById('advice');
+      adviceEl.style.display = 'block';
+      adviceEl.innerHTML = historyHTML;
     }
 
-    function manageSubscription() {
-      alert('Premium upgrades coming soon!');
+    // Export and clear data functions
+    function exportData() {
+      const allData = {
+        tier: getUserTier(),
+        usage: JSON.parse(localStorage.getItem('monthlyUsage') || '{}'),
+        additionalContext: JSON.parse(localStorage.getItem('additionalContext') || 'null'),
+        profiles: profiles,
+        decisionHistory: JSON.parse(localStorage.getItem('decisionHistory') || '[]'),
+        exportDate: new Date().toISOString(),
+        version: '3.0',
+        metadata: {
+          totalDecisions: JSON.parse(localStorage.getItem('decisionHistory') || '[]').length,
+          profileCompleteness: completionPercentage,
+          memberSince: localStorage.getItem('memberSince') || new Date().toISOString()
+        }
+      };
+      
+      const dataStr = JSON.stringify(allData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `knowme-complete-export-${new Date().toISOString().split('T')[0]}.json`;
+      link.click();
+      
+      alert('✅ Your complete profile and decision history has been exported securely!');
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      createParticles();
-      loadProfileData();
-      updateUsageDisplay();
+    function clearAllData() {
+      if (confirm('⚠️ This will permanently delete ALL your data including:\n• Profile information\n• Decision history\n• AI conversation logs\n• Draft questions\n• Subscription status\n\nThis cannot be undone. Continue?')) {
+        const keysToRemove = [
+          'userProfile', 'mentalHealthProfile', 'financeProfile',
+          'careerProfile', 'relationshipsProfile', 'fitnessProfile',
+          'lifestyleProfile', 'decisionHistory', 'draftQuestion',
+          'additionalContext', 'additionalContextDraft', 'monthlyUsage',
+          'userTier', 'upgradeDate'
+        ];
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+        alert('🗑️ All data has been cleared.');
+        window.location.reload();
+      }
+    }
+
+    // Main advice function
+    async function getAdvice() {
+      const question = document.getElementById('user-question').value.trim();
+      const adviceEl = document.getElementById('advice');
+      const btn = document.getElementById('advice-btn');
+      
+      if (!question) {
+        alert('💭 Please enter a question or decision you need help with');
+        return;
+      }
+      
+      // Check usage limits
+      if (!checkUsageLimit()) {
+        return;
+      }
+      
+      if (completedCategories.length === 0) {
+        handleNoProfileError(adviceEl);
+        return;
+      }
+      
+      const relevantCategories = detectRelevantCategories(question);
+      const confidence = calculateAdviceConfidence(profiles, question, relevantCategories);
+      const isPremium = isPremiumUser();
+      
+      adviceEl.style.display = 'block';
+      adviceEl.innerHTML = `
+        <div class="advice-header">
+          🤖 ${isPremium ? 'Premium Analysis' : 'Analyzing'} your unique situation...
+          <span class="confidence-indicator ${confidence > 70 ? 'confidence-high' : confidence > 40 ? 'confidence-medium' : 'confidence-low'}">
+            ${confidence}% Confidence
+          </span>
+        </div>
+        <div class="loading">
+          <div class="spinner"></div>
+          <span>Processing ${relevantCategories.length} relevant life areas...</span>
+          <div style="margin-top: 15px; font-size: 0.9em; color: #aaa;">
+            ${isPremium ? 'Premium: Multi-step analysis active' : 'Free: Basic analysis'}
+          </div>
+        </div>
+      `;
+      
+      btn.disabled = true;
+      btn.innerHTML = 'Analyzing... <div class="spinner" style="width: 16px; height: 16px; display: inline-block; margin-left: 10px;"></div>';
+      
+      try {
+        // Clear draft since we're processing the question
+        localStorage.removeItem('draftQuestion');
+        
+        // Call your actual API
+        const response = await fetch('/api/advice', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            question: question,
+            profile: profiles
+          })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Request failed');
+        }
+        
+        const data = await response.json();
+        const advice = data.advice;
+        
+        // Save decision to history
+        const decisionId = saveDecision(question, advice, confidence, relevantCategories, []);
+        
+        // Format the advice with better styling
+        const formattedAdvice = advice
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n\n/g, '</p><p>')
+          .replace(/\n/g, '<br>');
+        
+        adviceEl.innerHTML = `
+          <div class="advice-header">
+            💡 Your ${isPremium ? 'Premium' : ''} Personalized Advice
+            <span class="confidence-indicator ${confidence > 70 ? 'confidence-high' : confidence > 40 ? 'confidence-medium' : 'confidence-low'}">
+              ${confidence}% Confidence
+            </span>
+          </div>
+          
+          <div style="background: rgba(118,169,255,0.05); padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #76a9ff;">
+            <strong>Your Question:</strong> "${question}"
+            ${isPremium ? '<br><small style="color: #4CAF50;">💎 Premium Analysis Applied</small>' : '<br><small style="color: #ff9800;">🆓 Free Tier Analysis</small>'}
+          </div>
+          
+          <div style="margin-top: 20px; padding-top: 15px; border-top: 2px solid #e2e8f0;">
+            <p>${formattedAdvice}</p>
+          </div>
+          
+          ${!isPremium ? `
+          <div style="background: rgba(255, 152, 0, 0.1); border: 2px solid rgba(255, 152, 0, 0.3); border-radius: 15px; padding: 20px; margin: 20px 0; text-align: center;">
+            <h4 style="color: #ff9800; margin-bottom: 1rem;">🚀 Want Deeper Analysis?</h4>
+            <p>Premium users get multi-step analysis, more detailed insights, and unlimited questions.</p>
+            <button onclick="showUpgradeModal()" style="background: linear-gradient(135deg, #4CAF50, #45a049); margin-top: 10px; width: auto; padding: 10px 20px;">
+              Upgrade to Premium - $9.99/month
+            </button>
+          </div>
+          ` : ''}
+          
+          <div style="text-align: center; margin-top: 20px; padding: 15px; background: rgba(118, 169, 255, 0.05); border-radius: 10px;">
+            <h4>How helpful was this advice?</h4>
+            <button class="rating-btn" onclick="rateAdvice(${decisionId}, 1)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">1 - Not helpful</button>
+            <button class="rating-btn" onclick="rateAdvice(${decisionId}, 2)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">2 - Somewhat</button>
+            <button class="rating-btn" onclick="rateAdvice(${decisionId}, 3)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">3 - Helpful</button>
+            <button class="rating-btn" onclick="rateAdvice(${decisionId}, 4)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">4 - Very helpful</button>
+            <button class="rating-btn" onclick="rateAdvice(${decisionId}, 5)" style="background: none; border: 2px solid #ddd; color: #666; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; width: auto; font-size: 0.9rem;">5 - Excellent</button>
+          </div>
+          
+          <div style="margin-top: 25px; padding: 15px; background: rgba(118,169,255,0.05); border-radius: 10px; text-align: center;">
+            <small style="color: #718096;">
+              💾 This advice has been saved to your decision history. 
+              ${confidence < 60 ? 'Complete more profile categories for higher confidence advice.' : 'High confidence - advice based on comprehensive profile data.'}
+            </small>
+          </div>
+        `;
+        
+      } catch (error) {
+        console.error('Error:', error);
+        
+        adviceEl.innerHTML = `
+          <div class="advice-header">❌ Unable to Generate Advice</div>
+          <div style="background: rgba(244, 67, 54, 0.1); padding: 20px; border-radius: 10px; margin-top: 15px; border: 2px solid #f44336;">
+            <h4 style="margin-top: 0; color: #f44336;">Something went wrong:</h4>
+            <p style="color: #ffcdd2;">${error.message}</p>
+            
+            <div style="margin-top: 20px;">
+              <strong style="color: #fff;">Try these solutions:</strong><br>
+              • Check your internet connection<br>
+              • Try asking a simpler, more specific question<br>
+              • Refresh the page and try again<br>
+              • Complete more profile sections for better results<br>
+              • Break complex questions into smaller parts
+            </div>
+            
+            <button onclick="getAdvice()" style="margin-top: 15px; background: #f44336;">
+              🔄 Try Again
+            </button>
+          </div>
+        `;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Get AI-Powered Advice <span class="typing-indicator">|</span>';
+      }
+    }
+
+    // Rate advice functionality
+    function rateAdvice(decisionId, rating) {
+      const history = JSON.parse(localStorage.getItem('decisionHistory') || '[]');
+      const decision = history.find(d => d.id === decisionId);
+      
+      if (decision) {
+        decision.rating = rating;
+        localStorage.setItem('decisionHistory', JSON.stringify(history));
+        
+        // Update UI to show selected rating
+        document.querySelectorAll('.rating-btn').forEach(btn => {
+          btn.style.background = 'none';
+          btn.style.borderColor = '#ddd';
+          btn.style.color = '#666';
+        });
+        event.target.style.background = '#76a9ff';
+        event.target.style.borderColor = '#76a9ff';
+        event.target.style.color = 'white';
+        
+        // Show thank you message
+        setTimeout(() => {
+          const ratingDiv = event.target.parentElement;
+          ratingDiv.innerHTML = `
+            <div style="color: #4caf50; padding: 20px;">
+              ✓ Thank you for your feedback! This helps me learn and improve.
+              ${rating <= 2 ? '<br><small>We\'d love to know how we can do better. Consider sharing feedback in your next question!</small>' : ''}
+            </div>
+          `;
+        }, 500);
+      }
+    }
+
+    // Enhanced keyboard shortcuts and UX improvements
+    document.getElementById('user-question').addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'Enter') {
+        getAdvice();
+      }
+      if (e.key === 'Escape') {
+        this.blur();
+      }
     });
+
+    // Character counter for question input
+    document.getElementById('user-question').addEventListener('input', function() {
+      const length = this.value.length;
+      const maxLength = 1000;
+      
+      let countDisplay = document.getElementById('char-counter');
+      if (!countDisplay) {
+        countDisplay = document.createElement('div');
+        countDisplay.id = 'char-counter';
+        countDisplay.style.cssText = 'text-align: right; font-size: 0.8rem; color: #888; margin-top: 5px;';
+        this.parentNode.appendChild(countDisplay);
+      }
+      
+      countDisplay.textContent = `${length}/${maxLength} characters`;
+      
+      if (length > maxLength * 0.9) {
+        countDisplay.style.color = '#f44336';
+      } else if (length > maxLength * 0.7) {
+        countDisplay.style.color = '#ff9800';
+      } else {
+        countDisplay.style.color = '#888';
+      }
+    });
+
+    // Initialize with enhanced features
+    async function initializePage() {
+      createParticles();
+      await loadProfileData();
+      
+      // Load draft on page load
+      const draft = localStorage.getItem('draftQuestion');
+      if (draft) {
+        document.getElementById('user-question').value = draft;
+      }
+      
+      // Check for additional context and show indicator
+      checkAdditionalContext();
+      
+      // Update usage display
+      updateUsageDisplay();
+
+      // Check for successful payment on page load
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('success') === 'true') {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (currentUser.id) {
+          handleSuccessfulPayment(currentUser.id);
+        }
+      }
+    }
+
+    // Initialize everything when page loads
+    document.addEventListener('DOMContentLoaded', initializePage);
+
+    // Auto-refresh suggestions every 45 seconds if user is active
+    let lastActivity = Date.now();
+    document.addEventListener('click', () => lastActivity = Date.now());
+    document.addEventListener('keypress', () => lastActivity = Date.now());
+
+    setInterval(() => {
+      if (Date.now() - lastActivity < 45000) { // User active in last 45 seconds
+        updateSmartQuestions();
+      }
+    }, 45000);
+
+    // Add notification for premium features
+    const lastVersion = localStorage.getItem('lastKnownVersion') || '1.0';
+    const currentVersion = '3.0';
+    
+    if (lastVersion !== currentVersion && completedCategories.length > 0) {
+      setTimeout(() => {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+          position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+          background: linear-gradient(135deg, #4CAF50, #45a049); color: white;
+          padding: 15px 25px; border-radius: 25px; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+          z-index: 1000; font-size: 0.9rem; max-width: 400px; text-align: center;
+        `;
+        notification.innerHTML = `
+          ✨ New: Premium features, usage tracking, and enhanced AI analysis!
+          <button onclick="this.parentNode.remove(); localStorage.setItem('lastKnownVersion', '${currentVersion}')" 
+                  style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 10px; 
+                         border-radius: 15px; margin-left: 10px; cursor: pointer;">Got it</button>
+        `;
+        document.body.appendChild(notification);
+      }, 2000);
+    }
+    
+    localStorage.setItem('lastKnownVersion', currentVersion);
   </script>
 </body>
 </html>
