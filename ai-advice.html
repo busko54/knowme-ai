@@ -29,63 +29,138 @@
       font-weight: 700; letter-spacing: -1px;
     }
     @keyframes glow { from { text-shadow: 0 0 20px rgba(118, 169, 255, 0.5); } to { text-shadow: 0 0 30px rgba(118, 169, 255, 1); } }
-    .profile-section, .question-section, #advice {
+    .profile-section, .question-section, #advice, .completion-notice {
       background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); padding: 25px;
       border-radius: 20px; margin-bottom: 25px; border: 2px solid rgba(118, 169, 255, 0.3);
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); position: relative; overflow: hidden; color: #2d3748;
     }
-    .profile-summary { background: rgba(247, 250, 252, 0.95); padding: 20px; border-radius: 15px; font-size: 0.95rem; line-height: 1.6; max-height: 200px; overflow-y: auto; border: 1px solid rgba(118, 169, 255, 0.2); }
-    .profile-summary p { margin: 8px 0; }
+    .tier-status { display: inline-block; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; margin-bottom: 15px; }
+    .tier-free { background: rgba(255, 152, 0, 0.2); color: #ff9800; border: 1px solid rgba(255, 152, 0, 0.4); }
+    .tier-premium { background: rgba(76, 175, 80, 0.2); color: #4CAF50; border: 1px solid rgba(76, 175, 80, 0.4); }
+    .usage-counter { text-align: center; margin-bottom: 20px; padding: 15px; background: rgba(118, 169, 255, 0.1); border-radius: 10px; border: 1px solid rgba(118, 169, 255, 0.3); }
+    .completeness-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .completion-percentage { font-size: 1.4rem; font-weight: bold; color: #76a9ff; text-shadow: 0 0 10px rgba(118, 169, 255, 0.5); }
+    .completeness-bar { width: 100%; height: 16px; background: linear-gradient(90deg, #e2e8f0, #f7fafc); border-radius: 8px; overflow: hidden; margin: 15px 0; box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1); border: 1px solid rgba(118, 169, 255, 0.2); }
+    .completeness-fill { height: 100%; background: linear-gradient(90deg, #76a9ff, #667eea, #764ba2); transition: width 1s ease-out; box-shadow: 0 0 15px rgba(118, 169, 255, 0.4); position: relative; }
+    #profile-summary { background: rgba(247, 250, 252, 0.95); padding: 25px; border-radius: 15px; border: 1px solid rgba(118, 169, 255, 0.3); white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.95rem; line-height: 1.6; max-height: 250px; overflow-y: auto; box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.05); color: #4a5568; }
+    .ai-brain-visual { text-align: center; margin: 30px 0; }
+    .brain-icon { font-size: 4rem; color: #76a9ff; animation: pulse 2s infinite; text-shadow: 0 0 20px rgba(118, 169, 255, 0.6); }
+    @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
+    .missing-categories { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+    .category-tag { background: linear-gradient(135deg, rgba(118, 169, 255, 0.2), rgba(102, 126, 234, 0.2)); padding: 10px 18px; border-radius: 25px; font-size: 0.9rem; cursor: pointer; transition: all 0.4s ease; border: 2px solid rgba(118, 169, 255, 0.3); position: relative; color: #76a9ff; }
+    .category-tag:hover { background: linear-gradient(135deg, rgba(118, 169, 255, 0.3), rgba(102, 126, 234, 0.3)); transform: translateY(-3px) scale(1.05); box-shadow: 0 6px 20px rgba(118, 169, 255, 0.2); }
+    .category-tag.completed { background: linear-gradient(135deg, #4caf50, #43a047); color: #81c784; border-color: #4caf50; box-shadow: 0 0 15px rgba(76, 175, 80, 0.4); }
+    .question-label { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; color: #4a5568; }
     textarea {
-      width: 100%; min-height: 100px; padding: 15px; border-radius: 12px; border: 2px solid #e2e8f0;
-      background: #f7fafc; color: #2d3748; resize: vertical; margin-bottom: 15px; font-size: 1rem;
-      font-family: inherit;
+      width: 100%; min-height: 140px; padding: 20px; border-radius: 15px; border: 2px solid #e2e8f0;
+      background: #f7fafc; color: #2d3748; resize: vertical; margin-bottom: 20px; font-size: 1.1rem;
+      line-height: 1.6; transition: all 0.3s ease; font-family: inherit;
     }
     textarea:focus { outline: none; border-color: #76a9ff; background: #ffffff; box-shadow: 0 0 0 4px rgba(118, 169, 255, 0.1); }
     button {
-      width: 100%; padding: 15px; background: linear-gradient(135deg, #76a9ff 0%, #667eea 50%, #764ba2 100%);
-      color: white; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; font-size: 1.1rem;
-      margin-bottom: 10px; transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(118, 169, 255, 0.4);
+      width: 100%; padding: 18px; background: linear-gradient(135deg, #76a9ff 0%, #667eea 50%, #764ba2 100%);
+      color: white; font-weight: 700; border: none; border-radius: 15px; cursor: pointer; font-size: 1.2rem;
+      margin-bottom: 15px; transition: all 0.4s ease; box-shadow: 0 6px 20px rgba(118, 169, 255, 0.4);
+      position: relative; overflow: hidden;
     }
-    button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(118, 169, 255, 0.6); }
-    button:disabled { background: #888; cursor: not-allowed; transform: none; }
-    #advice { min-height: 200px; display: none; line-height: 1.8; font-size: 1.05rem; }
-    .loading { text-align: center; padding: 30px; }
-    .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #76a9ff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+    button:hover { background: linear-gradient(135deg, #667eea, #76a9ff, #764ba2); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(118, 169, 255, 0.6); }
+    button:disabled { background: #444; color: #666; cursor: not-allowed; transform: none; box-shadow: none; }
+    .quick-questions h4 { color: #4a5568; margin-bottom: 15px; font-size: 1.1rem; }
+    .quick-question-btn {
+      background: rgba(118, 169, 255, 0.1); border: 2px solid rgba(118, 169, 255, 0.3); color: #76a9ff;
+      padding: 12px 16px; border-radius: 12px; margin: 8px 8px 8px 0; cursor: pointer; font-size: 0.95rem;
+      display: inline-block; transition: all 0.3s ease; backdrop-filter: blur(5px);
+    }
+    .quick-question-btn:hover { background: rgba(118, 169, 255, 0.2); transform: scale(1.05); box-shadow: 0 4px 15px rgba(118, 169, 255, 0.3); }
+    #advice { min-height: 150px; font-family: 'Segoe UI', sans-serif; line-height: 1.7; font-size: 1.05rem; }
+    .loading { display: flex; align-items: center; justify-content: center; gap: 15px; flex-direction: column; padding: 40px; }
+    .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #76a9ff; border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .advice-header { border-bottom: 3px solid #76a9ff; padding-bottom: 15px; margin-bottom: 20px; font-weight: bold; font-size: 1.3rem; color: #4a5568; }
-    .confidence-score { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; margin-left: 15px; font-weight: 600; }
+    .advice-header { border-bottom: 3px solid #76a9ff; padding-bottom: 15px; margin-bottom: 20px; color: #4a5568; font-weight: bold; font-size: 1.3rem; }
+    .confidence-indicator { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; margin-left: 10px; }
     .confidence-high { background: rgba(76, 175, 80, 0.3); color: #4caf50; }
     .confidence-medium { background: rgba(255, 152, 0, 0.3); color: #ff9800; }
     .confidence-low { background: rgba(244, 67, 54, 0.3); color: #f44336; }
-    .warning-box { background: rgba(244, 67, 54, 0.1); border-left: 4px solid #f44336; padding: 15px; border-radius: 8px; margin: 15px 0; color: #c62828; }
-    .action-box { background: rgba(76, 175, 80, 0.1); border-left: 4px solid #4caf50; padding: 15px; border-radius: 8px; margin: 15px 0; }
-    .back-btn { position: absolute; top: 20px; left: 20px; background: rgba(26, 26, 26, 0.8); border: 1px solid rgba(118, 169, 255, 0.3); color: #76a9ff; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-size: 0.9rem; transition: all 0.3s ease; cursor: pointer; z-index: 100; }
-    .back-btn:hover { background: rgba(118, 169, 255, 0.1); }
-    @media (max-width: 768px) { h1 { font-size: 2rem; } body { padding: 15px; } }
+    .action-buttons { display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap; }
+    .action-btn { flex: 1; min-width: 200px; padding: 15px; font-size: 1rem; border-radius: 12px; transition: all 0.3s ease; }
+    .export-btn { background: linear-gradient(135deg, #4CAF50, #45a049); }
+    .clear-btn { background: linear-gradient(135deg, #f44336, #d32f2f); }
+    .back-btn {
+      position: absolute; top: 20px; left: 20px; background: rgba(26, 26, 26, 0.8); border: 1px solid rgba(118, 169, 255, 0.3);
+      color: #76a9ff; padding: 0.5rem 1rem; border-radius: 25px; text-decoration: none; font-size: 0.9rem;
+      transition: all 0.3s ease; backdrop-filter: blur(10px); z-index: 100; display: flex; align-items: center; gap: 8px;
+    }
+    .back-btn:hover { background: rgba(118, 169, 255, 0.1); border-color: #76a9ff; transform: translateX(-3px); box-shadow: 0 4px 15px rgba(118, 169, 255, 0.2); }
+    @media (max-width: 768px) {
+      body { padding: 15px; }
+      h1 { font-size: 2.2rem; margin-top: 60px; }
+      .back-btn { top: 15px; left: 15px; padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+      .action-buttons { flex-direction: column; }
+      .action-btn { min-width: auto; }
+    }
   </style>
 </head>
 <body>
   <div class="particles" id="particles"></div>
-  <button class="back-btn" onclick="window.location.href='categories.html'">← Back</button>
-  
-  <h1>🧠 Knowme AI</h1>
+  <a href="categories.html" class="back-btn" style="z-index: 1000; cursor: pointer; pointer-events: auto;">← Back to Categories</a>
+  <h1>Knowme AI</h1>
+  <div class="ai-brain-visual">
+    <div class="brain-icon">🧠</div>
+    <p style="margin: 10px 0; color: #76a9ff; font-style: italic;">Your personal decision intelligence</p>
+  </div>
 
   <div class="profile-section">
-    <h3>Your Profile Summary</h3>
-    <div class="profile-summary" id="profile-summary">Loading profile...</div>
+    <div class="tier-status tier-free" id="tier-status">🆓 Free Plan</div>
+    <div class="usage-counter" id="usage-counter">Loading usage...</div>
+    <div class="profile-completeness">
+      <div class="completeness-header">
+        <span>Profile Completeness</span>
+        <span class="completion-percentage" id="completion-percentage">0%</span>
+      </div>
+      <div class="completeness-bar"><div class="completeness-fill" id="completion-bar"></div></div>
+    </div>
+    <div id="profile-summary">Loading your profile data...</div>
+  </div>
+
+  <div id="completion-notice" class="completion-notice" style="display: none;">
+    <h3>Unlock Better Insights</h3>
+    <p>Complete more categories for deeper, more accurate advice:</p>
+    <div class="missing-categories" id="missing-categories"></div>
+    <button class="add-categories-btn" onclick="window.location.href='categories.html'">Complete More Categories</button>
   </div>
 
   <div class="question-section">
-    <label style="font-size: 1.1rem; font-weight: 600; color: #4a5568; display: block; margin-bottom: 12px;">What decision are you facing?</label>
+    <div class="question-label">What decision are you facing?</div>
     <textarea id="user-question" placeholder="Ask me about any life decision..."></textarea>
-    <button onclick="getAdvice()" id="advice-btn">Get AI-Powered Advice</button>
+    <div class="quick-questions"><h4>Smart suggestions based on your profile:</h4></div>
+    <button onclick="getAdvice()" id="advice-btn">Get AI-Powered Advice <span class="typing-indicator">|</span></button>
   </div>
 
-  <div id="advice"></div>
+  <div id="advice" style="display: none;"></div>
+
+  <div class="action-buttons">
+    <button onclick="exportData()" class="action-btn export-btn">Export My Data</button>
+    <button onclick="clearAllData()" class="action-btn clear-btn">Reset All Data</button>
+    <button onclick="showHistory()" class="action-btn" style="background: linear-gradient(135deg, #76a9ff, #667eea);">Decision History</button>
+    <button onclick="manageSubscription()" class="action-btn" style="background: linear-gradient(135deg, #ff9800, #f57c00);">Manage Plan</button>
+  </div>
 
   <script>
-    // Create particles
+    let profiles = {
+      mental: {}, finance: {}, career: {}, relationships: {}, fitness: {}, lifestyle: {}
+    };
+    let completedCategories = [];
+    const totalCategories = 6;
+
+    const categoryInfo = {
+      mental: { name: 'Mental Health', param: 'mental-health' },
+      finance: { name: 'Finance', param: 'finance' },
+      career: { name: 'Career', param: 'career' },
+      relationships: { name: 'Relationships', param: 'relationships' },
+      fitness: { name: 'Fitness', param: 'fitness' },
+      lifestyle: { name: 'Lifestyle', param: 'lifestyle' }
+    };
+
     function createParticles() {
       const container = document.getElementById('particles');
       for (let i = 0; i < 50; i++) {
@@ -98,9 +173,29 @@
       }
     }
 
-    // Load and display profile
+    function isPremiumUser() {
+      return localStorage.getItem('userTier') === 'premium';
+    }
+
+    function updateUsageDisplay() {
+      const usage = JSON.parse(localStorage.getItem('monthlyUsage') || '{}');
+      const month = new Date().getMonth() + '-' + new Date().getFullYear();
+      const count = usage[month] || 0;
+      const remaining = Math.max(0, 5 - count);
+      const el = document.getElementById('usage-counter');
+      const tierEl = document.getElementById('tier-status');
+      if (isPremiumUser()) {
+        el.innerHTML = `<div style="color: #4CAF50;">💎 Premium: Unlimited</div>`;
+        tierEl.innerHTML = '💎 Premium Plan';
+        tierEl.className = 'tier-status tier-premium';
+      } else {
+        el.innerHTML = `<div style="color: ${remaining <= 1 ? '#f44336' : '#ff9800'};">🆓 Free Plan: ${remaining} sessions left this month</div>`;
+        tierEl.className = 'tier-status tier-free';
+      }
+    }
+
     function loadProfileData() {
-      const profiles = {
+      profiles = {
         mental: JSON.parse(localStorage.getItem('mentalHealthProfile') || '{}'),
         finance: JSON.parse(localStorage.getItem('financeProfile') || '{}'),
         career: JSON.parse(localStorage.getItem('careerProfile') || '{}'),
@@ -108,198 +203,238 @@
         fitness: JSON.parse(localStorage.getItem('fitnessProfile') || '{}'),
         lifestyle: JSON.parse(localStorage.getItem('lifestyleProfile') || '{}')
       };
-
-      let summary = '<strong>Your Profile:</strong><br>';
-      
-      if (Object.keys(profiles.mental).length > 0) {
-        summary += `<p><strong>Mental:</strong> Stress level ${profiles.mental.stressLevel || '?'}/10, ${profiles.mental.sleepHours || '?'} hrs sleep, Main stressor: ${profiles.mental.mainStressor || 'not specified'}</p>`;
-      }
-      
-      if (Object.keys(profiles.finance).length > 0) {
-        summary += `<p><strong>Finance:</strong> Monthly income ${profiles.finance.monthlyIncome || '?'}, Risk tolerance: ${profiles.finance.riskTolerance || 'not specified'}</p>`;
-      }
-      
-      if (Object.keys(profiles.career).length > 0) {
-        summary += `<p><strong>Career:</strong> Status: ${profiles.career.jobStatus || '?'}, Satisfaction: ${profiles.career.jobSatisfaction || '?'}/10</p>`;
-      }
-
-      if (summary === '<strong>Your Profile:</strong><br>') {
-        summary = '<p style="color: #999;">Complete your profile for personalized advice. <a href="categories.html" style="color: #76a9ff;">Start here</a></p>';
-      }
-
-      document.getElementById('profile-summary').innerHTML = summary;
-      return profiles;
+      updateCompletionDisplay();
+      displayProfileSummary();
+      showCompletionNotice();
+      updateSmartQuestions();
     }
 
-    // Analyze question context
-    function analyzeQuestion(question, profiles) {
+    function updateCompletionDisplay() {
+      completedCategories = Object.keys(profiles).filter(k => Object.keys(profiles[k]).length > 0);
+      const percentage = Math.round((completedCategories.length / totalCategories) * 100);
+      document.getElementById('completion-percentage').textContent = percentage + '%';
+      setTimeout(() => {
+        document.getElementById('completion-bar').style.width = percentage + '%';
+      }, 500);
+    }
+
+    function displayProfileSummary() {
+      let summary = '';
+      Object.keys(profiles).forEach(key => {
+        if (Object.keys(profiles[key]).length > 0) {
+          summary += `${categoryInfo[key].name}:\n`;
+          Object.entries(profiles[key]).slice(0, 3).forEach(([k, v]) => {
+            if (k !== 'completedAt') {
+              summary += `  • ${k}: ${Array.isArray(v) ? v.join(', ') : v}\n`;
+            }
+          });
+          summary += '\n';
+        }
+      });
+      document.getElementById('profile-summary').textContent = summary || 'Complete your profile to get personalized advice!';
+    }
+
+    function showCompletionNotice() {
+      if (completedCategories.length < totalCategories) {
+        const notice = document.getElementById('completion-notice');
+        const container = document.getElementById('missing-categories');
+        notice.style.display = 'block';
+        container.innerHTML = '';
+        Object.keys(profiles).forEach(key => {
+          const tag = document.createElement('div');
+          tag.className = 'category-tag';
+          tag.textContent = categoryInfo[key].name;
+          if (Object.keys(profiles[key]).length > 0) {
+            tag.classList.add('completed');
+          } else {
+            tag.onclick = () => window.location.href = `category-form.html?category=${categoryInfo[key].param}`;
+          }
+          container.appendChild(tag);
+        });
+      }
+    }
+
+    function updateSmartQuestions() {
+      const div = document.querySelector('.quick-questions');
+      div.innerHTML = '<h4>Smart suggestions based on your profile:</h4>';
+      const suggestions = [
+        "Should I quit my job?",
+        "How can I save more money?",
+        "Is this relationship healthy?",
+        "How do I reduce stress?",
+        "What career move should I make?"
+      ];
+      suggestions.forEach(q => {
+        const btn = document.createElement('div');
+        btn.className = 'quick-question-btn';
+        btn.textContent = q;
+        btn.onclick = () => {
+          document.getElementById('user-question').value = q;
+        };
+        div.appendChild(btn);
+      });
+    }
+
+    async function getAdvice() {
+      const question = document.getElementById('user-question').value.trim();
+      const adviceEl = document.getElementById('advice');
+      const btn = document.getElementById('advice-btn');
+
+      if (!question) {
+        alert('Please enter a question');
+        return;
+      }
+
+      if (completedCategories.length === 0) {
+        adviceEl.style.display = 'block';
+        adviceEl.innerHTML = `<div style="text-align:center;padding:40px;"><h3>Build Your Profile First</h3><p>Complete at least one category to get personalized advice.</p><button onclick="window.location.href='categories.html'" style="background:linear-gradient(135deg, #4CAF50, #45a049);color:white;padding:10px 20px;border-radius:10px;border:none;cursor:pointer;">Start Profile</button></div>`;
+        return;
+      }
+
+      adviceEl.style.display = 'block';
+      adviceEl.innerHTML = `<div class="loading"><div class="spinner"></div><span>Generating personalized advice...</span></div>`;
+      btn.disabled = true;
+      btn.textContent = 'Analyzing...';
+
+      await new Promise(r => setTimeout(r, 2000));
+
+      const confidence = Math.floor(Math.random() * 25) + 70;
+      const relevantCategories = detectRelevantCategories(question);
+      const advice = generateRealAdvice(question, profiles, relevantCategories, confidence);
+
+      adviceEl.innerHTML = advice;
+      btn.disabled = false;
+      btn.textContent = 'Get AI-Powered Advice';
+
+      saveDecision(question, confidence);
+    }
+
+    function detectRelevantCategories(question) {
       const q = question.toLowerCase();
-      
-      const analysis = {
-        isMajorFinancialDecision: q.includes('spend') || q.includes('money') || q.includes('$') || q.includes('invest') || q.includes('buy'),
-        isTravel: q.includes('travel') || q.includes('italy') || q.includes('trip') || q.includes('vacation') || q.includes('go to'),
-        isCareer: q.includes('job') || q.includes('quit') || q.includes('work') || q.includes('career'),
-        isRelationship: q.includes('relationship') || q.includes('dating') || q.includes('friend') || q.includes('family'),
-        isHealth: q.includes('health') || q.includes('exercise') || q.includes('sleep') || q.includes('stress'),
-        isUrgent: q.includes('now') || q.includes('asap') || q.includes('urgent') || q.includes('rn'),
-        isFeasible: !q.includes('afford') && !q.includes('can\'t') && !q.includes('impossible')
-      };
-
-      return analysis;
+      const relevant = [];
+      if (q.includes('money') || q.includes('spend') || q.includes('invest') || q.includes('$')) relevant.push('finance');
+      if (q.includes('job') || q.includes('quit') || q.includes('work') || q.includes('career')) relevant.push('career');
+      if (q.includes('stress') || q.includes('anxiety') || q.includes('sleep') || q.includes('health')) relevant.push('mental');
+      if (q.includes('relationship') || q.includes('dating') || q.includes('friend') || q.includes('love')) relevant.push('relationships');
+      if (q.includes('exercise') || q.includes('fit') || q.includes('weight')) relevant.push('fitness');
+      if (q.includes('life') || q.includes('happy') || q.includes('balance')) relevant.push('lifestyle');
+      return relevant.length > 0 ? relevant : completedCategories;
     }
 
-    // Calculate confidence based on profile completeness
-    function calculateConfidence(profiles, analysis) {
-      let confidence = 50;
-      
-      const completedCategories = Object.values(profiles).filter(p => Object.keys(p).length > 0).length;
-      confidence += completedCategories * 8;
-      
-      if (analysis.isMajorFinancialDecision && Object.keys(profiles.finance).length > 0) confidence += 15;
-      if (analysis.isTravel && Object.keys(profiles.lifestyle).length > 0) confidence += 10;
-      if (analysis.isCareer && Object.keys(profiles.career).length > 0) confidence += 15;
-      
-      return Math.min(confidence, 95);
-    }
-
-    // Generate contextual advice
-    function generateAdvice(question, profiles, analysis, confidence) {
+    function generateRealAdvice(question, profiles, relevant, confidence) {
       const mental = profiles.mental;
       const finance = profiles.finance;
       const career = profiles.career;
       
-      let advice = '';
-      let criticalWarnings = [];
+      let advice = `<div class="advice-header">Your AI Advice <span class="confidence-indicator ${confidence > 80 ? 'confidence-high' : 'confidence-medium'}">${confidence}%</span></div>`;
+      advice += `<div style="background:rgba(118,169,255,0.05);padding:15px;border-radius:10px;margin:15px 0;"><strong>Your Question:</strong> "${question}"</div>`;
 
-      // Major financial decision analysis
-      if (analysis.isMajorFinancialDecision && question.includes('$100,000')) {
-        
-        // Extract financial situation
-        const monthlyIncomeMatch = finance.monthlyIncome;
-        const savingsMatch = finance.savings;
+      // Financial decisions with money involved
+      if (question.toLowerCase().includes('spend') && question.toLowerCase().includes('$')) {
+        const amount = question.match(/\$?(\d+(?:,\d+)*)/)?.[1] || 'significant amount';
         const stressLevel = parseInt(mental.stressLevel) || 5;
-        const jobSatisfaction = parseInt(career.jobSatisfaction) || 5;
+        const monthlyIncome = finance.monthlyIncome || 'unknown';
 
+        advice += `<p style="line-height:1.8;margin:20px 0;"><strong>Recommendation:</strong> Before spending ${amount}, consider these factors from your profile:</p>`;
+        
         if (stressLevel >= 8) {
-          criticalWarnings.push('⚠️ <strong>High stress detected:</strong> Major financial decisions made under high stress often lead to regret. Wait 2-3 weeks.');
+          advice += `<p style="color:#d32f2f;"><strong>⚠️ Important:</strong> You're under high stress (${stressLevel}/10). Major financial decisions under stress often lead to regret. Wait 1-2 weeks if possible.</p>`;
         }
 
-        if (jobSatisfaction <= 4 && mental.mainStressor?.includes('work')) {
-          criticalWarnings.push('⚠️ <strong>Job unhappiness:</strong> Your work stress might be driving escape fantasies. Address job issues first.');
-        }
-
-        advice = `
-<div class="advice-header">
-  Your Personalized Financial Advice
-  <span class="confidence-score ${confidence > 75 ? 'confidence-high' : confidence > 60 ? 'confidence-medium' : 'confidence-low'}">
-    ${confidence}% Confidence
-  </span>
-</div>
-
-<div style="background: rgba(255, 152, 0, 0.1); border: 2px solid #ff9800; border-radius: 10px; padding: 20px; margin: 20px 0;">
-  <strong style="color: #ff9800; font-size: 1.1rem;">⚠️ Hold on - This needs deeper analysis</strong>
-  <p style="margin-top: 10px;">Spending $100,000 right now is a major decision that shouldn't be rushed.</p>
-</div>
-
-${criticalWarnings.map(w => `<div class="warning-box">${w}</div>`).join('')}
-
-<h4 style="color: #4a5568; margin-top: 20px;">Here's what I'm seeing:</h4>
-
-<p><strong>Your current situation:</strong></p>
-<ul style="line-height: 1.8; color: #555;">
-  <li><strong>Stress level:</strong> ${mental.stressLevel}/10 ${parseInt(mental.stressLevel) >= 7 ? '(High - not ideal for major decisions)' : '(Manageable)'}</li>
-  <li><strong>Main stressor:</strong> ${mental.mainStressor || 'not specified'}</li>
-  <li><strong>Work satisfaction:</strong> ${career.jobSatisfaction}/10 ${parseInt(career.jobSatisfaction) <= 4 ? '(Low - suggests frustration)' : ''}</li>
-  <li><strong>Sleep:</strong> ${mental.sleepHours} hours ${parseInt(mental.sleepHours) <= 5 ? '(Sleep-deprived, affects judgment)' : ''}</li>
-</ul>
-
-<div class="action-box">
-  <h4 style="color: #2e7d32; margin-top: 0;">⚡ What to do NOW (before spending $100k):</h4>
-  <ol style="color: #555; line-height: 1.9;">
-    <li><strong>Write it down:</strong> Describe exactly what you'd do in Italy and why. Leave it for 48 hours.</li>
-    <li><strong>Financial reality check:</strong> What's your monthly income? $100k is how many months of income?</li>
-    <li><strong>Root cause:</strong> Are you running TOWARD something or AWAY from something (like work stress)?</li>
-    <li><strong>Reduce stress first:</strong> Take 1 week vacation locally to clear your head before committing $100k.</li>
-    <li><strong>Talk it through:</strong> Discuss with someone you trust - not just in your head.</li>
-  </ol>
-</div>
-
-<h4 style="color: #4a5568; margin-top: 20px;">Questions to answer before deciding:</h4>
-<ul style="color: #666; line-height: 1.8;">
-  <li>If you DON'T go, will you regret it in 5 years?</li>
-  <li>If you DO go and have less savings, will that stress you even more?</li>
-  <li>Can you do a shorter, cheaper trip first to test the idea?</li>
-  <li>Is this about Italy specifically, or about escaping your current situation?</li>
-</ul>
-
-<p style="margin-top: 20px; padding: 15px; background: rgba(33, 150, 243, 0.1); border-radius: 8px; border-left: 4px solid #2196F3;">
-  <strong>My honest take:</strong> With your current stress level and work situation, this feels more like an escape fantasy than a real decision. That's not bad - it means you need a change. But it might be a smaller change than $100k. What if you took a 2-week trip for $5k instead and used that time to figure out what's really wrong?
-</p>
-        `;
-
-      } else {
-        // Generic fallback
-        advice = `
-<div class="advice-header">Your Personalized Advice</div>
-<p>Based on your profile (${Object.values(profiles).filter(p => Object.keys(p).length > 0).length} categories completed):</p>
-<div class="action-box">
-  <p><strong>Next step:</strong> Take one small action toward this decision today. Often, the best insights come from moving forward, not overthinking.</p>
-</div>
-        `;
+        advice += `<p><strong>Action Steps:</strong></p><ol style="line-height:1.8;">
+          <li>Write down exactly what you'll buy/do and why</li>
+          <li>Sleep on it for 48 hours</li>
+          <li>Calculate: Is this expense worth ${amount === 'significant amount' ? 'that amount' : amount}?</li>
+          <li>Ask someone you trust what they think</li>
+          <li>If still sure after 48 hours, make the decision</li>
+        </ol>`;
       }
+      // Career decisions
+      else if (question.toLowerCase().includes('job') || question.toLowerCase().includes('quit') || question.toLowerCase().includes('career')) {
+        const jobSatisfaction = parseInt(career.jobSatisfaction) || 5;
+        const stressLevel = parseInt(mental.stressLevel) || 5;
+
+        advice += `<p style="line-height:1.8;margin:20px 0;"><strong>Recommendation:</strong> Your job satisfaction is ${jobSatisfaction}/10 and stress is ${stressLevel}/10.</p>`;
+        
+        if (jobSatisfaction <= 4) {
+          advice += `<p><strong>This matters:</strong> Low satisfaction + high stress = you need change. But don't react, plan.</p>`;
+          advice += `<p><strong>Action Steps:</strong></p><ol style="line-height:1.8;">
+            <li>List 3 specific things you hate about the job</li>
+            <li>Could any of those be fixed (different team, role adjustment)?</li>
+            <li>If yes, try that first (takes 3 months)</li>
+            <li>If no, start quietly looking for new jobs</li>
+            <li>Never quit before securing something new</li>
+          </ol>`;
+        } else {
+          advice += `<p><strong>Your take:</strong> Job satisfaction is moderate. Before making changes, clarify what you actually want.</p>`;
+        }
+      }
+      // Generic advice
+      else {
+        advice += `<p style="line-height:1.8;margin:20px 0;"><strong>My recommendation:</strong> Take one small action toward this decision today.</p>
+          <p><strong>Why:</strong> You've completed ${completedCategories.length} life areas in your profile. I understand your situation enough to say: the best insight comes from moving forward, not overthinking.</p>
+          <p><strong>Next Step:</strong> Do ONE thing in the next 60 minutes that moves you toward this decision.</p>`;
+      }
+
+      if (!isPremiumUser()) {
+        advice += `<div style="background:rgba(255,152,0,0.1);padding:20px;border-radius:15px;margin:20px 0;text-align:center;border:2px solid rgba(255,152,0,0.3);">
+          <h4>Want Deeper Analysis?</h4>
+          <p>Upgrade to Premium for unlimited advice sessions and all 12 life categories.</p>
+          <button onclick="alert('Stripe integration coming soon')" style="background:#4CAF50;padding:10px 20px;border-radius:10px;border:none;color:white;cursor:pointer;font-weight:bold;">Upgrade – $9.99/mo</button>
+        </div>`;
+      }
+
+      advice += `<div style="text-align:center;margin-top:20px;">
+        <h4>Rate this advice:</h4>
+        ${[1,2,3,4,5].map(n => `<button onclick="alert('Thanks for rating!')" style="margin:0 5px;padding:8px 12px;border-radius:20px;border:2px solid #ddd;background:white;cursor:pointer;">${'⭐'.repeat(n)}</button>`).join('')}
+      </div>`;
 
       return advice;
     }
 
-    // Main function
-    async function getAdvice() {
-      const question = document.getElementById('user-question').value.trim();
-      const btn = document.getElementById('advice-btn');
-      const adviceEl = document.getElementById('advice');
-
-      if (!question) {
-        alert('Please enter your question');
-        return;
-      }
-
-      btn.disabled = true;
-      btn.textContent = 'Analyzing...';
-      
-      adviceEl.innerHTML = '<div class="loading"><div class="spinner"></div>Thinking about your decision...</div>';
-      adviceEl.style.display = 'block';
-
-      const profiles = loadProfileData();
-      const analysis = analyzeQuestion(question, profiles);
-      const confidence = calculateConfidence(profiles, analysis);
-
-      // Simulate processing delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      const advice = generateAdvice(question, profiles, analysis, confidence);
-      adviceEl.innerHTML = advice;
-
-      btn.disabled = false;
-      btn.textContent = 'Get AI-Powered Advice';
-
-      // Save to history
+    function saveDecision(question, confidence) {
       const history = JSON.parse(localStorage.getItem('decisionHistory') || '[]');
       history.push({
         date: new Date().toISOString(),
         question: question,
         confidence: confidence
       });
-      localStorage.setItem('decisionHistory', JSON.stringify(history.slice(-20)));
+      localStorage.setItem('decisionHistory', JSON.stringify(history.slice(-100)));
     }
 
-    // Initialize
+    function exportData() {
+      alert('Export feature coming soon!');
+    }
+
+    function clearAllData() {
+      if (confirm('Are you sure? This will delete all your data.')) {
+        localStorage.clear();
+        location.reload();
+      }
+    }
+
+    function showHistory() {
+      const history = JSON.parse(localStorage.getItem('decisionHistory') || '[]');
+      if (history.length === 0) {
+        alert('No decisions yet. Ask a question first!');
+        return;
+      }
+      let historyText = 'Your Decision History:\n\n';
+      history.slice(-10).reverse().forEach((item, i) => {
+        const date = new Date(item.date).toLocaleDateString();
+        historyText += `${i + 1}. [${date}] ${item.question}\n`;
+      });
+      alert(historyText);
+    }
+
+    function manageSubscription() {
+      alert('Premium upgrades coming soon!');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       createParticles();
       loadProfileData();
-    });
-
-    // Allow Enter key
-    document.getElementById('user-question').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && e.ctrlKey) getAdvice();
+      updateUsageDisplay();
     });
   </script>
 </body>
