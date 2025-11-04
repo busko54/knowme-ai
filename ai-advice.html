@@ -329,28 +329,43 @@
       let advice = `<div class="advice-header">Your AI Advice <span class="confidence-indicator ${confidence > 80 ? 'confidence-high' : 'confidence-medium'}">${confidence}%</span></div>`;
       advice += `<div style="background:rgba(118,169,255,0.05);padding:15px;border-radius:10px;margin:15px 0;"><strong>Your Question:</strong> "${question}"</div>`;
 
-      // Financial decisions with money involved
-      if (question.toLowerCase().includes('spend') && question.toLowerCase().includes('$')) {
-        const amount = question.match(/\$?(\d+(?:,\d+)*)/)?.[1] || 'significant amount';
+      // Financial decisions with money/spending involved
+      const q = question.toLowerCase();
+      if (q.includes('spend') || q.includes('100k') || q.includes('100000') || q.includes('money')) {
         const stressLevel = parseInt(mental.stressLevel) || 5;
-        const monthlyIncome = finance.monthlyIncome || 'unknown';
+        const sleepHours = parseInt(mental.sleepHours) || 7;
+        const mainStressor = mental.mainStressor || 'unknown';
 
-        advice += `<p style="line-height:1.8;margin:20px 0;"><strong>Recommendation:</strong> Before spending ${amount}, consider these factors from your profile:</p>`;
+        advice += `<p style="line-height:1.8;margin:20px 0;"><strong>⚠️ MAJOR FINANCIAL DECISION:</strong> Spending $100k is serious. Let me analyze your situation:</p>`;
         
-        if (stressLevel >= 8) {
-          advice += `<p style="color:#d32f2f;"><strong>⚠️ Important:</strong> You're under high stress (${stressLevel}/10). Major financial decisions under stress often lead to regret. Wait 1-2 weeks if possible.</p>`;
+        advice += `<p><strong>Your Current State:</strong></p><ul style="line-height:1.8;margin:10px 0;">
+          <li>Stress Level: ${stressLevel}/10 ${stressLevel >= 8 ? '(HIGH - Red flag for decisions)' : stressLevel >= 6 ? '(MODERATE - Proceed carefully)' : '(OK - You\'re thinking clearly)'}</li>
+          <li>Sleep: ${sleepHours} hours ${sleepHours <= 5 ? '(Sleep-deprived - your judgment is impaired)' : ''}</li>
+          <li>Main Stressor: ${mainStressor}</li>
+        </ul>`;
+        
+        if (stressLevel >= 8 || sleepHours <= 5) {
+          advice += `<p style="color:#d32f2f;background:rgba(244,67,54,0.1);padding:15px;border-radius:8px;border-left:4px solid #f44336;"><strong>🛑 HOLD UP:</strong> You're stressed and sleep-deprived. This is exactly when people make financial mistakes. Before you spend $100k, give yourself 2 weeks to get sleep and reduce stress. Then decide.</p>`;
         }
 
-        advice += `<p><strong>Action Steps:</strong></p><ol style="line-height:1.8;">
-          <li>Write down exactly what you'll buy/do and why</li>
-          <li>Sleep on it for 48 hours</li>
-          <li>Calculate: Is this expense worth ${amount === 'significant amount' ? 'that amount' : amount}?</li>
-          <li>Ask someone you trust what they think</li>
-          <li>If still sure after 48 hours, make the decision</li>
+        advice += `<p style="margin:20px 0;"><strong>Critical Questions (Answer These First):</strong></p><ol style="line-height:2;margin:15px 0;">
+          <li>Why $100k specifically? What are you buying/doing?</li>
+          <li>How many months of income is $100k for you?</li>
+          <li>If you don't do this now, will you regret it in 5 years?</li>
+          <li>Are you running TOWARD something or AWAY from stress?</li>
+          <li>Could you do this more cheaply or on a smaller scale first?</li>
+        </ol>`;
+
+        advice += `<p><strong>Action Plan (Do This NOW):</strong></p><ol style="line-height:1.8;">
+          <li><strong>Write it down:</strong> Exactly what, why, when. Leave it alone for 48 hours.</li>
+          <li><strong>Sleep:</strong> Get 8 hours tonight. Decisions made tired are usually wrong.</li>
+          <li><strong>Talk to someone:</strong> Tell a friend/family member. Say it out loud.</li>
+          <li><strong>Calculate:</strong> What % of your wealth is $100k? Is that worth it?</li>
+          <li><strong>Wait:</strong> If still want it after 1 week, then act. Not before.</li>
         </ol>`;
       }
       // Career decisions
-      else if (question.toLowerCase().includes('job') || question.toLowerCase().includes('quit') || question.toLowerCase().includes('career')) {
+      else if (q.includes('job') || q.includes('quit') || q.includes('career')) {
         const jobSatisfaction = parseInt(career.jobSatisfaction) || 5;
         const stressLevel = parseInt(mental.stressLevel) || 5;
 
