@@ -336,9 +336,12 @@
       const finance = profiles.finance || {};
       const career = profiles.career || {};
       
-      console.log('generateRealAdvice called with:', { question, mental, finance, career, confidence });
+      // Show debug info on page
+      const debugInfo = `Debug - Stress: ${mental.stressLevel || 'MISSING'}, Sleep: ${mental.sleepHours || 'MISSING'}, Stressor: ${mental.mainStressor || 'MISSING'}`;
+      console.log(debugInfo);
       
-      let advice = `<div class="advice-header">Your AI Advice <span class="confidence-indicator ${confidence > 80 ? 'confidence-high' : 'confidence-medium'}">${confidence}%</span></div>`;
+      let advice = `<div style="background:rgba(0,0,0,0.05);padding:10px;border-radius:8px;margin-bottom:15px;font-size:0.85rem;color:#666;"><strong>📊 Debug:</strong> ${debugInfo}</div>`;
+      advice += `<div class="advice-header">Your AI Advice <span class="confidence-indicator ${confidence > 80 ? 'confidence-high' : 'confidence-medium'}">${confidence}%</span></div>`;
       advice += `<div style="background:rgba(118,169,255,0.05);padding:15px;border-radius:10px;margin:15px 0;"><strong>Your Question:</strong> "${question}"</div>`;
 
       // Financial decisions with money/spending involved
