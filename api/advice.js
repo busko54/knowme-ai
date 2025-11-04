@@ -46,8 +46,8 @@ Provide good advice that fits their unique situation.`;
 
     console.log('Calling Google API...');
     
-    // Using the correct model name and endpoint
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
+    // UPDATED: Using gemini-1.5-flash-latest which should work
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
