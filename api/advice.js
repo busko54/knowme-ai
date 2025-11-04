@@ -46,8 +46,8 @@ Provide good advice that fits their unique situation.`;
 
     console.log('Calling Google API...');
     
-    // Call Google AI API - FIXED THE SYNTAX HERE
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+    // Using the correct model name and endpoint
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ Provide good advice that fits their unique situation.`;
           temperature: 0.8,
           topK: 40,
           topP: 0.95,
-          maxOutputTokens: 1200
+          maxOutputTokens: 1024
         }
       })
     });
@@ -77,6 +77,11 @@ Provide good advice that fits their unique situation.`;
     
     const data = await response.json();
     console.log('Google API success');
+    
+    // Check if we have valid response data
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+      throw new Error('Invalid response format from API');
+    }
     
     const advice = data.candidates[0].content.parts[0].text;
     
