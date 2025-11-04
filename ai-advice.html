@@ -1572,7 +1572,7 @@
         localStorage.removeItem('draftQuestion');
         
         // Call your actual API
-        const response = await fetch('/api/advice', {
+const response = await fetch('https://knowme-ai.vercel.app/api/advice', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1807,3 +1807,4 @@
   </script>
 </body>
 </html>
+
