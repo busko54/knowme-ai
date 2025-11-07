@@ -2,82 +2,216 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>🧠 Knowme AI - Advice</title>
+  <title>Knowme AI - Advice</title>
   <style>
-    /* ← YOUR EXACT OLD STYLE — I DID NOT CHANGE ONE PIXEL */
-    *{box-sizing:border-box}body{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#2d3748;font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;padding:20px;max-width:900px;margin:0 auto;min-height:100vh}
-    .particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden}
-    .particle{position:absolute;width:2px;height:2px;background:rgba(118,169,255,.3);border-radius:50%;animation:float 20s infinite linear;opacity:.6}
-    @keyframes float{0%{transform:translateY(100vh) rotate(0deg)}100%{transform:translateY(-100vh) rotate(360deg)}}
-    h1{color:#76a9ff;text-align:center;margin-bottom:30px;font-size:2.8rem;text-shadow:0 0 30px rgba(118,169,255,.8);animation:glow 2s ease-in-out infinite alternate;font-weight:700;letter-spacing:-1px}
-    @keyframes glow{from{text-shadow:0 0 20px rgba(118,169,255,.5)}to{text-shadow:0 0 30px rgba(118,169,255,1)}}
-    .profile-section,.question-section,#advice{background:rgba(255,255,255,.95);backdrop-filter:blur(15px);padding:25px;border-radius:20px;margin-bottom:25px;border:2px solid rgba(118,169,255,.3);box-shadow:0 10px 40px rgba(0,0,0,.1)}
-    textarea{width:100%;min-height:140px;padding:20px;border-radius:15px;border:2px solid #e2e8f0;background:#f7fafc;color:#2d3748;resize:vertical;font-size:1.1rem;margin-bottom:20px}
-    textarea:focus{outline:none;border-color:#76a9ff;background:#fff;box-shadow:0 0 0 4px rgba(118,169,255,.1)}
-    button{width:100%;padding:18px;background:linear-gradient(135deg,#76a9ff 0%,#667eea 50%,#764ba2 100%);color:white;font-weight:700;border:none;border-radius:15px;cursor:pointer;font-size:1.2rem;transition:all .4s ease;box-shadow:0 6px 20px rgba(118,169,255,.4)}
-    button:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(118,169,255,.6)}
-    .back-btn{position:absolute;top:20px;left:20px;background:rgba(26,26,26,.8);border:1px solid rgba(118,169,255,.3);color:#76a9ff;padding:.5rem 1rem;border-radius:25px;text-decoration:none;font-size:.9rem;z-index:100}
-    .loading{display:flex;flex-direction:column;align-items:center;gap:15px;padding:40px}
-    .spinner{width:40px;height:40px;border:4px solid #e2e8f0;border-top:4px solid #76a9ff;border-radius:50%;animation:spin 1s linear infinite}
-    @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+    * { box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #2d3748;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+    .particles {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;
+    }
+    .particle {
+      position: absolute; width: 2px; height: 2px; background: rgba(118, 169, 255, 0.3);
+      border-radius: 50%; animation: float 20s infinite linear; opacity: 0.6;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); }
+      100% { transform: translateY(-100vh) rotate(360deg); }
+    }
+    h1 {
+      color: #76a9ff; text-align: center; margin-bottom: 30px; font-size: 2.8rem;
+      text-shadow: 0 0 30px rgba(118, 169, 255, 0.8); animation: glow 2s ease-in-out infinite alternate;
+      font-weight: 700; letter-spacing: -1px;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 20px rgba(118, 169, 255, 0.5); }
+      to { text-shadow: 0 0 30px rgba(118, 169, 255, 1); }
+    }
+    .profile-section {
+      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px);
+      padding: 25px; border-radius: 20px; margin-bottom: 25px;
+      border: 2px solid rgba(118, 169, 255, 0.3); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      position: relative; overflow: hidden; color: #2d3748;
+    }
+    .tier-status {
+      display: inline-block; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem;
+      font-weight: 600; margin-bottom: 15px;
+    }
+    .tier-free { background: rgba(255, 152, 0, 0.2); color: #ff9800; border: 1px solid rgba(255, 152, 0, 0.4); }
+    .usage-counter {
+      text-align: center; margin-bottom: 20px; padding: 15px;
+      background: rgba(118, 169, 255, 0.1); border-radius: 10px;
+      border: 1px solid rgba(118, 169, 255, 0.3);
+    }
+    .profile-completeness {
+      text-align: center; margin-bottom: 20px;
+    }
+    .completeness-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
+    }
+    .completion-percentage {
+      font-size: 1.4rem; font-weight: bold; color: #76a9ff;
+      text-shadow: 0 0 10px rgba(118, 169, 255, 0.5);
+    }
+    .completeness-bar {
+      width: 100%; height: 16px; background: linear-gradient(90deg, #e2e8f0, #f7fafc);
+      border-radius: 8px; overflow: hidden; margin: 15px 0;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1); border: 1px solid rgba(118, 169, 255, 0.2);
+    }
+    .completeness-fill {
+      height: 100%; background: linear-gradient(90deg, #76a9ff, #667eea, #764ba2);
+      transition: width 1s ease-out; box-shadow: 0 0 15px rgba(118, 169, 255, 0.4);
+    }
+    #profile-summary {
+      background: rgba(247, 250, 252, 0.95); padding: 25px; border-radius: 15px;
+      border: 1px solid rgba(118, 169, 255, 0.3); white-space: pre-wrap;
+      font-family: 'Courier New', monospace; font-size: 0.95rem; line-height: 1.6;
+      max-height: 250px; overflow-y: auto; box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.05);
+      color: #4a5568;
+    }
+    .question-section {
+      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px);
+      padding: 30px; border-radius: 20px; margin-bottom: 25px;
+      border: 2px solid rgba(118, 169, 255, 0.3); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    .question-label {
+      font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; color: #4a5568;
+    }
+    textarea {
+      width: 100%; min-height: 140px; padding: 20px; border-radius: 15px;
+      border: 2px solid #e2e8f0; background: #f7fafc; color: #2d3748; resize: vertical;
+      margin-bottom: 20px; font-size: 1.1rem; line-height: 1.6;
+    }
+    textarea:focus {
+      outline: none; border-color: #76a9ff; background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(118, 169, 255, 0.1);
+    }
+    button {
+      width: 100%; padding: 18px; background: linear-gradient(135deg, #76a9ff 0%, #667eea 50%, #764ba2 100%);
+      color: white; font-weight: 700; border: none; border-radius: 15px; cursor: pointer;
+      font-size: 1.2rem; margin-bottom: 15px; transition: all 0.4s ease;
+      box-shadow: 0 6px 20px rgba(118, 169, 255, 0.4);
+    }
+    button:hover {
+      transform: translateY(-3px); box-shadow: 0 10px 30px rgba(118, 169, 255, 0.6);
+    }
+    #advice {
+      background: rgba(247, 250, 252, 0.95); padding: 30px; border-radius: 20px;
+      margin-top: 25px; white-space: pre-wrap; min-height: 150px;
+      border: 2px solid rgba(118, 169, 255, 0.3); font-family: 'Segoe UI', sans-serif;
+      line-height: 1.7; font-size: 1.05rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      color: #2d3748;
+    }
+    .loading {
+      display: flex; align-items: center; justify-content: center; gap: 15px;
+      flex-direction: column; padding: 40px;
+    }
+    .spinner {
+      width: 40px; height: 40px; border: 4px solid #e2e8f0;
+      border-top: 4px solid #76a9ff; border-radius: 50%; animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .back-btn {
+      position: absolute; top: 20px; left: 20px; background: rgba(26, 26, 26, 0.8);
+      border: 1px solid rgba(118, 169, 255, 0.3); color: #76a9ff; padding: 0.5rem 1rem;
+      border-radius: 25px; text-decoration: none; font-size: 0.9rem; z-index: 100;
+    }
+    .back-btn:hover {
+      background: rgba(118, 169, 255, 0.1); border-color: #76a9ff;
+    }
   </style>
 </head>
 <body>
   <div class="particles" id="particles"></div>
-  <a href="categories.html" class="back-btn">← Back to Categories</a>
-  <h1>🧠 Knowme AI</h1>
+  <a href="categories.html" class="back-btn">Back to Categories</a>
+
+  <h1>Knowme AI</h1>
 
   <div class="profile-section">
-    <div id="profile-summary">Loading your profile...</div>
+    <div class="tier-status tier-free">Free Plan</div>
+    <div class="usage-counter">Loading usage...</div>
+    <div class="profile-completeness">
+      <div class="completeness-header">
+        <span>Profile Completeness</span>
+        <span class="completion-percentage" id="completion-percentage">0%</span>
+      </div>
+      <div class="completeness-bar">
+        <div class="completeness-fill" id="completion-bar"></div>
+      </div>
+    </div>
+    <div id="profile-summary">Loading your profile data...</div>
   </div>
 
   <div class="question-section">
     <div class="question-label">What decision are you facing?</div>
-    <textarea id="user-question" placeholder="Ask me about any life decision..."></textarea>
+    <textarea id="user-question" placeholder="Ask me about any life decision - career, relationships, finances, health, or anything else..."></textarea>
     <button onclick="getAdvice()" id="advice-btn">Get AI-Powered Advice</button>
   </div>
 
-  <div id="advice" style="display:none;"></div>
+  <div id="advice" style="display: none;"></div>
 
   <script>
-    // YOUR OLD PARTICLES
-    for(let i=0;i<50;i++){
-      const p=document.createElement('div');p.className='particle';
-      p.style.left=Math.random()*100+'%';
-      p.style.animationDelay=Math.random()*20+'s';
-      document.getElementById('particles').appendChild(p);
+    // Particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 50; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 20 + 's';
+      particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+      particlesContainer.appendChild(particle);
     }
 
-    // LOAD PROFILE (your old way)
-    let profiles = {personal:{},mental:{},finance:{},career:{},relationships:{},fitness:{},lifestyle:{}};
+    // Profile
+    let profiles = { personal: {}, mental: {}, finance: {}, career: {}, relationships: {}, fitness: {}, lifestyle: {} };
     const keys = ['userProfile','mentalHealthProfile','financeProfile','careerProfile','relationshipsProfile','fitnessProfile','lifestyleProfile'];
-    keys.forEach((k,i)=>profiles[Object.keys(profiles)[i]]=JSON.parse(localStorage.getItem(k)||'{}'));
-    document.getElementById('profile-summary').textContent = Object.keys(profiles).filter(k=>Object.keys(profiles[k]).length).length+' categories completed';
+    keys.forEach((k,i) => profiles[Object.keys(profiles)[i]] = JSON.parse(localStorage.getItem(k) || '{}'));
 
-    // FIXED: 1 LINE ONLY
+    const completed = Object.keys(profiles).filter(k => Object.keys(profiles[k]).length > 0).length;
+    document.getElementById('completion-percentage').textContent = Math.round((completed / 7) * 100) + '%';
+    document.getElementById('completion-bar').style.width = Math.round((completed / 7) * 100) + '%';
+    document.getElementById('profile-summary').textContent = completed + ' categories completed';
+
+    // GET ADVICE — FIXED: RELATIVE URL
     async function getAdvice() {
       const question = document.getElementById('user-question').value.trim();
       const adviceEl = document.getElementById('advice');
       const btn = document.getElementById('advice-btn');
-      if (!question) return alert('Type something');
 
-      adviceEl.style.display='block';
-      adviceEl.innerHTML='<div class="loading"><div class="spinner"></div><span>Thinking...</span></div>';
-      btn.disabled=true;
+      if (!question) return alert('Please enter a question');
+
+      adviceEl.style.display = 'block';
+      adviceEl.innerHTML = `<div class="loading"><div class="spinner"></div><span>Thinking...</span></div>`;
+      btn.disabled = true;
 
       try {
-        const res = await fetch('/api/advice', {  // ← THIS IS THE ONLY CHANGE
+        const response = await fetch('/api/advice', {  // ← ONLY CHANGE
           method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({question, profile: profiles})
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question, profile: profiles })
         });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed');
-        adviceEl.innerHTML = `<p style="font-size:1.2rem;line-height:1.8">${data.advice.replace(/\n/g,'<br>')}</p>`;
-      } catch (e) {
-        adviceEl.innerHTML = `<p style="color:#f44336">Error: ${e.message}</p><p>Refresh • Check internet • Try again</p>`;
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed');
+
+        adviceEl.innerHTML = `<p style="font-size:1.1rem;line-height:1.8">${data.advice.replace(/\n/g, '<br>')}</p>`;
+
+      } catch (error) {
+        adviceEl.innerHTML = `<p style="color:#f44336">Failed to get advice: ${error.message}</p>
+          <p>Try: Refresh page • Check internet • Complete profile</p>`;
+      } finally {
+        btn.disabled = false;
       }
-      btn.disabled=false;
     }
   </script>
 </body>
