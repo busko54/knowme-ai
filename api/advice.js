@@ -1,5 +1,5 @@
 // pages/api/advice.js
-// FINAL WORKING CODE — NOV 7 2025
+// FINAL WORKING CODE — NOV 7 2025 — NO CACHE
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
   const API_KEY = process.env.GOOGLE_AI_KEY;
 
-  console.log('KEY:', !!API_KEY);
+  console.log('KEY:', !!API_KEY ? 'YES' : 'NO');
   console.log('MODEL: gemini-1.5-flash-latest');
   console.log('API: v1');
 
