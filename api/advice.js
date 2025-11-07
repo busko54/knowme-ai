@@ -47,8 +47,7 @@ Provide good advice that fits their unique situation.`;
     console.log('Calling Google API...');
     
     // UPDATED: Using gemini-1.5-flash-latest which should work
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
-      method: 'POST',
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`, {      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
