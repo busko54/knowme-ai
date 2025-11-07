@@ -1,5 +1,5 @@
 // pages/api/advice.js
-// FORCE VERCEL REBUILD — NOV 7 2025 — 100% WORKING
+// FINAL WORKING CODE — NOV 7 2025
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
   const API_KEY = process.env.GOOGLE_AI_KEY;
 
-  console.log('KEY:', API_KEY ? 'YES' : 'NO');
+  console.log('KEY:', !!API_KEY);
   console.log('MODEL: gemini-1.5-flash-latest');
   console.log('API: v1');
 
@@ -28,12 +28,12 @@ export default async function handler(req, res) {
       }
     );
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const err = await response.json();
-      return res.status(500).json({ error: err.error?.message || 'Gemini failed' });
+      return res.status(500).json({ error: data.error?.message || 'Gemini failed' });
     }
 
-    const data = await response.json();
     const advice = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response';
 
     return res.status(200).json({ advice });
